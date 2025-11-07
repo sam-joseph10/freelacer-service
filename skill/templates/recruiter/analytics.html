@@ -1,0 +1,762 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Recruiter Analytics Dashboard</title>
+  
+  <!-- Chart.js CDN -->
+  <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+  
+  <!-- Bootstrap CSS -->
+  <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" rel="stylesheet">
+  <!-- Bootstrap Icons -->
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.0/font/bootstrap-icons.css">
+  <!-- Font Awesome -->
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+  <!-- Google Fonts -->
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800;900&display=swap" rel="stylesheet">
+
+  <style>
+    /* Premium Color Palette - Enhanced */
+    :root {
+        --primary-gradient: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+        --secondary-gradient: linear-gradient(135deg, #4ecdc4 0%, #44a08d 100%);
+        --accent-gradient: linear-gradient(135deg, #ff6b6b 0%, #feca57 100%);
+        --success-gradient: linear-gradient(135deg, #51cf66 0%, #40c057 100%);
+        --rainbow-gradient: linear-gradient(135deg, #667eea, #4ecdc4, #ff6b6b);
+        --glass-bg: rgba(255, 255, 255, 0.08);
+        --glass-border: rgba(255, 255, 255, 0.12);
+        --dark-bg: #0f0f23;
+        --darker-bg: #0a0a1a;
+        --card-bg: rgba(30, 30, 60, 0.6);
+        --text-primary: #ffffff;
+        --text-secondary: #e2e8f0;
+        --text-muted: #94a3b8;
+        --shadow-glow: 0 10px 40px rgba(102, 126, 234, 0.25);
+        --shadow-intense: 0 25px 50px rgba(0, 0, 0, 0.4);
+        --border-radius: 20px;
+    }
+
+    * {
+        margin: 0;
+        padding: 0;
+        box-sizing: border-box;
+    }
+
+    body {
+        font-family: 'Inter', -apple-system, BlinkMacSystemFont, sans-serif;
+        background: linear-gradient(135deg, var(--dark-bg) 0%, var(--darker-bg) 100%);
+        color: var(--text-primary);
+        overflow-x: hidden;
+        line-height: 1.6;
+        min-height: 100vh;
+    }
+
+    /* Premium Background Animation */
+    .bg-animation {
+        position: fixed;
+        inset: 0;
+        z-index: -1;
+        overflow: hidden;
+    }
+
+    .floating-orb {
+        position: absolute;
+        border-radius: 50%;
+        filter: blur(80px);
+        opacity: 0.2;
+        animation: float-orbs 30s ease-in-out infinite;
+    }
+
+    .orb-1 {
+        width: 400px;
+        height: 400px;
+        background: var(--primary-gradient);
+        top: 10%;
+        left: 5%;
+        animation-delay: 0s;
+    }
+
+    .orb-2 {
+        width: 300px;
+        height: 300px;
+        background: var(--secondary-gradient);
+        bottom: 15%;
+        right: 8%;
+        animation-delay: 10s;
+    }
+
+    .orb-3 {
+        width: 350px;
+        height: 350px;
+        background: var(--accent-gradient);
+        top: 60%;
+        left: 75%;
+        animation-delay: 20s;
+    }
+
+    .container {
+        width: 95%;
+        max-width: 1200px;
+        margin: 40px auto;
+        padding: 20px;
+    }
+
+    .header-section {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        margin-bottom: 40px;
+        flex-wrap: wrap;
+        gap: 20px;
+    }
+
+    h2 {
+        font-weight: 800;
+        font-size: 2.5rem;
+        background: var(--rainbow-gradient);
+        -webkit-background-clip: text;
+        -webkit-text-fill-color: transparent;
+        background-clip: text;
+        animation: gradient-shift 4s ease-in-out infinite;
+        background-size: 200% 200%;
+        margin: 0;
+    }
+
+    .back-btn {
+        background: var(--rainbow-gradient);
+        color: white;
+        border: none;
+        border-radius: 15px;
+        padding: 0.8rem 1.5rem;
+        font-weight: 600;
+        cursor: pointer;
+        transition: all 0.4s ease;
+        display: flex;
+        align-items: center;
+        gap: 0.5rem;
+        box-shadow: var(--shadow-glow);
+        position: relative;
+        overflow: hidden;
+        text-decoration: none;
+    }
+
+    .back-btn::before {
+        content: '';
+        position: absolute;
+        top: 0;
+        left: -100%;
+        width: 100%;
+        height: 100%;
+        background: linear-gradient(90deg, transparent, rgba(255,255,255,0.3), transparent);
+        transition: left 0.6s ease;
+    }
+
+    .back-btn:hover::before {
+        left: 100%;
+    }
+
+    .back-btn:hover {
+        transform: translateY(-3px) scale(1.05);
+        box-shadow: 0 15px 40px rgba(102, 126, 234, 0.4);
+        color: white;
+        text-decoration: none;
+    }
+
+    .nav-tabs {
+        display: flex;
+        justify-content: center;
+        gap: 15px;
+        margin-bottom: 40px;
+        flex-wrap: wrap;
+    }
+
+    .nav-tab {
+        background: var(--glass-bg);
+        border: 1px solid var(--glass-border);
+        border-radius: 15px;
+        padding: 0.8rem 1.5rem;
+        color: var(--text-secondary);
+        cursor: pointer;
+        transition: all 0.4s ease;
+        font-weight: 500;
+        position: relative;
+        overflow: hidden;
+    }
+
+    .nav-tab::before {
+        content: '';
+        position: absolute;
+        top: 0;
+        left: -100%;
+        width: 100%;
+        height: 100%;
+        background: linear-gradient(90deg, transparent, rgba(102, 126, 234, 0.2), transparent);
+        transition: left 0.6s ease;
+    }
+
+    .nav-tab:hover::before {
+        left: 100%;
+    }
+
+    .nav-tab:hover {
+        color: var(--text-primary);
+        transform: translateY(-3px);
+        box-shadow: var(--shadow-glow);
+    }
+
+    .nav-tab.active {
+        background: rgba(102, 126, 234, 0.3);
+        color: var(--text-primary);
+        border-color: rgba(102, 126, 234, 0.5);
+        box-shadow: var(--shadow-glow);
+    }
+
+    .chart-section {
+        display: none;
+        animation: fadeIn 0.5s ease;
+    }
+
+    .chart-section.active {
+        display: block;
+    }
+
+    .chart-container {
+        background: var(--card-bg);
+        backdrop-filter: blur(25px);
+        border: 1px solid var(--glass-border);
+        border-radius: var(--border-radius);
+        padding: 30px;
+        transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+        position: relative;
+        overflow: hidden;
+        box-shadow: var(--shadow-glow);
+        animation: fade-in-up 0.8s ease-out;
+        margin-bottom: 30px;
+    }
+
+    .chart-container::before {
+        content: '';
+        position: absolute;
+        top: 0;
+        left: 0;
+        width: 100%;
+        height: 100%;
+        background: conic-gradient(from 0deg, transparent, rgba(102, 126, 234, 0.1), transparent);
+        animation: rotate-gradient 15s linear infinite;
+    }
+
+    .chart-container::after {
+        content: '';
+        position: absolute;
+        top: 0;
+        left: 0;
+        width: 100%;
+        height: 4px;
+        background: var(--rainbow-gradient);
+        transform: scaleX(0);
+        transform-origin: left;
+        transition: transform 0.4s ease;
+    }
+
+    .chart-container:hover::after {
+        transform: scaleX(1);
+    }
+
+    .chart-container:hover {
+        transform: translateY(-8px) scale(1.02);
+        box-shadow: var(--shadow-intense);
+        border-color: rgba(102, 126, 234, 0.3);
+    }
+
+    .chart-title {
+        margin-bottom: 25px;
+        color: var(--text-primary);
+        font-size: 1.5rem;
+        font-weight: 600;
+        position: relative;
+        z-index: 2;
+        text-align: center;
+    }
+
+    .chart-wrapper {
+        position: relative;
+        width: 100%;
+        height: 400px;
+        margin: 0 auto;
+        z-index: 2;
+    }
+
+    .donut-wrapper {
+        position: relative;
+        width: 350px;
+        height: 350px;
+        margin: 0 auto;
+    }
+
+    .donut-center {
+        position: absolute;
+        top: 50%;
+        left: 50%;
+        transform: translate(-50%, -50%);
+        text-align: center;
+        z-index: 2;
+    }
+
+    .donut-total {
+        font-size: 2.8rem;
+        font-weight: 900;
+        background: var(--rainbow-gradient);
+        -webkit-background-clip: text;
+        -webkit-text-fill-color: transparent;
+        background-clip: text;
+        margin-bottom: 4px;
+        line-height: 1;
+    }
+
+    .donut-label {
+        font-size: 1rem;
+        color: var(--text-secondary);
+    }
+
+    .legend-box {
+        margin-top: 20px;
+        display: flex;
+        justify-content: center;
+        gap: 15px;
+        flex-wrap: wrap;
+        position: relative;
+        z-index: 2;
+    }
+
+    .legend-item {
+        display: flex;
+        align-items: center;
+        font-size: 1rem;
+        color: var(--text-secondary);
+        padding: 8px 15px;
+        background: rgba(255, 255, 255, 0.05);
+        border-radius: 10px;
+    }
+
+    .legend-color {
+        width: 15px;
+        height: 15px;
+        border-radius: 50%;
+        margin-right: 8px;
+    }
+
+    canvas {
+        width: 100% !important;
+        height: 100% !important;
+        position: relative;
+        z-index: 2;
+    }
+
+    .chart-description {
+        margin-top: 25px;
+        color: var(--text-secondary);
+        text-align: center;
+        position: relative;
+        z-index: 2;
+        font-size: 0.95rem;
+        line-height: 1.6;
+    }
+
+    footer {
+        text-align: center;
+        font-size: 0.9rem;
+        color: var(--text-muted);
+        margin-top: 50px;
+        padding-bottom: 30px;
+        position: relative;
+        z-index: 2;
+    }
+
+    /* Premium Animations */
+    @keyframes float-orbs {
+        0%, 100% {
+            transform: translateY(0) rotate(0deg);
+        }
+        33% {
+            transform: translateY(-30px) rotate(120deg);
+        }
+        66% {
+            transform: translateY(20px) rotate(240deg);
+        }
+    }
+
+    @keyframes gradient-shift {
+        0% {
+            background-position: 0% 50%;
+        }
+        50% {
+            background-position: 100% 50%;
+        }
+        100% {
+            background-position: 0% 50%;
+        }
+    }
+
+    @keyframes fade-in-up {
+        from {
+            opacity: 0;
+            transform: translateY(30px);
+        }
+        to {
+            opacity: 1;
+            transform: translateY(0);
+        }
+    }
+
+    @keyframes rotate-gradient {
+        from {
+            transform: rotate(0deg);
+        }
+        to {
+            transform: rotate(360deg);
+        }
+    }
+
+    @keyframes fadeIn {
+        from {
+            opacity: 0;
+        }
+        to {
+            opacity: 1;
+        }
+    }
+
+    /* Custom Scrollbar */
+    ::-webkit-scrollbar {
+        width: 8px;
+    }
+
+    ::-webkit-scrollbar-track {
+        background: rgba(255, 255, 255, 0.05);
+        border-radius: 10px;
+    }
+
+    ::-webkit-scrollbar-thumb {
+        background: var(--rainbow-gradient);
+        border-radius: 10px;
+    }
+
+    ::-webkit-scrollbar-thumb:hover {
+        background: var(--secondary-gradient);
+    }
+
+    /* Responsive Design */
+    @media (max-width: 992px) {
+        .chart-wrapper {
+            height: 350px;
+        }
+        
+        .donut-wrapper {
+            width: 300px;
+            height: 300px;
+        }
+    }
+
+    @media (max-width: 768px) {
+        .header-section {
+            flex-direction: column;
+            text-align: center;
+        }
+        
+        .nav-tabs {
+            gap: 10px;
+        }
+        
+        .nav-tab {
+            padding: 0.6rem 1rem;
+            font-size: 0.9rem;
+        }
+        
+        .chart-wrapper {
+            height: 300px;
+        }
+        
+        .donut-wrapper {
+            width: 250px;
+            height: 250px;
+        }
+        
+        h2 {
+            font-size: 2rem;
+        }
+        
+        .chart-container {
+            padding: 20px;
+        }
+    }
+
+    @media (max-width: 576px) {
+        .chart-wrapper {
+            height: 250px;
+        }
+        
+        .donut-wrapper {
+            width: 200px;
+            height: 200px;
+        }
+        
+        .donut-total {
+            font-size: 2.2rem;
+        }
+        
+        .legend-item {
+            font-size: 0.9rem;
+            padding: 6px 10px;
+        }
+    }
+  </style>
+</head>
+<body>
+  <!-- Premium Background Animation -->
+  <div class="bg-animation">
+    <div class="floating-orb orb-1"></div>
+    <div class="floating-orb orb-2"></div>
+    <div class="floating-orb orb-3"></div>
+  </div>
+
+  <div class="container">
+    <div class="header-section">
+      <h2>Recruiter Analytics </h2>
+      <a href="{% url 'admin_dashboard' %}" class="back-btn">
+        <i class="bi bi-arrow-left"></i> Back to Dashboard
+      </a>
+    </div>
+
+    <div class="nav-tabs">
+      <div class="nav-tab active" data-target="applications-per-job">Applications per Job</div>
+      <div class="nav-tab" data-target="job-status">Job Status Overview</div>
+      <div class="nav-tab" data-target="application-funnel">Application Funnel</div>
+    </div>
+
+    <!-- Applications per Job Post -->
+    <div class="chart-section active" id="applications-per-job">
+      <div class="chart-container">
+        <h3 class="chart-title">Applications per Job Post</h3>
+        <div class="chart-wrapper">
+          <canvas id="applicationsPerJobChart"></canvas>
+        </div>
+        <div class="chart-description">
+          Track the performance of your job posts by seeing how many applications each position has received.
+          Identify your most attractive job listings and optimize underperforming ones.
+        </div>
+      </div>
+    </div>
+
+    <!-- Job Status Overview -->
+    <div class="chart-section" id="job-status">
+      <div class="chart-container">
+        <h3 class="chart-title">Job Status Overview</h3>
+        <div class="donut-wrapper">
+          <canvas id="jobStatusChart"></canvas>
+          <div class="donut-center">
+            <div class="donut-total">{{ total_jobs }}</div>
+            <div class="donut-label">Total Jobs</div>
+          </div>
+        </div>
+        <div class="legend-box">
+          <div class="legend-item"><span class="legend-color" style="background-color:#60a5fa"></span>Open</div>
+          <div class="legend-item"><span class="legend-color" style="background-color:#9ca3af"></span>Closed</div>
+          <div class="legend-item"><span class="legend-color" style="background-color:#34d399"></span>Filled</div>
+        </div>
+        <div class="chart-description">
+          Monitor the status distribution of your job postings. Keep track of open positions,
+          successfully filled roles, and closed opportunities to optimize your recruitment strategy.
+        </div>
+      </div>
+    </div>
+
+    <!-- Overall Application Funnel -->
+    <div class="chart-section" id="application-funnel">
+      <div class="chart-container">
+        <h3 class="chart-title">Overall Application Funnel</h3>
+        <div class="chart-wrapper">
+          <canvas id="applicationFunnelChart"></canvas>
+        </div>
+        <div class="chart-description">
+          Visualize your recruitment pipeline from initial applications to final hires.
+          Identify bottlenecks in your hiring process and optimize conversion rates at each stage.
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <footer>© 2025 Recruiter Analytics Dashboard</footer>
+
+  <script>
+    // ====== Example static data (replace with Django context variables) ======
+    const jobTitles = {{ job_titles|safe }};
+    const applicationsCount = {{ applications_count|safe }};
+    const jobStatusData = {
+        Open: {{ job_status_data.Open }},
+        Closed: {{ job_status_data.Closed }},
+        Filled: {{ job_status_data.Filled }},
+    };
+    const totalJobs = {{ total_jobs }};
+    const funnelStages = {{ funnel_stages|safe }};
+    const funnelCounts = {{ funnel_counts|safe }};
+
+    // Navigation functionality
+    document.addEventListener('DOMContentLoaded', function() {
+        const navTabs = document.querySelectorAll('.nav-tab');
+        const chartSections = document.querySelectorAll('.chart-section');
+        
+        navTabs.forEach(tab => {
+            tab.addEventListener('click', function() {
+                const targetId = this.getAttribute('data-target');
+                
+                // Update active tab
+                navTabs.forEach(t => t.classList.remove('active'));
+                this.classList.add('active');
+                
+                // Show target section
+                chartSections.forEach(section => {
+                    section.classList.remove('active');
+                });
+                document.getElementById(targetId).classList.add('active');
+            });
+        });
+        
+        // Initialize charts
+        initializeCharts();
+    });
+
+    function initializeCharts() {
+      // ====== 1️⃣ Horizontal Bar Chart: Applications per Job Post ======
+      const ctxJobBar = document.getElementById("applicationsPerJobChart").getContext("2d");
+      new Chart(ctxJobBar, {
+        type: "bar",
+        data: {
+          labels: jobTitles,
+          datasets: [{
+            label: "Number of Applications",
+            data: applicationsCount,
+            backgroundColor: "#3b82f6",
+            borderRadius: 8,
+            barPercentage: 0.6,
+          }]
+        },
+        options: {
+          indexAxis: 'y',
+          responsive: true,
+          plugins: {
+            legend: { display: false },
+            tooltip: { enabled: true },
+            title: { display: false },
+          },
+          scales: {
+            x: {
+              beginAtZero: true,
+              ticks: { 
+                color: '#94a3b8'
+              },
+              grid: { 
+                color: 'rgba(255, 255, 255, 0.1)' 
+              },
+              title: { 
+                display: true, 
+                text: "Number of Applications", 
+                color: '#e2e8f0' 
+              }
+            },
+            y: {
+              ticks: {
+                color: '#94a3b8'
+              },
+              grid: { 
+                display: false 
+              },
+            }
+          }
+        }
+      });
+
+      // ====== 2️⃣ Donut Chart: Job Status Overview ======
+      const ctxJobStatus = document.getElementById("jobStatusChart").getContext("2d");
+      new Chart(ctxJobStatus, {
+        type: "doughnut",
+        data: {
+          labels: ["Open", "Closed", "Filled"],
+          datasets: [{
+            data: [jobStatusData.Open, jobStatusData.Closed, jobStatusData.Filled],
+            backgroundColor: ["#60a5fa", "#9ca3af", "#34d399"],
+            hoverBackgroundColor: ["#3b82f6", "#6b7280", "#10b981"],
+            borderWidth: 4,
+            borderColor: 'rgba(30, 30, 60, 0.8)',
+            hoverOffset: 15
+          }]
+        },
+        options: {
+          cutout: "65%",
+          plugins: {
+            legend: { 
+              display: false 
+            },
+            tooltip: {
+              callbacks: {
+                label: function(context) {
+                  const value = context.raw;
+                  const percentage = ((value/totalJobs)*100).toFixed(1);
+                  return `${context.label}: ${value} (${percentage}%)`;
+                }
+              }
+            }
+          }
+        }
+      });
+
+      // ====== 3️⃣ Vertical Bar Chart: Overall Application Funnel ======
+      const ctxFunnel = document.getElementById("applicationFunnelChart").getContext("2d");
+      new Chart(ctxFunnel, {
+        type: "bar",
+        data: {
+          labels: funnelStages,
+          datasets: [{
+            label: "Number of Candidates",
+            data: funnelCounts,
+            backgroundColor: ["#2563eb","#3b82f6","#60a5fa","#22c55e","#ef4444"],
+            borderRadius: 8,
+            barThickness: 50,
+          }]
+        },
+        options: {
+          responsive: true,
+          plugins: { 
+            legend: { display: false } 
+          },
+          scales: {
+            y: {
+              beginAtZero: true,
+              ticks: { 
+                color: '#94a3b8'
+              },
+              grid: { 
+                color: 'rgba(255, 255, 255, 0.1)' 
+              },
+              title: { 
+                display: true, 
+                text: "Number of Candidates", 
+                color: '#e2e8f0' 
+              }
+            },
+            x: {
+              ticks: {
+                color: '#94a3b8'
+              },
+              grid: { 
+                display: false 
+              },
+            }
+          }
+        }
+      });
+    }
+  </script>
+</body>
+</html>

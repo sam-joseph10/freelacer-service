@@ -1,0 +1,765 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Discussions - SkillJourney</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.0/font/bootstrap-icons.css">
+    <style>
+        :root {
+            --primary: #667eea;
+            --primary-dark: #5a6fd8;
+            --secondary: #4ecdc4;
+            --dark: #0f0f23;
+            --darker: #0a0a1a;
+            --light: #f8f9fa;
+            --border: #e9ecef;
+            --text: #212529;
+            --text-muted: #6c757d;
+            --text-light: #adb5bd;
+        }
+
+        body {
+            background: linear-gradient(135deg, var(--dark) 0%, var(--darker) 100%);
+            font-family: 'Inter', -apple-system, BlinkMacSystemFont, sans-serif;
+            color: white;
+            line-height: 1.6;
+            min-height: 100vh;
+            margin: 0;
+            padding: 0;
+        }
+
+        .main-container {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 30px 20px;
+            display: grid;
+            grid-template-columns: 1fr 2fr;
+            gap: 40px;
+            align-items: start;
+            height: 100vh;
+        }
+
+        /* Left Side - Image/Icon Section */
+        .left-section {
+            position: sticky;
+            top: 30px;
+            text-align: center;
+            padding: 40px 20px;
+            background: rgba(255, 255, 255, 0.03);
+            border-radius: 20px;
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            backdrop-filter: blur(10px);
+            height: fit-content;
+            max-height: calc(100vh - 60px);
+        }
+
+        .discussion-icon {
+            font-size: 120px;
+            margin-bottom: 20px;
+            background: linear-gradient(135deg, var(--primary), var(--secondary));
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+            display: block;
+        }
+
+        .left-title {
+            font-size: 28px;
+            font-weight: 700;
+            margin-bottom: 15px;
+            background: linear-gradient(135deg, var(--primary), var(--secondary));
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+        }
+
+        .left-description {
+            color: var(--text-light);
+            font-size: 16px;
+            line-height: 1.6;
+            margin-bottom: 25px;
+        }
+
+        .features-list {
+            text-align: left;
+            margin: 25px 0;
+        }
+
+        .feature-item {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            margin-bottom: 15px;
+            color: rgba(255, 255, 255, 0.9);
+            font-size: 14px;
+        }
+
+        .feature-icon {
+            color: var(--secondary);
+            font-size: 16px;
+        }
+
+        .stats-container {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 15px;
+            margin-top: 30px;
+        }
+
+        .stat-item {
+            background: rgba(255, 255, 255, 0.05);
+            padding: 15px;
+            border-radius: 12px;
+            text-align: center;
+            border: 1px solid rgba(255, 255, 255, 0.1);
+        }
+
+        .stat-number {
+            font-size: 24px;
+            font-weight: 700;
+            color: var(--secondary);
+            display: block;
+        }
+
+        .stat-label {
+            font-size: 12px;
+            color: var(--text-light);
+            margin-top: 5px;
+        }
+
+        /* Right Side - Discussions */
+        .right-section {
+            background: rgba(255, 255, 255, 0.02);
+            border-radius: 20px;
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            height: calc(100vh - 60px);
+            display: flex;
+            flex-direction: column;
+        }
+
+        .discussion-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 25px 30px;
+            border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+            background: rgba(255, 255, 255, 0.03);
+            border-radius: 20px 20px 0 0;
+            flex-shrink: 0;
+        }
+
+        .discussion-title {
+            font-size: 24px;
+            font-weight: 700;
+            color: white;
+            margin: 0;
+        }
+
+        .back-btn {
+            color: var(--text-light);
+            text-decoration: none;
+            font-size: 14px;
+            font-weight: 500;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            padding: 8px 16px;
+            border-radius: 8px;
+            transition: all 0.3s ease;
+            background: rgba(255, 255, 255, 0.05);
+            border: 1px solid rgba(255, 255, 255, 0.1);
+        }
+
+        .back-btn:hover {
+            color: white;
+            background: rgba(255, 255, 255, 0.1);
+            transform: translateY(-1px);
+        }
+
+        /* Scrollable Comments Container */
+        .comments-container {
+            flex: 1;
+            overflow-y: auto;
+            padding: 0 30px;
+            max-height: calc(100vh - 250px);
+        }
+
+        .comment-item {
+            padding: 20px 0;
+            border-bottom: 1px solid rgba(255, 255, 255, 0.08);
+            transition: all 0.3s ease;
+        }
+
+        .comment-item:hover {
+            background: rgba(255, 255, 255, 0.02);
+            padding: 20px 15px;
+            margin: 0 -15px;
+            border-radius: 12px;
+        }
+
+        .comment-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: flex-start;
+            margin-bottom: 12px;
+        }
+
+        .user-info {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+        }
+
+        .username {
+            font-weight: 600;
+            font-size: 16px;
+            color: white;
+        }
+
+        .badge {
+            font-size: 11px;
+            padding: 4px 10px;
+            border-radius: 12px;
+            font-weight: 600;
+            border: 1px solid transparent;
+        }
+
+        .badge-freelancer {
+            background: rgba(78, 205, 196, 0.15);
+            color: var(--secondary);
+            border-color: rgba(78, 205, 196, 0.3);
+        }
+
+        .badge-recruiter {
+            background: rgba(255, 107, 107, 0.15);
+            color: #ff6b6b;
+            border-color: rgba(255, 107, 107, 0.3);
+        }
+
+        .badge-user {
+            background: rgba(255, 255, 255, 0.1);
+            color: var(--text-light);
+            border-color: rgba(255, 255, 255, 0.2);
+        }
+
+        .comment-time {
+            font-size: 13px;
+            color: var(--text-light);
+        }
+
+        .comment-content {
+            margin-bottom: 15px;
+            font-size: 15px;
+            color: rgba(255, 255, 255, 0.9);
+            line-height: 1.6;
+        }
+
+        .reply-toggle {
+            background: none;
+            border: none;
+            color: var(--text-light);
+            font-size: 14px;
+            font-weight: 500;
+            cursor: pointer;
+            padding: 8px 0;
+            display: flex;
+            align-items: center;
+            gap: 6px;
+            transition: all 0.3s ease;
+            border-radius: 6px;
+        }
+
+        .reply-toggle:hover {
+            color: white;
+            background: rgba(255, 255, 255, 0.05);
+            padding: 8px 12px;
+        }
+
+        .reply-toggle i {
+            transition: transform 0.3s ease;
+            font-size: 12px;
+        }
+
+        .reply-toggle.active i {
+            transform: rotate(180deg);
+        }
+
+        .reply-form {
+            max-height: 0;
+            overflow: hidden;
+            transition: max-height 0.4s ease;
+        }
+
+        .reply-form.active {
+            max-height: 300px;
+            margin-top: 15px;
+        }
+
+        .reply-item {
+            margin-left: 30px;
+            padding: 15px 0;
+            border-top: 1px solid rgba(255, 255, 255, 0.05);
+            position: relative;
+        }
+
+        .reply-item::before {
+            content: '';
+            position: absolute;
+            top: 25px;
+            left: -20px;
+            width: 15px;
+            height: 2px;
+            background: rgba(255, 255, 255, 0.2);
+        }
+
+        .reply-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: flex-start;
+            margin-bottom: 8px;
+        }
+
+        .reply-content {
+            font-size: 14px;
+            color: rgba(255, 255, 255, 0.85);
+            line-height: 1.5;
+        }
+
+        .reply-input-group {
+            margin-top: 15px;
+            display: flex;
+            gap: 10px;
+        }
+
+        .reply-input {
+            flex: 1;
+            background: rgba(255, 255, 255, 0.05);
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            border-radius: 8px;
+            padding: 10px 15px;
+            font-size: 14px;
+            color: white;
+            transition: all 0.3s ease;
+        }
+
+        .reply-input:focus {
+            outline: none;
+            border-color: var(--primary);
+            background: rgba(255, 255, 255, 0.08);
+            box-shadow: 0 0 0 2px rgba(102, 126, 234, 0.2);
+        }
+
+        .reply-input::placeholder {
+            color: var(--text-light);
+        }
+
+        .reply-btn {
+            background: var(--primary);
+            border: none;
+            border-radius: 8px;
+            color: white;
+            padding: 10px 15px;
+            font-size: 14px;
+            font-weight: 500;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            display: flex;
+            align-items: center;
+            gap: 6px;
+        }
+
+        .reply-btn:hover {
+            background: var(--primary-dark);
+            transform: translateY(-1px);
+        }
+
+        .comment-form-section {
+            padding: 25px 30px;
+            border-top: 1px solid rgba(255, 255, 255, 0.1);
+            background: rgba(255, 255, 255, 0.03);
+            border-radius: 0 0 20px 20px;
+            flex-shrink: 0;
+        }
+
+        .comment-form-title {
+            font-size: 18px;
+            font-weight: 600;
+            margin-bottom: 15px;
+            color: white;
+        }
+
+        .comment-textarea {
+            width: 100%;
+            background: rgba(255, 255, 255, 0.05);
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            border-radius: 12px;
+            padding: 15px;
+            font-size: 15px;
+            color: white;
+            resize: vertical;
+            min-height: 100px;
+            transition: all 0.3s ease;
+        }
+
+        .comment-textarea:focus {
+            outline: none;
+            border-color: var(--primary);
+            background: rgba(255, 255, 255, 0.08);
+            box-shadow: 0 0 0 2px rgba(102, 126, 234, 0.2);
+        }
+
+        .comment-textarea::placeholder {
+            color: var(--text-light);
+        }
+
+        .submit-btn {
+            background: linear-gradient(135deg, var(--primary), var(--primary-dark));
+            color: white;
+            border: none;
+            border-radius: 10px;
+            padding: 12px 25px;
+            font-size: 14px;
+            font-weight: 600;
+            transition: all 0.3s ease;
+            margin-top: 15px;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+
+        .submit-btn:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 5px 15px rgba(102, 126, 234, 0.3);
+        }
+
+        .empty-state {
+            text-align: center;
+            padding: 60px 20px;
+            color: var(--text-light);
+        }
+
+        .empty-icon {
+            font-size: 64px;
+            margin-bottom: 20px;
+            opacity: 0.5;
+            background: linear-gradient(135deg, var(--primary), var(--secondary));
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+        }
+
+        .empty-title {
+            font-size: 20px;
+            font-weight: 600;
+            margin-bottom: 10px;
+            color: white;
+        }
+
+        .empty-text {
+            font-size: 15px;
+            margin-bottom: 0;
+            color: var(--text-light);
+        }
+
+        /* Animation for new comments */
+        @keyframes fadeInUp {
+            from {
+                opacity: 0;
+                transform: translateY(15px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        .comment-item {
+            animation: fadeInUp 0.4s ease-out;
+        }
+
+        /* Loading spinner */
+        .spinner {
+            animation: spin 1s linear infinite;
+        }
+
+        @keyframes spin {
+            from { transform: rotate(0deg); }
+            to { transform: rotate(360deg); }
+        }
+
+        /* Custom scrollbar for comments container */
+        .comments-container::-webkit-scrollbar {
+            width: 8px;
+        }
+
+        .comments-container::-webkit-scrollbar-track {
+            background: rgba(255, 255, 255, 0.05);
+            border-radius: 4px;
+            margin: 10px 0;
+        }
+
+        .comments-container::-webkit-scrollbar-thumb {
+            background: var(--primary);
+            border-radius: 4px;
+        }
+
+        .comments-container::-webkit-scrollbar-thumb:hover {
+            background: var(--primary-dark);
+        }
+
+        /* Responsive Design */
+        @media (max-width: 992px) {
+            .main-container {
+                grid-template-columns: 1fr;
+                gap: 30px;
+                height: auto;
+            }
+            
+            .left-section {
+                position: static;
+                max-height: none;
+            }
+            
+            .right-section {
+                height: auto;
+                max-height: none;
+            }
+            
+            .comments-container {
+                max-height: none;
+            }
+        }
+
+        @media (max-width: 768px) {
+            .main-container {
+                padding: 20px 15px;
+            }
+            
+            .discussion-header,
+            .comment-form-section {
+                padding: 20px;
+            }
+            
+            .comments-container {
+                padding: 0 20px;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="main-container">
+        <!-- Left Section - Image/Icon -->
+        <div class="left-section">
+            <i class="bi bi-chat-heart-fill discussion-icon"></i>
+            <h2 class="left-title">Community Hub</h2>
+            <p class="left-description">
+                Connect with fellow freelancers and recruiters. Share experiences, ask questions, and grow together in your professional journey.
+            </p>
+            
+            <div class="features-list">
+                <div class="feature-item">
+                    <i class="bi bi-shield-check feature-icon"></i>
+                    <span>Safe & Professional Environment</span>
+                </div>
+                <div class="feature-item">
+                    <i class="bi bi-lightning-charge feature-icon"></i>
+                    <span>Instant Notifications</span>
+                </div>
+                <div class="feature-item">
+                    <i class="bi bi-people feature-icon"></i>
+                    <span>Network with Professionals</span>
+                </div>
+                <div class="feature-item">
+                    <i class="bi bi-graph-up-arrow feature-icon"></i>
+                    <span>Career Growth Opportunities</span>
+                </div>
+            </div>
+
+            
+        </div>
+
+        <!-- Right Section - Discussions -->
+        <div class="right-section">
+            <!-- Header -->
+            <div class="discussion-header">
+                <h1 class="discussion-title">
+                    <i class="bi bi-chat-dots me-2"></i>Community Discussions
+                </h1>
+                <a href="{% url 'freelancer_dashboard' %}" class="back-btn">
+                    <i class="bi bi-arrow-left"></i>
+                    Back to Dashboard
+                </a>
+            </div>
+
+            <!-- Scrollable Comments Container -->
+            <div class="comments-container">
+                {% for comment in comments %}
+                <div class="comment-item">
+                    <div class="comment-header">
+                        <div class="user-info">
+                            <span class="username">{{ comment.user.username }}</span>
+                            <span class="badge {% if comment.user.freelancerprofile %}badge-freelancer{% elif comment.user.recruiterprofile %}badge-recruiter{% else %}badge-user{% endif %}">
+                                {% if comment.user.freelancerprofile %}
+                                    Freelancer
+                                {% elif comment.user.recruiterprofile %}
+                                    Recruiter
+                                {% else %}
+                                    User
+                                {% endif %}
+                            </span>
+                        </div>
+                        <span class="comment-time">{{ comment.created_at|date:"M d, Y H:i" }}</span>
+                    </div>
+                    
+                    <div class="comment-content">
+                        {{ comment.content }}
+                    </div>
+                    
+                    <!-- Reply Toggle Button -->
+                    <button class="reply-toggle" onclick="toggleReplies(this)">
+                        <i class="bi bi-chevron-down"></i>
+                        <span>
+                            {% if comment.replies.count > 0 %}
+                                {{ comment.replies.count }} repl{{ comment.replies.count|pluralize:"y,ies" }}
+                            {% else %}
+                                Reply
+                            {% endif %}
+                        </span>
+                    </button>
+
+                    <!-- Replies Section -->
+                    <div class="reply-form">
+                        {% for reply in comment.replies.all %}
+                        <div class="reply-item">
+                            <div class="reply-header">
+                                <div class="user-info">
+                                    <span class="username">{{ reply.user.username }}</span>
+                                    <span class="badge {% if reply.user.freelancerprofile %}badge-freelancer{% elif reply.user.recruiterprofile %}badge-recruiter{% else %}badge-user{% endif %}">
+                                        {% if reply.user.freelancerprofile %}
+                                            Freelancer
+                                        {% elif reply.user.recruiterprofile %}
+                                            Recruiter
+                                        {% else %}
+                                            User
+                                        {% endif %}
+                                    </span>
+                                </div>
+                                <span class="comment-time">{{ reply.created_at|date:"M d, Y H:i" }}</span>
+                            </div>
+                            <div class="reply-content">
+                                {{ reply.content }}
+                            </div>
+                        </div>
+                        {% endfor %}
+
+                        <!-- Reply Form -->
+                        <form method="POST">
+                            {% csrf_token %}
+                            <div class="reply-input-group">
+                                <input type="hidden" name="parent_id" value="{{ comment.id }}">
+                                <input type="text" name="content" class="reply-input" placeholder="Write a reply..." required>
+                                <button type="submit" class="reply-btn">
+                                    <i class="bi bi-reply"></i> Reply
+                                </button>
+                            </div>
+                        </form>
+                    </div>
+                </div>
+                {% empty %}
+                <div class="empty-state">
+                    <i class="bi bi-chat-square-text empty-icon"></i>
+                    <h3 class="empty-title">No discussions yet</h3>
+                    <p class="empty-text">Start the conversation by posting the first comment!</p>
+                </div>
+                {% endfor %}
+            </div>
+
+            <!-- Comment Form at the Bottom -->
+            <div class="comment-form-section">
+                <h3 class="comment-form-title">Add your comment</h3>
+                <form method="POST">
+                    {% csrf_token %}
+                    <textarea name="content" class="comment-textarea" placeholder="Share your thoughts with the community..." required></textarea>
+                    <button type="submit" class="submit-btn">
+                        <i class="bi bi-send"></i> Post Comment
+                    </button>
+                </form>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        // Toggle replies visibility
+        function toggleReplies(button) {
+            const replyForm = button.nextElementSibling;
+            button.classList.toggle('active');
+            replyForm.classList.toggle('active');
+            
+            // Update button text
+            const span = button.querySelector('span');
+            if (replyForm.classList.contains('active')) {
+                // Find how many replies exist
+                const replies = replyForm.querySelectorAll('.reply-item');
+                if (replies.length > 0) {
+                    span.textContent = `Hide ${replies.length} repl${replies.length === 1 ? 'y' : 'ies'}`;
+                } else {
+                    span.textContent = 'Cancel';
+                }
+            } else {
+                // Find how many replies exist
+                const replies = replyForm.querySelectorAll('.reply-item');
+                if (replies.length > 0) {
+                    span.textContent = `${replies.length} repl${replies.length === 1 ? 'y' : 'ies'}`;
+                } else {
+                    span.textContent = 'Reply';
+                }
+            }
+        }
+
+        // Auto-focus on reply input when form is shown
+        document.addEventListener('click', function(e) {
+            if (e.target.classList.contains('reply-toggle')) {
+                const replyForm = e.target.nextElementSibling;
+                if (replyForm.classList.contains('active')) {
+                    const input = replyForm.querySelector('input[type="text"]');
+                    if (input) {
+                        setTimeout(() => input.focus(), 300);
+                    }
+                }
+            }
+        });
+
+        // Handle form submission with visual feedback
+        document.querySelectorAll('form').forEach(form => {
+            form.addEventListener('submit', function() {
+                const button = this.querySelector('button[type="submit"]');
+                if (button) {
+                    const originalText = button.innerHTML;
+                    button.innerHTML = '<i class="bi bi-arrow-repeat spinner"></i> Posting...';
+                    button.disabled = true;
+                    
+                    // Revert after 2 seconds (in case of error)
+                    setTimeout(() => {
+                        button.innerHTML = originalText;
+                        button.disabled = false;
+                    }, 2000);
+                }
+            });
+        });
+
+        // Scroll to comment form when page loads if there are no comments
+        document.addEventListener('DOMContentLoaded', function() {
+            if (document.querySelector('.empty-state')) {
+                setTimeout(() => {
+                    document.querySelector('.comment-form-section').scrollIntoView({ 
+                        behavior: 'smooth',
+                        block: 'center'
+                    });
+                }, 500);
+            }
+        });
+    </script>
+</body>
+</html>
+

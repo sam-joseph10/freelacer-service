@@ -1,0 +1,12 @@
+Django==5.1.2
+asgiref==3.8.1
+sqlparse==0.5.1
+tzdata==2025.1
+gunicorn
+whitenoise
+PyPDF2==3.0.1
+asgiref==3.8.1
+channels==4.2.2
+openai==2.3.0
+pdfplumber==0.11.7
+pytz==2025.2

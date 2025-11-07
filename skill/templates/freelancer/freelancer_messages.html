@@ -1,0 +1,1083 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Messages - Freelancer Dashboard</title>
+  
+  <!-- Bootstrap CSS -->
+  <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+  <!-- Font Awesome -->
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+  <!-- Google Fonts -->
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800;900&display=swap" rel="stylesheet">
+  
+  <style>
+    :root {
+      --primary-gradient: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+      --secondary-gradient: linear-gradient(135deg, #4ecdc4 0%, #44a08d 100%);
+      --accent-gradient: linear-gradient(135deg, #ff6b6b 0%, #feca57 100%);
+      --success-gradient: linear-gradient(135deg, #51cf66 0%, #40c057 100%);
+      --rainbow-gradient: linear-gradient(135deg, #667eea, #4ecdc4, #ff6b6b);
+      --glass-bg: rgba(255, 255, 255, 0.08);
+      --glass-border: rgba(255, 255, 255, 0.12);
+      --dark-bg: #0f0f23;
+      --darker-bg: #0a0a1a;
+      --card-bg: rgba(30, 30, 60, 0.6);
+      --text-primary: #ffffff;
+      --text-secondary: #e2e8f0;
+      --text-muted: #94a3b8;
+      --shadow-glow: 0 10px 40px rgba(102, 126, 234, 0.15);
+      --shadow-intense: 0 20px 50px rgba(0, 0, 0, 0.3);
+      --border-radius: 20px;
+      --sidebar-width: 380px;
+    }
+    
+    * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+    }
+
+    body {
+      font-family: 'Inter', -apple-system, BlinkMacSystemFont, sans-serif;
+      background: linear-gradient(135deg, var(--dark-bg) 0%, var(--darker-bg) 100%);
+      color: var(--text-primary);
+      line-height: 1.6;
+      margin: 0;
+      min-height: 100vh;
+      overflow-x: hidden;
+      -webkit-font-smoothing: antialiased;
+      -moz-osx-font-smoothing: grayscale;
+    }
+
+    /* Simplified Background Animation */
+    .bg-animation {
+      position: fixed;
+      inset: 0;
+      z-index: -1;
+      overflow: hidden;
+      pointer-events: none;
+    }
+
+    .floating-orb {
+      position: absolute;
+      border-radius: 50%;
+      filter: blur(80px);
+      opacity: 0.15;
+      animation: float-orbs 40s ease-in-out infinite;
+      will-change: transform;
+    }
+
+    .orb-1 {
+      width: 400px;
+      height: 400px;
+      background: var(--primary-gradient);
+      top: 10%;
+      left: 5%;
+      animation-delay: 0s;
+    }
+
+    .orb-2 {
+      width: 300px;
+      height: 300px;
+      background: var(--secondary-gradient);
+      bottom: 15%;
+      right: 10%;
+      animation-delay: 20s;
+    }
+
+    .orb-3 {
+      width: 350px;
+      height: 350px;
+      background: var(--accent-gradient);
+      top: 60%;
+      left: 70%;
+      animation-delay: 30s;
+    }
+
+    /* Header Navigation */
+    .header-nav {
+      background: var(--card-bg);
+      backdrop-filter: blur(30px);
+      border-bottom: 1px solid var(--glass-border);
+      padding: 1.25rem 2rem;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      position: sticky;
+      top: 0;
+      z-index: 999;
+      box-shadow: var(--shadow-intense);
+      transition: all 0.2s ease;
+    }
+    
+    .header-brand {
+      display: flex;
+      align-items: center;
+      text-decoration: none;
+      color: var(--text-primary);
+      font-weight: 800;
+      font-size: 1.4rem;
+      transition: all 0.2s ease;
+      gap: 10px;
+    }
+    
+    .brand-logo {
+      width: 40px;
+      height: 40px;
+      background: var(--rainbow-gradient);
+      color: white;
+      border-radius: 12px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-weight: 900;
+      font-size: 16px;
+      transition: all 0.2s ease;
+      box-shadow: var(--shadow-glow);
+    }
+
+    .header-brand:hover .brand-logo {
+      transform: rotate(5deg) scale(1.1);
+      box-shadow: 0 15px 40px rgba(102, 126, 234, 0.4);
+    }
+
+    .header-brand span {
+      background: var(--rainbow-gradient);
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+      background-clip: text;
+    }
+    
+    .header-menu {
+      display: flex;
+      gap: 1.25rem;
+      align-items: center;
+    }
+    
+    .header-menu a {
+      color: var(--text-secondary);
+      text-decoration: none;
+      font-weight: 600;
+      transition: all 0.2s ease;
+      padding: 0.65rem 1.1rem;
+      border-radius: 10px;
+      display: flex;
+      align-items: center;
+      gap: 0.5rem;
+      background: var(--glass-bg);
+      border: 1px solid var(--glass-border);
+      backdrop-filter: blur(10px);
+    }
+    
+    .header-menu a:hover, .header-menu a.active {
+      color: var(--text-primary);
+      background: rgba(255, 255, 255, 0.15);
+      transform: translateY(-2px);
+      box-shadow: var(--shadow-glow);
+    }
+
+    /* Messages Container */
+    .messages-container {
+      max-width: 1400px;
+      margin: 2rem auto;
+      padding: 0 1rem;
+      height: calc(100vh - 120px);
+      display: flex;
+      border-radius: var(--border-radius);
+      overflow: hidden;
+      box-shadow: var(--shadow-intense);
+      background: var(--card-bg);
+      backdrop-filter: blur(25px);
+      border: 1px solid var(--glass-border);
+    }
+
+    /* Contacts Sidebar */
+    .contacts-sidebar {
+      width: var(--sidebar-width);
+      border-right: 1px solid var(--glass-border);
+      display: flex;
+      flex-direction: column;
+      background: rgba(30, 30, 60, 0.7);
+    }
+
+    .sidebar-header {
+      padding: 1.5rem;
+      border-bottom: 1px solid var(--glass-border);
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+    }
+
+    .sidebar-header h2 {
+      font-size: 1.5rem;
+      font-weight: 700;
+      background: var(--rainbow-gradient);
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+      background-clip: text;
+    }
+
+    .new-chat-btn {
+      background: var(--rainbow-gradient);
+      border: none;
+      border-radius: 50%;
+      width: 40px;
+      height: 40px;
+      color: white;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      cursor: pointer;
+      transition: all 0.2s ease;
+      box-shadow: var(--shadow-glow);
+    }
+
+    .new-chat-btn:hover {
+      transform: scale(1.1);
+      box-shadow: 0 10px 30px rgba(102, 126, 234, 0.4);
+    }
+
+    .search-container {
+      padding: 1rem 1.5rem;
+      border-bottom: 1px solid var(--glass-border);
+    }
+
+    .search-box {
+      position: relative;
+    }
+
+    .search-input {
+      width: 100%;
+      background: var(--glass-bg);
+      border: 1px solid var(--glass-border);
+      border-radius: 20px;
+      padding: 0.75rem 1rem 0.75rem 2.5rem;
+      color: var(--text-primary);
+      font-size: 0.9rem;
+      transition: all 0.2s ease;
+    }
+
+    .search-input:focus {
+      outline: none;
+      border-color: rgba(102, 126, 234, 0.5);
+      box-shadow: 0 0 0 3px rgba(102, 126, 234, 0.1);
+    }
+
+    .search-icon {
+      position: absolute;
+      left: 1rem;
+      top: 50%;
+      transform: translateY(-50%);
+      color: var(--text-muted);
+    }
+
+    .contacts-list {
+      flex: 1;
+      overflow-y: auto;
+      padding: 0.5rem 0;
+    }
+
+    .contact-item {
+      display: flex;
+      align-items: center;
+      padding: 1rem 1.5rem;
+      cursor: pointer;
+      transition: all 0.2s ease;
+      border-bottom: 1px solid rgba(255, 255, 255, 0.05);
+    }
+
+    .contact-item:hover {
+      background: rgba(255, 255, 255, 0.05);
+    }
+
+    .contact-item.active {
+      background: rgba(102, 126, 234, 0.15);
+      border-left: 4px solid #667eea;
+    }
+
+    .contact-avatar {
+      width: 50px;
+      height: 50px;
+      border-radius: 50%;
+      background: var(--rainbow-gradient);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      color: white;
+      font-weight: 700;
+      margin-right: 1rem;
+      position: relative;
+    }
+
+    .online-indicator {
+      position: absolute;
+      bottom: 2px;
+      right: 2px;
+      width: 12px;
+      height: 12px;
+      background: #51cf66;
+      border: 2px solid var(--card-bg);
+      border-radius: 50%;
+    }
+
+    .contact-info {
+      flex: 1;
+    }
+
+    .contact-name {
+      font-weight: 600;
+      margin-bottom: 0.25rem;
+    }
+
+    .last-message {
+      font-size: 0.85rem;
+      color: var(--text-muted);
+      white-space: nowrap;
+      overflow: hidden;
+      text-overflow: ellipsis;
+      max-width: 200px;
+    }
+
+    .message-time {
+      font-size: 0.75rem;
+      color: var(--text-muted);
+      margin-top: 0.25rem;
+    }
+
+    .unread-badge {
+      background: var(--accent-gradient);
+      color: white;
+      border-radius: 10px;
+      padding: 0.2rem 0.5rem;
+      font-size: 0.7rem;
+      font-weight: 700;
+      margin-left: auto;
+    }
+
+    /* Chat Area */
+    .chat-area {
+      flex: 1;
+      display: flex;
+      flex-direction: column;
+      background: rgba(35, 35, 65, 0.5);
+    }
+
+    .chat-header {
+      padding: 1rem 1.5rem;
+      border-bottom: 1px solid var(--glass-border);
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      background: rgba(30, 30, 60, 0.7);
+    }
+
+    .chat-user {
+      display: flex;
+      align-items: center;
+    }
+
+    .chat-user-avatar {
+      width: 45px;
+      height: 45px;
+      border-radius: 50%;
+      background: var(--rainbow-gradient);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      color: white;
+      font-weight: 700;
+      margin-right: 1rem;
+      position: relative;
+    }
+
+    .chat-user-info h3 {
+      font-weight: 600;
+      margin-bottom: 0.25rem;
+    }
+
+    .chat-user-info p {
+      font-size: 0.85rem;
+      color: var(--text-muted);
+    }
+
+    .chat-actions {
+      display: flex;
+      gap: 0.5rem;
+    }
+
+    .chat-action-btn {
+      background: var(--glass-bg);
+      border: 1px solid var(--glass-border);
+      border-radius: 50%;
+      width: 40px;
+      height: 40px;
+      color: var(--text-primary);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      cursor: pointer;
+      transition: all 0.2s ease;
+    }
+
+    .chat-action-btn:hover {
+      background: rgba(255, 255, 255, 0.1);
+      transform: scale(1.05);
+    }
+
+    /* View Tasks Button */
+    .view-tasks-btn {
+      background: var(--success-gradient);
+      color: white;
+      border: none;
+      border-radius: 12px;
+      padding: 0.6rem 1.2rem;
+      font-weight: 600;
+      cursor: pointer;
+      transition: all 0.3s ease;
+      display: flex;
+      align-items: center;
+      gap: 0.5rem;
+      text-decoration: none;
+      box-shadow: var(--shadow-glow);
+    }
+
+    .view-tasks-btn:hover {
+      transform: translateY(-2px);
+      box-shadow: 0 10px 25px rgba(81, 207, 102, 0.3);
+      color: white;
+      text-decoration: none;
+    }
+
+    .messages-area {
+      flex: 1;
+      padding: 1.5rem;
+      overflow-y: auto;
+      display: flex;
+      flex-direction: column;
+      gap: 1rem;
+    }
+
+    .message {
+      max-width: 70%;
+      padding: 0.75rem 1rem;
+      border-radius: 18px;
+      position: relative;
+      animation: message-appear 0.2s ease-out;
+    }
+
+    .message.received {
+      background: var(--glass-bg);
+      border: 1px solid var(--glass-border);
+      align-self: flex-start;
+      border-bottom-left-radius: 5px;
+    }
+
+    .message.sent {
+      background: var(--primary-gradient);
+      align-self: flex-end;
+      border-bottom-right-radius: 5px;
+    }
+
+    .message-text {
+      margin-bottom: 0.25rem;
+    }
+
+    .message-time {
+      font-size: 0.7rem;
+      opacity: 0.7;
+      text-align: right;
+    }
+
+    .typing-indicator {
+      display: flex;
+      align-items: center;
+      padding: 0.75rem 1rem;
+      background: var(--glass-bg);
+      border: 1px solid var(--glass-border);
+      border-radius: 18px;
+      align-self: flex-start;
+      border-bottom-left-radius: 5px;
+      max-width: 70px;
+    }
+
+    .typing-dots {
+      display: flex;
+      gap: 4px;
+    }
+
+    .typing-dot {
+      width: 8px;
+      height: 8px;
+      background: var(--text-muted);
+      border-radius: 50%;
+      animation: typing-bounce 1.4s infinite ease-in-out;
+    }
+
+    .typing-dot:nth-child(1) { animation-delay: -0.32s; }
+    .typing-dot:nth-child(2) { animation-delay: -0.16s; }
+
+    .message-input-area {
+      padding: 1rem 1.5rem;
+      border-top: 1px solid var(--glass-border);
+      display: flex;
+      align-items: center;
+      gap: 1rem;
+      background: rgba(30, 30, 60, 0.7);
+    }
+
+    .attachment-btn, .emoji-btn {
+      background: transparent;
+      border: none;
+      color: var(--text-muted);
+      font-size: 1.2rem;
+      cursor: pointer;
+      transition: all 0.2s ease;
+      width: 40px;
+      height: 40px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      border-radius: 50%;
+    }
+
+    .attachment-btn:hover, .emoji-btn:hover {
+      background: rgba(255, 255, 255, 0.1);
+      color: var(--text-primary);
+    }
+
+    .message-input {
+      flex: 1;
+      background: var(--glass-bg);
+      border: 1px solid var(--glass-border);
+      border-radius: 25px;
+      padding: 0.75rem 1.5rem;
+      color: var(--text-primary);
+      font-size: 0.95rem;
+      transition: all 0.2s ease;
+      resize: none;
+      max-height: 120px;
+    }
+
+    .message-input:focus {
+      outline: none;
+      border-color: rgba(102, 126, 234, 0.5);
+    }
+
+    .send-btn {
+      background: var(--rainbow-gradient);
+      border: none;
+      border-radius: 50%;
+      width: 45px;
+      height: 45px;
+      color: white;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      cursor: pointer;
+      transition: all 0.2s ease;
+      box-shadow: var(--shadow-glow);
+    }
+
+    .send-btn:hover {
+      transform: scale(1.05);
+      box-shadow: 0 10px 30px rgba(102, 126, 234, 0.4);
+    }
+
+    .send-btn:disabled {
+      opacity: 0.5;
+      cursor: not-allowed;
+      transform: none;
+    }
+
+    /* Empty State */
+    .empty-chat {
+      flex: 1;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      text-align: center;
+      padding: 2rem;
+    }
+
+    .empty-chat i {
+      font-size: 4rem;
+      margin-bottom: 1.5rem;
+      background: var(--rainbow-gradient);
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+      background-clip: text;
+    }
+
+    .empty-chat h3 {
+      color: var(--text-primary);
+      margin-bottom: 1rem;
+      font-weight: 700;
+    }
+
+    .empty-chat p {
+      color: var(--text-secondary);
+      max-width: 400px;
+    }
+
+    /* Animations */
+    @keyframes float-orbs {
+      0%, 100% {
+        transform: translateY(0);
+      }
+      50% {
+        transform: translateY(-20px);
+      }
+    }
+
+    @keyframes message-appear {
+      from {
+        opacity: 0;
+        transform: translateY(10px);
+      }
+      to {
+        opacity: 1;
+        transform: translateY(0);
+      }
+    }
+
+    @keyframes typing-bounce {
+      0%, 80%, 100% {
+        transform: scale(0.8);
+        opacity: 0.5;
+      }
+      40% {
+        transform: scale(1);
+        opacity: 1;
+      }
+    }
+
+    /* Responsive Design */
+    @media (max-width: 992px) {
+      .messages-container {
+        flex-direction: column;
+        height: calc(100vh - 100px);
+      }
+      
+      .contacts-sidebar {
+        width: 100%;
+        height: 40%;
+        border-right: none;
+        border-bottom: 1px solid var(--glass-border);
+      }
+      
+      .chat-area {
+        height: 60%;
+      }
+    }
+
+    @media (max-width: 768px) {
+      .header-nav {
+        padding: 1rem;
+      }
+      
+      .messages-container {
+        margin: 1rem auto;
+        height: calc(100vh - 80px);
+      }
+      
+      .message {
+        max-width: 85%;
+      }
+      
+      .view-tasks-btn {
+        padding: 0.5rem 1rem;
+        font-size: 0.9rem;
+      }
+    }
+
+    /* Custom Scrollbar */
+    ::-webkit-scrollbar {
+      width: 8px;
+    }
+
+    ::-webkit-scrollbar-track {
+      background: rgba(255, 255, 255, 0.05);
+      border-radius: 10px;
+    }
+
+    ::-webkit-scrollbar-thumb {
+      background: var(--rainbow-gradient);
+      border-radius: 10px;
+    }
+
+    ::-webkit-scrollbar-thumb:hover {
+      background: var(--secondary-gradient);
+    }
+  </style>
+</head>
+<body>
+    <!-- Simplified Background Animation -->
+    <div class="bg-animation">
+        <div class="floating-orb orb-1"></div>
+        <div class="floating-orb orb-2"></div>
+        <div class="floating-orb orb-3"></div>
+    </div>
+
+    <!-- Header Navigation -->
+    <nav class="header-nav">
+        <a href="{% url 'freelancer_dashboard' %}" class="header-brand">
+            <div class="brand-logo">SJ</div>
+            <span>SkillJourney</span>
+        </a>
+        
+        <div class="header-menu">
+            <a href="{% url 'freelancer_dashboard' %}">
+                <i class="fas fa-arrow-left"></i> Back to Dashboard
+            </a>
+        </div>
+    </nav>
+    
+    <!-- Messages Container -->
+    <div class="messages-container">
+        <!-- Contacts Sidebar -->
+        <div class="contacts-sidebar">
+            <div class="sidebar-header">
+                <h2>Messages</h2>
+            </div>
+            
+            <div class="search-container">
+                <div class="search-box">
+                    <i class="fas fa-search search-icon"></i>
+                    <input type="text" class="search-input" placeholder="Search messages...">
+                </div>
+            </div>
+            
+            <div class="contacts-list">
+              <!-- will implement by javascript -->
+            </div>
+        </div>
+        
+        <!-- Chat Area -->
+        <div class="chat-area">
+            <div class="empty-chat" id="emptyChat">
+                <i class="fas fa-comments"></i>
+                <h3>Your Messages</h3>
+                <p>Select a conversation from the sidebar to start messaging</p>
+            </div>
+            
+            <div class="chat-header" id="chatHeader" style="display: none;">
+                <div class="chat-user">
+                    <div class="chat-user-avatar" id="chatUserAvatar">
+                        <!-- Avatar will be set by JavaScript -->
+                    </div>
+                    <div class="chat-user-info">
+                        <h3 id="chatUserName">User Name</h3>
+                        <p id="chatUserStatus">Online</p>
+                    </div>
+                </div>
+                <div class="chat-actions">
+                    <a href="#" id="viewTasksBtn" class="view-tasks-btn">
+                        <i class="fas fa-tasks"></i>
+                        
+                    </a>
+                </div>
+            </div>
+            
+            <div class="messages-area" id="messagesArea" style="display: none;">
+                <!-- Messages will be populated by JavaScript -->
+            </div>
+            
+            <div class="message-input-area" id="messageInputArea" style="display: none;">
+                <button class="attachment-btn">
+                    <i class="fas fa-paperclip"></i>
+                </button>
+                <textarea class="message-input" id="messageInput" placeholder="Type a message..." rows="1"></textarea>
+                <button class="send-btn" id="sendBtn">
+                    <i class="fas fa-paper-plane"></i>
+                </button>
+            </div>
+        </div>
+    </div>
+
+    <!-- Bootstrap JS -->
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+
+    <script>
+      const viewTasksBtn = document.getElementById('viewTasksBtn');
+
+    function updateViewTasksLink(roomId) {
+        viewTasksBtn.href = `/freelancer/tasks/${roomId}/`;
+    }
+      const contacts = [
+  {% for room in chat_rooms %}
+  {
+    id: {{ forloop.counter }},
+    roomId: "{{ room.id }}",
+    name: "{{ room.recruiter.recruiterprofile.company_name|default:'No company'|escapejs }}",
+    avatarUrl: "{% if room.recruiter.recruiterprofile.profile_picture %}{{ room.recruiter.recruiterprofile.profile_picture.url }}{% else %}default{% endif %}",
+    online: false,
+    lastMessage: "{{ room.last_message|default:'No messages yet'|escapejs }}",
+    time: "",
+    unread: 0,
+    messages: []
+  }{% if not forloop.last %},{% endif %}
+  {% endfor %}
+];
+
+
+  const currentUser = "{{ user.username }}";
+  let chatSocket = null;
+  let currentRoomId = null;
+  let chatPartner = null;
+
+  // DOM Elements
+  const contactsList = document.querySelector('.contacts-list');
+  const emptyChat = document.getElementById('emptyChat');
+  const chatHeader = document.getElementById('chatHeader');
+  const messagesArea = document.getElementById('messagesArea');
+  const messageInputArea = document.getElementById('messageInputArea');
+  const messageInput = document.getElementById('messageInput');
+  const sendBtn = document.getElementById('sendBtn');
+  const chatUserName = document.getElementById('chatUserName');
+  const chatUserStatus = document.getElementById('chatUserStatus');
+  const chatUserAvatar = document.getElementById('chatUserAvatar');
+
+  // Current active contact
+  let activeContact = null;
+
+  // Initialize the messaging interface
+  document.addEventListener('DOMContentLoaded', function() {
+      renderContacts();
+      setupEventListeners();
+      setupNotificationSocket();
+  });
+
+  // ---------------------- CONTACTS ----------------------
+  function renderContacts() {
+    contactsList.innerHTML = '';
+    
+    contacts.forEach(contact => {
+        const contactItem = document.createElement('div');
+        contactItem.className = 'contact-item chat-link';
+        contactItem.dataset.id = contact.id;
+        contactItem.dataset.roomId = contact.roomId;
+        contactItem.dataset.roomPartner = contact.name;
+
+        contactItem.innerHTML = `
+            <div class="contact-avatar">
+                ${contact.avatarUrl !== 'default' 
+                    ? `<img src="${contact.avatarUrl}" alt="Avatar">` 
+                    : `<i class="fas fa-user"></i>`}
+                ${contact.online ? '<div class="online-indicator"></div>' : ''}
+            </div>
+            <div class="contact-info">
+                <div class="contact-name">${contact.name}</div>
+                <div class="last-message">${contact.lastMessage}</div>
+                <div class="message-time">${contact.time}</div>
+            </div>
+            ${contact.unread > 0 ? `<div class="unread-badge">${contact.unread}</div>` : ''}
+        `;
+        contactsList.appendChild(contactItem);
+    });
+}
+
+  // ---------------------- EVENT LISTENERS ----------------------
+  function setupEventListeners() {
+      // Contact click
+      contactsList.addEventListener('click', function(e) {
+          const contactItem = e.target.closest('.contact-item');
+          if (!contactItem) return;
+          
+          const contactId = parseInt(contactItem.dataset.id);
+          chatPartner = contactItem.dataset.roomPartner;
+          const roomId = contactItem.dataset.roomId;
+          selectContact(contactId);
+          openChatRoom(roomId);
+      });
+      
+      // Send message
+      sendBtn.addEventListener('click', sendMessage);
+      messageInput.addEventListener('keydown', function(e) {
+          if (e.key === 'Enter' && !e.shiftKey) {
+              e.preventDefault();
+              sendMessage();
+          }
+      });
+      
+      // Auto-resize textarea
+      messageInput.addEventListener('input', function() {
+          this.style.height = 'auto';
+          this.style.height = this.scrollHeight + 'px';
+          sendBtn.disabled = this.value.trim() === '';
+      });
+      
+      // Search
+      const searchInput = document.querySelector('.search-input');
+      searchInput.addEventListener('input', function() {
+          filterContacts(this.value.toLowerCase());
+      });
+  }
+
+  // ---------------------- SELECT CONTACT ----------------------
+  function selectContact(contactId) {
+      activeContact = contacts.find(contact => contact.id === contactId);
+      updateContactSelection(contactId);
+       updateViewTasksLink(activeContact.roomId);
+      // Reset unread
+      const contact = contacts.find(c => c.id === contactId);
+      if (contact) {
+          contact.unread = 0;
+          renderContacts();
+      }
+  }
+
+  // Update UI
+  function updateContactSelection(contactId) {
+      document.querySelectorAll('.contact-item').forEach(item => item.classList.remove('active'));
+      const selectedContact = document.querySelector(`.contact-item[data-id="${contactId}"]`);
+      if (selectedContact) selectedContact.classList.add('active');
+      
+      chatUserName.textContent = activeContact.name;
+      chatUserStatus.textContent = activeContact.online ? 'Online' : 'Last seen recently';
+      chatUserAvatar.textContent = activeContact.avatar;
+      
+      showChatArea();
+  }
+
+  function showChatArea() {
+      emptyChat.style.display = 'none';
+      chatHeader.style.display = 'flex';
+      messagesArea.style.display = 'flex';
+      messageInputArea.style.display = 'flex';
+      setTimeout(() => messageInput.focus(), 100);
+  }
+
+  // ---------------------- MESSAGES ----------------------
+  function renderMessages(messages = []) {
+      messagesArea.innerHTML = '';
+      if (!activeContact) return;
+      
+      (messages.length ? messages : activeContact.messages).forEach(message => {
+          const msgEl = document.createElement('div');
+          msgEl.className = `message ${message.sent ? 'sent' : 'received'}`;
+          msgEl.innerHTML = `
+              <div class="message-text">${message.text}</div>
+          `;
+          messagesArea.appendChild(msgEl);
+      });
+      scrollToBottom();
+  }
+
+  function sendMessage() {
+      const text = messageInput.value.trim();
+      if (!text || !chatSocket || chatSocket.readyState !== WebSocket.OPEN) return;
+      
+      const msgData = { message: text };
+      chatSocket.send(JSON.stringify(msgData));
+      
+      messageInput.value = '';
+      messageInput.style.height = 'auto';
+      sendBtn.disabled = true;
+  }
+
+  // ---------------------- SCROLL ----------------------
+  function scrollToBottom() {
+      messagesArea.scrollTop = messagesArea.scrollHeight;
+  }
+
+  // ---------------------- WEBSOCKET ----------------------
+  function setupNotificationSocket() {
+      const userId = "{{ user.id }}";
+      const notificationSocket = new WebSocket(
+          (window.location.protocol === "https:" ? "wss://" : "ws://") +
+          window.location.host +
+          `/ws/notifications/${userId}/`
+      );
+
+      notificationSocket.onmessage = function(e) {
+          const data = JSON.parse(e.data);
+          if (data.type === 'notification') {
+              const roomId = data.room_id;
+              const lastMessage = data.last_message;
+              const chatItem = document.querySelector(`.chat-item[data-room-id="${roomId}"]`) || document.querySelector(`.chat-link[data-room-id="${roomId}"]`);
+              if (!chatItem) return;
+              
+              const lastMsgEl = chatItem.querySelector('.last-message');
+              if (lastMsgEl) lastMsgEl.textContent = lastMessage;
+
+              if (roomId != currentRoomId) {
+                  const badge = chatItem.querySelector('.unread-badge');
+                  if (badge) badge.textContent = parseInt(badge.textContent) + 1;
+                  else {
+                      const newBadge = document.createElement('span');
+                      newBadge.classList.add('unread-badge');
+                      newBadge.textContent = '1';
+                      chatItem.appendChild(newBadge);
+                  }
+              }
+          }
+      };
+  }
+
+  // Open chat room WebSocket
+  function openChatRoom(roomId) {
+    currentRoomId = roomId;
+    messagesArea.innerHTML = '';
+
+    // Close previous socket if any
+    if (chatSocket) chatSocket.close();
+
+    chatSocket = new WebSocket(
+        (window.location.protocol === "https:" ? "wss://" : "ws://") +
+        window.location.host +
+        `/ws/chat/${roomId}/`
+    );
+
+    chatSocket.onopen = () => console.log("Connected to room " + roomId);
+
+    chatSocket.onmessage = function(e) {
+        const data = JSON.parse(e.data);
+
+        if (data.type === 'history') {
+            // Save chat history to activeContact
+            activeContact.messages = data.messages.map(msg => ({
+                text: msg.message,
+                time: new Date(msg.timestamp).toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' }),
+                sent: msg.sender === currentUser
+            }));
+            renderMessages(activeContact.messages);
+        } 
+        else if (data.type === 'new_message') {
+            // Create new message object
+            const msg = {
+                text: data.message,
+                time: new Date(data.timestamp).toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' }),
+                sent: data.sender === currentUser
+            };
+
+            // Add to activeContact messages
+            activeContact.messages.push(msg);
+
+            // Append message instead of re-rendering all
+            appendMessage(msg);
+
+            // Update sidebar last message
+            const chatItem = document.querySelector(`.chat-link[data-room-id="${roomId}"]`);
+            if (chatItem) chatItem.querySelector('.last-message').textContent = data.message;
+        }
+    };
+
+    chatSocket.onclose = e => console.warn('Chat socket closed', e);
+    chatSocket.onerror = e => console.error('Chat socket error', e);
+}
+  function appendMessage(msg) {
+    const msgEl = document.createElement('div');
+    msgEl.className = `message ${msg.sent ? 'sent' : 'received'}`;
+    msgEl.innerHTML = `
+        <div class="message-text">${msg.text}</div>
+        <div class="message-time">${msg.time}</div>
+    `;
+    messagesArea.appendChild(msgEl);
+    scrollToBottom();
+}
+</script>
+</body>
+</html>

@@ -1,0 +1,1903 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>SkillJourney - Build Your Freelance Career</title>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800;900&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Inter', sans-serif;
+            background: #000;
+            color: #fff;
+            overflow-x: hidden;
+            line-height: 1.6;
+        }
+
+        /* Loading Screen */
+        #loading-screen {
+            position: fixed;
+            inset: 0;
+            z-index: 9999;
+            background: linear-gradient(135deg, #1e293b 0%, #7c3aed 50%, #1e293b 100%);
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            transition: all 0.8s ease-in-out;
+        }
+
+        #loading-screen.hidden {
+            opacity: 0;
+            transform: scale(1.1);
+            pointer-events: none;
+        }
+
+        /* Background particles for loading */
+        .loading-particles {
+            position: absolute;
+            inset: 0;
+            overflow: hidden;
+        }
+
+        .particle {
+            position: absolute;
+            width: 4px;
+            height: 4px;
+            background: rgba(255, 255, 255, 0.2);
+            border-radius: 50%;
+            animation: float-particle 15s linear infinite;
+        }
+
+        .loading-logo {
+            width: 96px;
+            height: 96px;
+            background: linear-gradient(135deg, #3b82f6, #8b5cf6);
+            border-radius: 24px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            margin-bottom: 32px;
+            animation: logo-entrance 1s ease-out, pulse-glow 2s ease-in-out infinite;
+            box-shadow: 0 20px 60px rgba(59, 130, 246, 0.4);
+        }
+
+        .loading-logo-text {
+            font-size: 3rem;
+            font-weight: 900;
+            color: white;
+            animation: logo-text 1s ease-out;
+        }
+
+        .loading-title {
+            font-size: 4rem;
+            font-weight: 900;
+            color: white;
+            margin-bottom: 8px;
+            animation: slide-up 0.8s ease-out 0.5s both;
+        }
+
+        .progress-container {
+            width: 320px;
+            margin-bottom: 16px;
+        }
+
+        .loading-text {
+            color: #93c5fd;
+            margin-bottom: 16px;
+            font-size: 1.1rem;
+            animation: fade-pulse 2s ease-in-out infinite;
+        }
+
+        .progress-bar {
+            width: 100%;
+            height: 8px;
+            background: rgba(71, 85, 105, 0.5);
+            border-radius: 10px;
+            overflow: hidden;
+        }
+
+        .progress-fill {
+            height: 100%;
+            background: linear-gradient(90deg, #3b82f6, #8b5cf6);
+            border-radius: 10px;
+            width: 0%;
+            transition: width 0.3s ease;
+            animation: gradient-shift 2s ease-in-out infinite;
+        }
+
+        .progress-percentage {
+            color: rgba(255, 255, 255, 0.6);
+            margin-top: 8px;
+            text-align: center;
+            animation: fade-pulse 1.5s ease-in-out infinite;
+        }
+
+        /* Navigation */
+        .navbar {
+            position: fixed;
+            top: 0;
+            left: 0;
+            right: 0;
+            z-index: 1000;
+            background: rgba(15, 23, 42, 0.8);
+            backdrop-filter: blur(20px);
+            border-bottom: 1px solid rgba(71, 85, 105, 0.5);
+            transition: all 0.3s ease;
+            opacity: 0;
+            transform: translateY(-100px);
+            animation: nav-entrance 0.8s ease-out 0.2s forwards;
+        }
+
+        .navbar.scrolled {
+            background: rgba(15, 23, 42, 0.95);
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.3);
+        }
+
+        .nav-container {
+            max-width: 1200px;
+            margin: 0 auto;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 1rem 2rem;
+        }
+
+        .brand {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            color: white;
+            text-decoration: none;
+            transition: transform 0.3s ease;
+        }
+
+        .brand:hover {
+            transform: scale(1.05);
+        }
+
+        .brand-logo {
+            width: 32px;
+            height: 32px;
+            background: linear-gradient(135deg, #667eea, #764ba2);
+            border-radius: 8px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-weight: 900;
+            font-size: 14px;
+            color: white;
+            transition: transform 0.3s ease;
+        }
+
+        .brand:hover .brand-logo {
+            transform: rotate(5deg) scale(1.1);
+        }
+
+        .brand-text {
+            font-size: 20px;
+            font-weight: 700;
+        }
+
+        .nav-links {
+            display: flex;
+            gap: 2rem;
+            list-style: none;
+        }
+
+        .nav-link {
+            color: rgba(203, 213, 225, 0.8);
+            text-decoration: none;
+            font-weight: 500;
+            transition: all 0.3s ease;
+            position: relative;
+            padding: 0.5rem 0;
+        }
+
+        .nav-link:hover {
+            color: white;
+            transform: translateY(-2px);
+        }
+
+        .nav-link::after {
+            content: '';
+            position: absolute;
+            bottom: 0;
+            left: 0;
+            width: 0;
+            height: 2px;
+            background: linear-gradient(90deg, #667eea, #764ba2);
+            transition: width 0.3s ease;
+        }
+
+        .nav-link:hover::after {
+            width: 100%;
+        }
+
+        .nav-buttons {
+            display: flex;
+            gap: 1rem;
+        }
+
+        .btn {
+            padding: 0.75rem 1.5rem;
+            border: none;
+            border-radius: 25px;
+            font-weight: 600;
+            text-decoration: none;
+            display: inline-block;
+            transition: all 0.3s ease;
+            cursor: pointer;
+            text-align: center;
+            font-size: 14px;
+        }
+
+        .btn-primary {
+            background: linear-gradient(135deg, #3b82f6, #8b5cf6);
+            color: white;
+        }
+
+        .btn-primary:hover {
+            transform: translateY(-2px) scale(1.05);
+            box-shadow: 0 10px 30px rgba(59, 130, 246, 0.4);
+        }
+
+        .btn-secondary {
+            background: white;
+            color: #3b82f6;
+        }
+
+        .btn-secondary:hover {
+            transform: translateY(-2px) scale(1.05);
+            box-shadow: 0 10px 30px rgba(255, 255, 255, 0.2);
+        }
+
+        /* NEW HERO SECTION - Integrated from the second page */
+        .hero-section {
+            min-height: 100vh;
+            position: relative;
+            display: flex;
+            align-items: center;
+            overflow: hidden;
+        }
+
+        #background-video {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+            z-index: -2;
+        }
+
+        .video-overlay {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: linear-gradient(135deg, rgba(15, 15, 35, 0.8) 0%, rgba(102, 126, 234, 0.6) 50%, rgba(118, 75, 162, 0.8) 100%);
+            z-index: -1;
+        }
+
+        .hero-content {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 0 2rem;
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 4rem;
+            align-items: center;
+            color: white;
+            position: relative;
+            z-index: 1;
+        }
+
+        .hero-text h1 {
+            font-size: 4rem;
+            font-weight: 900;
+            line-height: 1.1;
+            margin-bottom: 1.5rem;
+            animation: slide-up 1s ease-out;
+        }
+
+        .gradient-text {
+            background: linear-gradient(135deg, #ff6b6b, #4ecdc4, #45b7d1);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+            animation: gradient-shift 3s ease-in-out infinite;
+            background-size: 200% 200%;
+        }
+
+        .hero-text p {
+            font-size: 1.25rem;
+            line-height: 1.6;
+            opacity: 0.9;
+            margin-bottom: 2rem;
+            animation: slide-up 1s ease-out 0.2s both;
+        }
+
+        .hero-buttons {
+            display: flex;
+            gap: 1rem;
+            margin-bottom: 3rem;
+            animation: slide-up 1s ease-out 0.4s both;
+        }
+
+        .hero-stats {
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            gap: 2rem;
+            animation: slide-up 1s ease-out 0.6s both;
+        }
+
+        .stat-item {
+            text-align: center;
+            background: rgba(255,255,255,0.1);
+            backdrop-filter: blur(10px);
+            padding: 1.5rem;
+            border-radius: 20px;
+            border: 1px solid rgba(255,255,255,0.2);
+            transition: all 0.3s ease;
+        }
+
+        .stat-item:hover {
+            transform: translateY(-5px);
+            background: rgba(255,255,255,0.15);
+        }
+
+        .stat-number {
+            font-size: 2.5rem;
+            font-weight: 900;
+            color: #4ecdc4;
+            display: block;
+            animation: count-up 2s ease-out 1s both;
+        }
+
+        .stat-label {
+            font-size: 0.9rem;
+            opacity: 0.8;
+            margin-top: 0.5rem;
+        }
+
+        .hero-image {
+            position: relative;
+            animation: slide-up 1s ease-out 0.3s both;
+        }
+
+        .hero-image img {
+            width: 100%;
+            border-radius: 30px;
+            box-shadow: 0 30px 80px rgba(0,0,0,0.3);
+            transition: transform 0.3s ease;
+        }
+
+        .hero-image:hover img {
+            transform: scale(1.02) rotate(1deg);
+        }
+
+        .floating-card {
+            position: absolute;
+            background: rgba(255,255,255,0.95);
+            backdrop-filter: blur(10px);
+            padding: 1rem;
+            border-radius: 15px;
+            box-shadow: 0 15px 40px rgba(0,0,0,0.1);
+            animation: float 3s ease-in-out infinite;
+        }
+
+        .floating-card.top-left {
+            top: -10px;
+            left: -20px;
+            animation-delay: 0s;
+        }
+
+        .floating-card.bottom-right {
+            bottom: -10px;
+            right: -20px;
+            animation-delay: 1s;
+        }
+
+        .floating-card.center-right {
+            top: 50%;
+            right: -30px;
+            transform: translateY(-50%);
+            animation-delay: 2s;
+        }
+
+        /* Sections */
+        .section {
+            padding: 5rem 0;
+            position: relative;
+        }
+
+        .section-container {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 0 2rem;
+        }
+
+        /* Features Section */
+        .features-section {
+            background: linear-gradient(135deg, #f8fafc 0%, #e2e8f0 100%);
+            position: relative;
+            overflow: hidden;
+        }
+
+        .features-bg-particles {
+            position: absolute;
+            inset: 0;
+        }
+
+        .features-particle {
+            position: absolute;
+            width: 8px;
+            height: 8px;
+            background: rgba(59, 130, 246, 0.2);
+            border-radius: 50%;
+            animation: features-particle-float 12s ease-in-out infinite;
+        }
+
+        .section-header {
+            text-align: center;
+            margin-bottom: 4rem;
+        }
+
+        .section-title {
+            font-size: clamp(2.5rem, 6vw, 4rem);
+            font-weight: 900;
+            color: #1e293b;
+            margin-bottom: 1rem;
+            opacity: 0;
+            transform: translateY(30px);
+            transition: all 0.8s ease;
+        }
+
+        .section-title.visible {
+            opacity: 1;
+            transform: translateY(0);
+        }
+
+        .section-description {
+            font-size: 1.25rem;
+            color: #64748b;
+            max-width: 600px;
+            margin: 0 auto;
+            line-height: 1.6;
+            opacity: 0;
+            transform: translateY(20px);
+            transition: all 0.8s ease 0.2s;
+        }
+
+        .section-description.visible {
+            opacity: 1;
+            transform: translateY(0);
+        }
+
+        .features-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(350px, 1fr));
+            gap: 2rem;
+        }
+
+        .feature-card {
+            background: rgba(255, 255, 255, 0.8);
+            backdrop-filter: blur(10px);
+            padding: 2.5rem;
+            border-radius: 25px;
+            box-shadow: 0 10px 40px rgba(0, 0, 0, 0.1);
+            border: 1px solid rgba(59, 130, 246, 0.1);
+            position: relative;
+            overflow: hidden;
+            transition: all 0.4s ease;
+            opacity: 0;
+            transform: translateY(50px);
+        }
+
+        .feature-card.visible {
+            opacity: 1;
+            transform: translateY(0);
+        }
+
+        .feature-card:hover {
+            transform: translateY(-10px);
+            box-shadow: 0 20px 60px rgba(59, 130, 246, 0.2);
+        }
+
+        .feature-card::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: -100%;
+            width: 100%;
+            height: 100%;
+            background: linear-gradient(90deg, transparent, rgba(59, 130, 246, 0.1), transparent);
+            transition: left 0.6s ease;
+        }
+
+        .feature-card:hover::before {
+            left: 100%;
+        }
+
+        .feature-icon {
+            width: 80px;
+            height: 80px;
+            border-radius: 20px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            margin-bottom: 1.5rem;
+            font-size: 2rem;
+            color: white;
+            transition: all 0.3s ease;
+            position: relative;
+            z-index: 10;
+        }
+
+        .feature-card:hover .feature-icon {
+            transform: rotate(5deg) scale(1.1);
+        }
+
+        .feature-title {
+            font-size: 1.5rem;
+            font-weight: 700;
+            color: #1e293b;
+            margin-bottom: 1rem;
+            transition: all 0.3s ease;
+        }
+
+        .feature-card:hover .feature-title {
+            color: #2563eb;
+            transform: translateX(5px);
+        }
+
+        .feature-description {
+            color: #64748b;
+            line-height: 1.6;
+        }
+
+        .feature-underline {
+            margin-top: 1.5rem;
+            height: 4px;
+            border-radius: 2px;
+            width: 0;
+            transition: width 0.8s ease;
+        }
+
+        .feature-card.visible .feature-underline {
+            width: 100%;
+        }
+
+        /* How It Works Section */
+        .how-it-works {
+            background: linear-gradient(135deg, #0f0f23 0%, #1e1b4b 100%);
+            color: white;
+        }
+
+        .how-it-works-grid {
+            display: grid;
+            grid-template-columns: 1fr;
+            gap: 4rem;
+            align-items: center;
+        }
+
+        @media (min-width: 1024px) {
+            .how-it-works-grid {
+                grid-template-columns: 1fr 1fr;
+            }
+        }
+
+        .steps-container {
+            position: relative;
+        }
+
+        .step-item {
+            display: flex;
+            gap: 1.5rem;
+            margin-bottom: 3rem;
+            position: relative;
+            opacity: 0;
+            transform: translateX(-30px);
+            transition: all 0.6s ease;
+        }
+
+        .step-item.visible {
+            opacity: 1;
+            transform: translateX(0);
+        }
+
+        .step-item:hover {
+            transform: translateX(10px);
+        }
+
+        .step-number {
+            width: 60px;
+            height: 60px;
+            border-radius: 15px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-weight: 900;
+            font-size: 1.25rem;
+            color: white;
+            flex-shrink: 0;
+            box-shadow: 0 10px 30px rgba(255, 107, 107, 0.3);
+            transition: all 0.3s ease;
+            position: relative;
+        }
+
+        .step-item:hover .step-number {
+            transform: scale(1.1) rotate(5deg);
+        }
+
+        .step-content h3 {
+            font-size: 1.5rem;
+            font-weight: 700;
+            margin-bottom: 0.5rem;
+            transition: all 0.3s ease;
+        }
+
+        .step-item:hover .step-content h3 {
+            color: #60a5fa;
+            transform: translateX(5px);
+        }
+
+        .step-content p {
+            opacity: 0.8;
+            line-height: 1.6;
+        }
+
+        .step-line {
+            position: absolute;
+            left: 30px;
+            top: 60px;
+            width: 2px;
+            height: calc(100% - 120px);
+            background: linear-gradient(to bottom, #ff6b6b, #4ecdc4);
+            opacity: 0.3;
+        }
+
+        .how-it-works-image {
+            position: relative;
+            opacity: 0;
+            transform: translateX(50px);
+            transition: all 0.8s ease 0.2s;
+        }
+
+        .how-it-works-image.visible {
+            opacity: 1;
+            transform: translateX(0);
+        }
+
+        .how-it-works-image img {
+            width: 100%;
+            border-radius: 30px;
+            box-shadow: 0 30px 80px rgba(0, 0, 0, 0.3);
+            transition: transform 0.3s ease;
+        }
+
+        .how-it-works-image:hover img {
+            transform: scale(1.02) rotate(1deg);
+        }
+
+        .floating-element {
+            position: absolute;
+            background: rgba(255, 255, 255, 0.9);
+            backdrop-filter: blur(10px);
+            padding: 1rem;
+            border-radius: 15px;
+            box-shadow: 0 15px 40px rgba(0, 0, 0, 0.1);
+        }
+
+        .floating-1 {
+            top: -32px;
+            left: -32px;
+            animation: float-1 4s ease-in-out infinite;
+        }
+
+        .floating-2 {
+            bottom: -24px;
+            right: -24px;
+            animation: float-2 5s ease-in-out infinite 1s;
+        }
+
+        /* CTA Section */
+        .cta-section {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .cta-bg-pattern {
+            position: absolute;
+            top: -50%;
+            left: -50%;
+            width: 200%;
+            height: 200%;
+            background: radial-gradient(circle, rgba(255, 255, 255, 0.1) 1px, transparent 1px);
+            background-size: 50px 50px;
+            animation: bg-move 20s linear infinite;
+        }
+
+        .cta-particles {
+            position: absolute;
+            inset: 0;
+        }
+
+        .cta-particle {
+            position: absolute;
+            width: 4px;
+            height: 4px;
+            background: rgba(255, 255, 255, 0.3);
+            border-radius: 50%;
+            animation: cta-particle-float 20s linear infinite;
+        }
+
+        .cta-grid {
+            display: grid;
+            grid-template-columns: 1fr;
+            gap: 4rem;
+            align-items: center;
+            position: relative;
+            z-index: 10;
+        }
+
+        @media (min-width: 1024px) {
+            .cta-grid {
+                grid-template-columns: 1fr 1fr;
+            }
+        }
+
+        .cta-content {
+            opacity: 0;
+            transform: translateX(-50px);
+            transition: all 0.8s ease;
+        }
+
+        .cta-content.visible {
+            opacity: 1;
+            transform: translateX(0);
+        }
+
+        .cta-title {
+            font-size: clamp(2rem, 5vw, 3rem);
+            font-weight: 900;
+            margin-bottom: 1.5rem;
+        }
+
+        .cta-description {
+            font-size: 1.25rem;
+            opacity: 0.9;
+            margin-bottom: 2rem;
+            line-height: 1.6;
+        }
+
+        .cta-button {
+            background: white;
+            color: #667eea;
+            padding: 1rem 2rem;
+            border-radius: 50px;
+            font-weight: 600;
+            font-size: 1.1rem;
+            text-decoration: none;
+            display: inline-flex;
+            align-items: center;
+            gap: 8px;
+            transition: all 0.3s ease;
+            margin-bottom: 2rem;
+        }
+
+        .cta-button:hover {
+            transform: translateY(-2px) scale(1.05);
+            box-shadow: 0 20px 40px rgba(255, 255, 255, 0.2);
+        }
+
+        .trust-badges {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 2rem;
+            margin-bottom: 1rem;
+        }
+
+        .trust-badge {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            color: #93c5fd;
+            font-size: 0.9rem;
+            opacity: 0;
+            transform: scale(0.8);
+            transition: all 0.3s ease;
+        }
+
+        .trust-badge.visible {
+            opacity: 1;
+            transform: scale(1);
+        }
+
+        .trust-badge:hover {
+            transform: translateY(-2px);
+        }
+
+        .trust-badge i {
+            color: #4ade80;
+        }
+
+        .cta-image {
+            position: relative;
+            opacity: 0;
+            transform: translateX(50px);
+            transition: all 0.8s ease 0.2s;
+        }
+
+        .cta-image.visible {
+            opacity: 1;
+            transform: translateX(0);
+        }
+
+        .cta-image img {
+            width: 100%;
+            border-radius: 30px;
+            box-shadow: 0 30px 80px rgba(0, 0, 0, 0.3);
+            transition: transform 0.3s ease;
+        }
+
+        .cta-image:hover img {
+            transform: scale(1.02) rotate(1deg);
+        }
+
+        .testimonial {
+            text-align: center;
+            margin-top: 4rem;
+            background: rgba(255, 255, 255, 0.1);
+            backdrop-filter: blur(10px);
+            border-radius: 20px;
+            padding: 2rem;
+            border: 1px solid rgba(255, 255, 255, 0.2);
+            opacity: 0;
+            transform: translateY(30px);
+            transition: all 0.8s ease 0.8s;
+        }
+
+        .testimonial.visible {
+            opacity: 1;
+            transform: translateY(0);
+        }
+
+        .testimonial-stars {
+            display: flex;
+            justify-content: center;
+            margin-bottom: 1rem;
+        }
+
+        .testimonial-star {
+            color: #fbbf24;
+            font-size: 24px;
+            margin: 0 2px;
+            opacity: 0;
+            transform: scale(0);
+            animation: star-appear 0.5s ease-out both;
+        }
+
+        .testimonial-star:nth-child(1) { animation-delay: 0.9s; }
+        .testimonial-star:nth-child(2) { animation-delay: 1.0s; }
+        .testimonial-star:nth-child(3) { animation-delay: 1.1s; }
+        .testimonial-star:nth-child(4) { animation-delay: 1.2s; }
+        .testimonial-star:nth-child(5) { animation-delay: 1.3s; }
+
+        .testimonial-quote {
+            font-size: 1.25rem;
+            font-style: italic;
+            color: rgba(255, 255, 255, 0.9);
+            margin-bottom: 1rem;
+            max-width: 600px;
+            margin-left: auto;
+            margin-right: auto;
+            opacity: 0;
+            transform: translateY(20px);
+            animation: slide-up 0.8s ease-out 1.4s both;
+        }
+
+        .testimonial-author {
+            color: #93c5fd;
+            opacity: 0;
+            animation: fade-in 0.8s ease-out 1.6s both;
+        }
+
+        /* Footer */
+        .footer {
+            background: #000;
+            color: white;
+            padding: 3rem 0;
+            text-align: center;
+        }
+
+        .footer-brand {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 12px;
+            margin-bottom: 1rem;
+            transition: transform 0.3s ease;
+        }
+
+        .footer-brand:hover {
+            transform: scale(1.05);
+        }
+
+        .footer-description {
+            opacity: 0.8;
+            margin-bottom: 2rem;
+        }
+
+        .footer-links {
+            display: flex;
+            justify-content: center;
+            flex-wrap: wrap;
+            gap: 2rem;
+            margin-bottom: 2rem;
+        }
+
+        .footer-link {
+            color: rgba(255, 255, 255, 0.6);
+            text-decoration: none;
+            transition: all 0.3s ease;
+            font-size: 0.9rem;
+        }
+
+        .footer-link:hover {
+            color: white;
+            transform: translateY(-2px);
+        }
+
+        .copyright {
+            opacity: 0.6;
+            font-size: 0.9rem;
+        }
+
+        /* Scroll to top button */
+        .scroll-top {
+            position: fixed;
+            bottom: 30px;
+            right: 30px;
+            width: 56px;
+            height: 56px;
+            background: linear-gradient(135deg, #667eea, #764ba2);
+            border: none;
+            border-radius: 50%;
+            color: white;
+            font-size: 20px;
+            cursor: pointer;
+            opacity: 0;
+            visibility: hidden;
+            transition: all 0.3s ease;
+            z-index: 1000;
+            box-shadow: 0 10px 30px rgba(102, 126, 234, 0.3);
+        }
+
+        .scroll-top.visible {
+            opacity: 1;
+            visibility: visible;
+        }
+
+        .scroll-top:hover {
+            transform: translateY(-3px) rotate(-180deg);
+            box-shadow: 0 15px 40px rgba(102, 126, 234, 0.4);
+        }
+
+        /* Responsive Design */
+        @media (max-width: 768px) {
+            .nav-links {
+                display: none;
+            }
+
+            .hero-content {
+                grid-template-columns: 1fr;
+                text-align: center;
+            }
+
+            .hero-text h1 {
+                font-size: 2.5rem;
+            }
+
+            .hero-stats {
+                grid-template-columns: 1fr;
+            }
+
+            .features-grid {
+                grid-template-columns: 1fr;
+            }
+
+            .how-it-works-grid,
+            .cta-grid {
+                grid-template-columns: 1fr;
+            }
+
+            .trust-badges {
+                justify-content: center;
+            }
+        }
+
+        /* Animations */
+        @keyframes logo-entrance {
+            from {
+                opacity: 0;
+                transform: scale(0) rotate(-180deg);
+            }
+            to {
+                opacity: 1;
+                transform: scale(1) rotate(0deg);
+            }
+        }
+
+        @keyframes logo-text {
+            from {
+                opacity: 0;
+                transform: scale(0) rotate(-180deg);
+            }
+            to {
+                opacity: 1;
+                transform: scale(1) rotate(0deg);
+            }
+        }
+
+        @keyframes slide-up {
+            from {
+                opacity: 0;
+                transform: translateY(50px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        @keyframes slide-right {
+            from {
+                opacity: 0;
+                transform: translateX(-20px);
+            }
+            to {
+                opacity: 1;
+                transform: translateX(0);
+            }
+        }
+
+        @keyframes nav-entrance {
+            from {
+                opacity: 0;
+                transform: translateY(-100px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        @keyframes float-particle {
+            0% {
+                transform: translateY(100vh) rotate(0deg);
+                opacity: 0;
+            }
+            10% {
+                opacity: 1;
+            }
+            90% {
+                opacity: 1;
+            }
+            100% {
+                transform: translateY(-100px) rotate(360deg);
+                opacity: 0;
+            }
+        }
+
+        @keyframes hero-particle-float {
+            0% {
+                transform: translateY(0) translateX(0);
+                opacity: 0;
+            }
+            10% {
+                opacity: 1;
+            }
+            90% {
+                opacity: 1;
+            }
+            100% {
+                transform: translateY(-100px) translateX(100px);
+                opacity: 0;
+            }
+        }
+
+        @keyframes features-particle-float {
+            0%, 100% {
+                transform: translateY(0) translateX(0);
+                opacity: 0.3;
+            }
+            50% {
+                transform: translateY(-50px) translateX(30px);
+                opacity: 0.7;
+            }
+        }
+
+        @keyframes cta-particle-float {
+            0% {
+                transform: translateY(0) translateX(0);
+                opacity: 0;
+            }
+            10% {
+                opacity: 1;
+            }
+            90% {
+                opacity: 1;
+            }
+            100% {
+                transform: translateY(-100px) translateX(100px);
+                opacity: 0;
+            }
+        }
+
+        @keyframes bg-float {
+            0%, 100% {
+                transform: translate(0, 0) rotate(0deg);
+            }
+            33% {
+                transform: translate(30px, -30px) rotate(120deg);
+            }
+            66% {
+                transform: translate(-20px, 20px) rotate(240deg);
+            }
+        }
+
+        @keyframes bg-move {
+            0% {
+                transform: translate(0, 0);
+            }
+            100% {
+                transform: translate(50px, 50px);
+            }
+        }
+
+        @keyframes pulse-glow {
+            0%, 100% {
+                box-shadow: 0 20px 60px rgba(59, 130, 246, 0.4);
+            }
+            50% {
+                box-shadow: 0 25px 80px rgba(59, 130, 246, 0.6);
+            }
+        }
+
+        @keyframes gradient-shift {
+            0% {
+                background-position: 0% 50%;
+            }
+            50% {
+                background-position: 100% 50%;
+            }
+            100% {
+                background-position: 0% 50%;
+            }
+        }
+
+        @keyframes star-appear {
+            from {
+                opacity: 0;
+                transform: scale(0);
+            }
+            to {
+                opacity: 1;
+                transform: scale(1);
+            }
+        }
+
+        @keyframes stat-appear {
+            from {
+                opacity: 0;
+                transform: scale(0.5);
+            }
+            to {
+                opacity: 1;
+                transform: scale(1);
+            }
+        }
+
+        @keyframes count-up {
+            from {
+                opacity: 0;
+                transform: scale(0.5);
+            }
+            to {
+                opacity: 1;
+                transform: scale(1);
+            }
+        }
+
+        @keyframes bounce {
+            0%, 20%, 50%, 80%, 100% {
+                transform: translateY(0);
+            }
+            40% {
+                transform: translateY(-10px);
+            }
+            60% {
+                transform: translateY(-5px);
+            }
+        }
+
+        @keyframes fade-in {
+            from {
+                opacity: 0;
+            }
+            to {
+                opacity: 1;
+            }
+        }
+
+        @keyframes fade-pulse {
+            0%, 100% {
+                opacity: 0.9;
+            }
+            50% {
+                opacity: 0.6;
+            }
+        }
+
+        @keyframes float-1 {
+            0%, 100% {
+                transform: translateY(0) rotate(0deg);
+            }
+            50% {
+                transform: translateY(-20px) rotate(5deg);
+            }
+        }
+
+        @keyframes float-2 {
+            0%, 100% {
+                transform: translateY(0) rotate(0deg);
+            }
+            50% {
+                transform: translateY(15px) rotate(-3deg);
+            }
+        }
+
+        @keyframes float {
+            0%, 100% {
+                transform: translateY(0);
+            }
+            50% {
+                transform: translateY(-10px);
+            }
+        }
+    </style>
+</head>
+<body>
+    <!-- Loading Screen -->
+    <div id="loading-screen">
+        <div class="loading-particles"></div>
+        
+        <div class="loading-logo">
+            <div class="loading-logo-text">SJ</div>
+        </div>
+        
+        <h1 class="loading-title">SkillJourney</h1>
+        
+        <div class="progress-container">
+            <div class="loading-text" id="loading-text">Initializing...</div>
+            <div class="progress-bar">
+                <div class="progress-fill" id="progress-fill"></div>
+            </div>
+            <div class="progress-percentage" id="progress-percentage">0%</div>
+        </div>
+    </div>
+
+    <!-- Main Content -->
+    <div id="main-content" style="display: none;">
+        <!-- Navigation -->
+        <nav class="navbar" id="navbar">
+            <div class="nav-container">
+                <a href="#" class="brand">
+                    <div class="brand-logo">SJ</div>
+                    <span class="brand-text">SkillJourney</span>
+                </a>
+                
+                <ul class="nav-links">
+                    <li><a href="#home" class="nav-link">Home</a></li>
+                    <li><a href="#features" class="nav-link">Features</a></li>
+                    <li><a href="#how-it-works" class="nav-link">How it Works</a></li>
+                    <li><a href="#testimonials" class="nav-link">Testimonials</a></li>
+                </ul>
+                
+                <div class="nav-buttons">
+                    <a href="{% url 'login' %}" class="btn btn-primary">Sign In</a>
+                    <a href="{% url 'register' %}" class="btn btn-secondary">Register</a>
+                </div>
+            </div>
+        </nav>
+
+        <!-- NEW HERO SECTION -->
+        <section id="home" class="hero-section">
+            <video id="background-video" autoplay muted loop playsinline>
+                <source src="https://commondatastorage.googleapis.com/gtv-videos-bucket/sample/BigBuckBunny.mp4" type="video/mp4">
+                <source src="https://www.w3schools.com/html/mov_bbb.mp4" type="video/mp4">
+                Your browser does not support the video tag.
+            </video>
+            <div class="video-overlay"></div>
+            
+            <div class="hero-content">
+                <div class="hero-text">
+                    <h1>Build Your <span class="gradient-text">Freelance Career</span></h1>
+                    <p>Create your professional profile, showcase your achievements, and connect with clients seeking your skills. Find projects that match your expertise and grow your freelance business.</p>
+                    
+                                                           
+                    <div class="hero-stats">
+                        <div class="stat-item">
+                            <span class="stat-number" data-count="{{ total_jobs }}">{{ total_jobs }}</span>
+                            <div class="stat-label">Active Jobs</div>
+                        </div>
+                        <div class="stat-item">
+                            <span class="stat-number" data-count="{{ total_freelancers }}">{{ total_freelancers }}</span>
+                            <div class="stat-label">Freelancers</div>
+                        </div>
+                        <div class="stat-item">
+                            <span class="stat-number" data-count="{{ success_rate }}">{{ success_rate|floatformat:0 }}%</span>
+                            <div class="stat-label">Success Rate</div>
+                        </div>
+                    </div>
+                </div>
+                
+                <div class="hero-image">
+                    <img src="https://images.unsplash.com/photo-1573164713714-d95e436ab8d6?ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&ixlib=rb-1.2.1&auto=format&fit=crop&w=1080&q=80" alt="Freelancer working">
+                    
+                    <div class="floating-card top-left">
+                        <div style="display: flex; align-items: center; gap: 8px;">
+                            <i class="fas fa-bell" style="color: #667eea;"></i>
+                            <span style="color: #1e293b; font-weight: 600;">Job Alert</span>
+                        </div>
+                    </div>
+                    
+                    <div class="floating-card bottom-right">
+                        <div style="text-align: center;">
+                            <div style="font-size: 2rem; font-weight: 900; color: #10b981; margin-bottom: 4px;">{{ success_rate|floatformat:0 }}%</div>
+                            <div style="font-size: 0.875rem; color: #64748b;">Success Rate</div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- Features Section -->
+        <section id="features" class="section features-section">
+            <div class="features-bg-particles"></div>
+            
+            <div class="section-container">
+                <div class="section-header">
+                    <h2 class="section-title">
+                        Everything You Need to <span class="gradient-text">Succeed</span>
+                    </h2>
+                    <p class="section-description">
+                        Our platform provides all the tools to build your freelance career and find perfect projects that match your expertise.
+                    </p>
+                </div>
+                
+                <div class="features-grid">
+                    <div class="feature-card">
+                        <div class="feature-icon" style="background: linear-gradient(135deg, #3b82f6, #06b6d4);">
+                            <i class="fas fa-user-plus"></i>
+                        </div>
+                        <h3 class="feature-title">Professional Profile</h3>
+                        <p class="feature-description">Create a compelling profile showcasing your skills, experience, and portfolio to attract quality clients.</p>
+                        <div class="feature-underline" style="background: linear-gradient(135deg, #3b82f6, #06b6d4);"></div>
+                    </div>
+                    
+                    <div class="feature-card">
+                        <div class="feature-icon" style="background: linear-gradient(135deg, #8b5cf6, #ec4899);">
+                            <i class="fas fa-file-alt"></i>
+                        </div>
+                        <h3 class="feature-title">Resume Hosting</h3>
+                        <p class="feature-description">Upload and manage your resume. Make it public or share privately with potential clients.</p>
+                        <div class="feature-underline" style="background: linear-gradient(135deg, #8b5cf6, #ec4899);"></div>
+                    </div>
+                    
+                    <div class="feature-card">
+                        <div class="feature-icon" style="background: linear-gradient(135deg, #10b981, #059669);">
+                            <i class="fas fa-trophy"></i>
+                        </div>
+                        <h3 class="feature-title">Achievements Portfolio</h3>
+                        <p class="feature-description">Showcase your completed projects, client testimonials, and professional certifications.</p>
+                        <div class="feature-underline" style="background: linear-gradient(135deg, #10b981, #059669);"></div>
+                    </div>
+                    
+                    <div class="feature-card">
+                        <div class="feature-icon" style="background: linear-gradient(135deg, #f59e0b, #ea580c);">
+                            <i class="fas fa-search-plus"></i>
+                        </div>
+                        <h3 class="feature-title">Smart Job Matching</h3>
+                        <p class="feature-description">Get personalized job recommendations based on your skills, experience, and preferences.</p>
+                        <div class="feature-underline" style="background: linear-gradient(135deg, #f59e0b, #ea580c);"></div>
+                    </div>
+                    
+                    <div class="feature-card">
+                        <div class="feature-icon" style="background: linear-gradient(135deg, #6366f1, #3b82f6);">
+                            <i class="fas fa-shield-alt"></i>
+                        </div>
+                        <h3 class="feature-title">Secure Applications</h3>
+                        <p class="feature-description">Apply to jobs with confidence. Our system protects your proposals and ensures fair consideration.</p>
+                        <div class="feature-underline" style="background: linear-gradient(135deg, #6366f1, #3b82f6);"></div>
+                    </div>
+                    
+                    <div class="feature-card">
+                        <div class="feature-icon" style="background: linear-gradient(135deg, #f43f5e, #dc2626);">
+                            <i class="fas fa-chart-line"></i>
+                        </div>
+                        <h3 class="feature-title">Career Growth Tools</h3>
+                        <p class="feature-description">Access resources, courses, and insights to improve your skills and increase your earning potential.</p>
+                        <div class="feature-underline" style="background: linear-gradient(135deg, #f43f5e, #dc2626);"></div>
+                    </div>
+                </div>
+                
+                
+            </div>
+        </section>
+
+        <!-- How It Works Section -->
+        <section id="how-it-works" class="section how-it-works">
+            <div class="section-container">
+                <div class="how-it-works-grid">
+                    <div>
+                        <div class="section-header" style="text-align: left; margin-bottom: 3rem;">
+                            <h2 class="section-title" style="color: white;">
+                                Start Your Journey in <span class="gradient-text">4 Simple Steps</span>
+                            </h2>
+                            <p class="section-description" style="color: #cbd5e1;">
+                                From creating your profile to securing projects, we guide you through every step of the process.
+                            </p>
+                        </div>
+                        
+                        <div class="steps-container">
+                            <div class="step-line"></div>
+                            
+                            <div class="step-item">
+                                <div class="step-number" style="background: linear-gradient(135deg, #3b82f6, #06b6d4);">
+                                    <i class="fas fa-user-plus"></i>
+                                </div>
+                                <div class="step-content">
+                                    <h3>Create Your Profile</h3>
+                                    <p>Sign up and build a comprehensive profile highlighting your skills, experience, and portfolio.</p>
+                                </div>
+                                <div style="position: absolute; left: -8px; top: -8px; width: 32px; height: 32px; background: white; border: 2px solid #e2e8f0; border-radius: 50%; display: flex; align-items: center; justify-content: center; font-size: 14px; font-weight: 700; color: #64748b;">1</div>
+                            </div>
+                            
+                            <div class="step-item">
+                                <div class="step-number" style="background: linear-gradient(135deg, #8b5cf6, #ec4899);">
+                                    <i class="fas fa-upload"></i>
+                                </div>
+                                <div class="step-content">
+                                    <h3>Upload Resume & Work</h3>
+                                    <p>Add your resume and showcase your best work to demonstrate your expertise to potential clients.</p>
+                                </div>
+                                <div style="position: absolute; left: -8px; top: -8px; width: 32px; height: 32px; background: white; border: 2px solid #e2e8f0; border-radius: 50%; display: flex; align-items: center; justify-content: center; font-size: 14px; font-weight: 700; color: #64748b;">2</div>
+                            </div>
+                            
+                            <div class="step-item">
+                                <div class="step-number" style="background: linear-gradient(135deg, #10b981, #059669);">
+                                    <i class="fas fa-search"></i>
+                                </div>
+                                <div class="step-content">
+                                    <h3>Find & Apply to Jobs</h3>
+                                    <p>Browse curated job listings or get matched with ideal projects based on your profile.</p>
+                                </div>
+                                <div style="position: absolute; left: -8px; top: -8px; width: 32px; height: 32px; background: white; border: 2px solid #e2e8f0; border-radius: 50%; display: flex; align-items: center; justify-content: center; font-size: 14px; font-weight: 700; color: #64748b;">3</div>
+                            </div>
+                            
+                            <div class="step-item">
+                                <div class="step-number" style="background: linear-gradient(135deg, #f59e0b, #dc2626);">
+                                    <i class="fas fa-check-circle"></i>
+                                </div>
+                                <div class="step-content">
+                                    <h3>Job Application Updates</h3>
+                                    <p>You will get notified when your job application is approved or rejected.</p>
+                                </div>
+                                <div style="position: absolute; left: -8px; top: -8px; width: 32px; height: 32px; background: white; border: 2px solid #e2e8f0; border-radius: 50%; display: flex; align-items: center; justify-content: center; font-size: 14px; font-weight: 700; color: #64748b;">4</div>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <div class="how-it-works-image">
+                        <img src="https://images.unsplash.com/photo-1563986768609-322da13575f3?ixlib=rb-4.0.3&auto=format&fit=crop&w=1080&q=80" alt="User profile interface">
+                        
+                        <div class="floating-element floating-1">
+                            <div style="display: flex; align-items: center; gap: 12px;">
+                                <div style="width: 12px; height: 12px; background: #10b981; border-radius: 50%; animation: pulse 2s infinite;"></div>
+                                <span style="color: #475569; font-weight: 600;">Profile Active</span>
+                            </div>
+                        </div>
+                        
+                        <div class="floating-element floating-2" style="background: linear-gradient(135deg, #3b82f6, #8b5cf6); color: white;">
+                            <div style="text-align: center;">
+                                <div style="font-size: 2rem; font-weight: 900; margin-bottom: 4px;">{{ success_rate|floatformat:0 }}%</div>
+                                <div style="font-size: 0.875rem; opacity: 0.9;">Success Rate</div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                
+                <div style="text-align: center; margin-top: 5rem;">
+                </div>
+            </div>
+        </section>
+
+        <!-- CTA Section -->
+        <section id="testimonials" class="section cta-section">
+            <div class="cta-bg-pattern"></div>
+            <div class="cta-particles"></div>
+            
+            <div class="section-container">
+                <div class="cta-grid">
+                    <div class="cta-content">
+                        <h2 class="cta-title">
+                            Ready to Build Your <span class="gradient-text">Freelance Career?</span>
+                        </h2>
+                        
+                        <p class="cta-description">
+                            Join our community of successful freelancers. Create your profile, showcase your skills, 
+                            and start applying to quality projects today.
+                        </p>
+                        
+                        <a href="{% url 'register' %}" class="cta-button">
+                            Register and Create Your Profile
+                            <i class="fas fa-arrow-right"></i>
+                        </a>
+                        
+                        <div class="trust-badges">
+                            <div class="trust-badge">
+                                <i class="fas fa-shield-alt"></i>
+                                <span>No hidden fees</span>
+                            </div>
+                            <div class="trust-badge">
+                                <i class="fas fa-star"></i>
+                                <span>Free to join</span>
+                            </div>
+                            <div class="trust-badge">
+                                <i class="fas fa-bolt"></i>
+                                <span>Cancel anytime</span>
+                            </div>
+                        </div>
+                        
+                        
+                    </div>
+                    
+                    <div class="cta-image">
+                        <img src="https://images.unsplash.com/photo-1522202176988-66273c2fd55f?ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&ixlib=rb-1.2.1&auto=format&fit=crop&w=1080&q=80" alt="Team collaboration">
+                        
+                        <div class="floating-element" style="top: -24px; left: -24px; animation: float-1 4s ease-in-out infinite;">
+                            <div style="text-align: center;">
+                                <div style="font-size: 2rem; font-weight: 900; color: #10b981; margin-bottom: 4px;">{{ total_jobs }}+</div>
+                                <div style="font-size: 0.875rem; color: #64748b;">Active Jobs</div>
+                            </div>
+                        </div>
+                        
+                        <div class="floating-element" style="bottom: -16px; right: -16px; background: linear-gradient(135deg, #8b5cf6, #ec4899); color: white; animation: float-2 5s ease-in-out infinite 1s;">
+                            <div style="text-align: center;">
+                                <div style="font-size: 2rem; font-weight: 900; margin-bottom: 4px;">{{ total_freelancers }}+</div>
+                                <div style="font-size: 0.875rem; opacity: 0.9;">Freelancers</div>
+                            </div>
+                        </div>
+                        
+                        <div class="floating-element" style="top: 50%; right: -32px; transform: translateY(-50%); background: rgba(59, 130, 246, 0.9); color: white; animation: float-1 3s ease-in-out infinite 2s;">
+                            <div style="display: flex; align-items: center; gap: 8px;">
+                                <div style="width: 8px; height: 8px; background: #4ade80; border-radius: 50%; animation: pulse 2s infinite;"></div>
+                                <span style="font-size: 0.875rem; font-weight: 600;">New job match!</span>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                
+              {% with testimonial=t.0 %}
+    {% if testimonial %}
+        <div class="testimonial">
+            <div class="testimonial-stars">
+                {% for i in "12345" %}
+                    {% if forloop.counter <= testimonial.rating %}
+                        <i class="fas fa-star testimonial-star"></i>
+                    {% else %}
+                        <i class="far fa-star testimonial-star"></i>
+                    {% endif %}
+                {% endfor %}
+            </div>
+            <blockquote class="testimonial-quote">
+                "{{ testimonial.message }}"
+            </blockquote>
+            <p class="testimonial-author">
+                - {{ testimonial.freelancer.full_name }}, {{ testimonial.freelancer.professional_title }}
+            </p>
+        </div>
+    {% else %}
+        <p class="text-center">No testimonials yet.</p>
+    {% endif %}
+{% endwith %}
+            </div>
+        </section>
+
+        <!-- Footer -->
+        <footer class="footer">
+            <div class="section-container">
+                <div class="footer-brand">
+                    <div class="brand-logo">SJ</div>
+                    <span class="brand-text">SkillJourney</span>
+                </div>
+                
+                <p class="footer-description">
+                    Empowering freelancers to build successful careers since 2024
+                </p>
+                
+                <div class="footer-links">
+                    <a href="#" class="footer-link">Privacy Policy</a>
+                    <a href="#" class="footer-link">Terms of Service</a>
+                    <a href="#" class="footer-link">Cookie Policy</a>
+                </div>
+                
+                <p class="copyright">© 2025 SkillJourney. All rights reserved.</p>
+            </div>
+        </footer>
+
+        <!-- Scroll to Top Button -->
+        <button class="scroll-top" id="scrollTop">
+            <i class="fas fa-arrow-up"></i>
+        </button>
+    </div>
+
+    <script>
+        // Loading Screen Logic
+        let progress = 0;
+        const progressFill = document.getElementById('progress-fill');
+        const progressPercentage = document.getElementById('progress-percentage');
+        const loadingText = document.getElementById('loading-text');
+        const loadingScreen = document.getElementById('loading-screen');
+        const mainContent = document.getElementById('main-content');
+
+        const loadingTexts = [
+            'Initializing...',
+            'Loading creative assets...',
+            'Preparing portfolio...',
+            'Almost ready...',
+            'Welcome!'
+        ];
+
+        // Create loading particles
+        function createLoadingParticles() {
+            const container = document.querySelector('.loading-particles');
+            for (let i = 0; i < 50; i++) {
+                const particle = document.createElement('div');
+                particle.className = 'particle';
+                particle.style.left = Math.random() * 100 + '%';
+                particle.style.top = Math.random() * 100 + '%';
+                particle.style.animationDelay = Math.random() * 5 + 's';
+                container.appendChild(particle);
+            }
+        }
+
+        function updateProgress() {
+            progress += Math.random() * 15 + 5;
+            if (progress > 100) progress = 100;
+
+            progressFill.style.width = progress + '%';
+            progressPercentage.textContent = Math.round(progress) + '%';
+
+            // Update loading text based on progress
+            if (progress > 80) loadingText.textContent = loadingTexts[4];
+            else if (progress > 60) loadingText.textContent = loadingTexts[3];
+            else if (progress > 40) loadingText.textContent = loadingTexts[2];
+            else if (progress > 20) loadingText.textContent = loadingTexts[1];
+
+            if (progress >= 100) {
+                setTimeout(() => {
+                    loadingScreen.classList.add('hidden');
+                    setTimeout(() => {
+                        loadingScreen.style.display = 'none';
+                        mainContent.style.display = 'block';
+                        initializeAnimations();
+                    }, 800);
+                }, 500);
+            } else {
+                setTimeout(updateProgress, Math.random() * 200 + 100);
+            }
+        }
+
+        // Video loading check
+        const video = document.getElementById('background-video');
+        if (video) {
+            video.addEventListener('loadeddata', () => {
+                // Video loaded, we can speed up the loading
+                progress = Math.max(progress, 70);
+                progressFill.style.width = progress + '%';
+            });
+            
+            video.addEventListener('canplaythrough', () => {
+                // Video is ready to play
+                progress = Math.max(progress, 80);
+                progressFill.style.width = progress + '%';
+            });
+            
+            video.addEventListener('error', function() {
+                // If video fails to load, show a beautiful gradient background
+                const heroSection = document.querySelector('.hero-section');
+                if (heroSection) {
+                    heroSection.style.background = 'linear-gradient(135deg, #667eea 0%, #764ba2 50%, #ff6b6b 100%)';
+                }
+                // Continue with loading
+                progress = Math.max(progress, 70);
+                progressFill.style.width = progress + '%';
+            });
+        }
+
+        // Features particles
+        function createFeaturesParticles() {
+            const container = document.querySelector('.features-bg-particles');
+            for (let i = 0; i < 20; i++) {
+                const particle = document.createElement('div');
+                particle.className = 'features-particle';
+                particle.style.left = Math.random() * 100 + '%';
+                particle.style.top = Math.random() * 100 + '%';
+                particle.style.animationDelay = Math.random() * 3 + 's';
+                particle.style.animationDuration = (Math.random() * 8 + 5) + 's';
+                container.appendChild(particle);
+            }
+        }
+
+        // CTA particles
+        function createCTAParticles() {
+            const container = document.querySelector('.cta-particles');
+            for (let i = 0; i < 50; i++) {
+                const particle = document.createElement('div');
+                particle.className = 'cta-particle';
+                particle.style.left = Math.random() * 100 + '%';
+                particle.style.top = Math.random() * 100 + '%';
+                particle.style.animationDelay = Math.random() * 5 + 's';
+                particle.style.animationDuration = (Math.random() * 15 + 10) + 's';
+                container.appendChild(particle);
+            }
+        }
+
+        // Scroll reveal animation
+        function revealOnScroll() {
+            const reveals = document.querySelectorAll('.section-title, .section-description, .feature-card, .step-item, .cta-content, .cta-image, .trust-badge, .testimonial, .how-it-works-image');
+            
+            reveals.forEach(reveal => {
+                const windowHeight = window.innerHeight;
+                const elementTop = reveal.getBoundingClientRect().top;
+                const elementVisible = 150;
+                
+                if (elementTop < windowHeight - elementVisible) {
+                    reveal.classList.add('visible');
+                }
+            });
+        }
+
+        // Counter animation
+        function animateCounters() {
+            const counters = document.querySelectorAll('.stat-number');
+            
+            counters.forEach(counter => {
+                const target = parseInt(counter.getAttribute('data-count'));
+                let count = 0;
+                const increment = target / 100;
+                
+                const updateCount = () => {
+                    if (count < target) {
+                        count += increment;
+                        counter.textContent = Math.ceil(count).toLocaleString();
+                        setTimeout(updateCount, 20);
+                    } else {
+                        counter.textContent = target.toLocaleString() + (target < 100 ? '' : '+');
+                    }
+                };
+                
+                updateCount();
+            });
+        }
+
+        // Navbar scroll effect
+        function handleNavbarScroll() {
+            const navbar = document.getElementById('navbar');
+            if (window.scrollY > 100) {
+                navbar.classList.add('scrolled');
+            } else {
+                navbar.classList.remove('scrolled');
+            }
+        }
+
+        // Scroll to top button
+        function handleScrollTopButton() {
+            const scrollTopBtn = document.getElementById('scrollTop');
+            if (window.scrollY > 300) {
+                scrollTopBtn.classList.add('visible');
+            } else {
+                scrollTopBtn.classList.remove('visible');
+            }
+        }
+
+        // Smooth scrolling
+        function setupSmoothScrolling() {
+            document.querySelectorAll('a[href^="#"]').forEach(anchor => {
+                anchor.addEventListener('click', function (e) {
+                    e.preventDefault();
+                    const target = document.querySelector(this.getAttribute('href'));
+                    if (target) {
+                        target.scrollIntoView({
+                            behavior: 'smooth',
+                            block: 'start'
+                        });
+                    }
+                });
+            });
+
+            document.getElementById('scrollTop').addEventListener('click', () => {
+                window.scrollTo({
+                    top: 0,
+                    behavior: 'smooth'
+                });
+            });
+        }
+
+        // Initialize all animations and interactions
+        function initializeAnimations() {
+            createFeaturesParticles();
+            createCTAParticles();
+            
+            // Start counter animation after a delay
+            setTimeout(animateCounters, 2000);
+            
+            // Setup scroll events
+            window.addEventListener('scroll', () => {
+                revealOnScroll();
+                handleNavbarScroll();
+                handleScrollTopButton();
+            });
+            
+            // Initial scroll check
+            revealOnScroll();
+            
+            // Setup smooth scrolling
+            setupSmoothScrolling();
+        }
+
+        // Start the loading process
+        createLoadingParticles();
+        setTimeout(updateProgress, 500);
+
+        // Console easter egg
+        console.log('🚀 SkillJourney - The most impressive freelancer platform ever built!');
+        console.log('💼 Ready to blow away any interviewer!');
+        console.log('✨ Built with HTML, CSS, and JavaScript - no frameworks needed!');
+
+        // Konami code easter egg
+        const konamiCode = [38, 38, 40, 40, 37, 39, 37, 39, 66, 65];
+        let konamiIndex = 0;
+
+        document.addEventListener('keydown', (e) => {
+            if (e.keyCode === konamiCode[konamiIndex]) {
+                konamiIndex++;
+                if (konamiIndex === konamiCode.length) {
+                    document.body.style.filter = 'hue-rotate(180deg)';
+                    setTimeout(() => {
+                        document.body.style.filter = 'none';
+                    }, 3000);
+                    konamiIndex = 0;
+                    console.log('🎉 Konami code activated! Colors inverted for 3 seconds!');
+                }
+            } else {
+                konamiIndex = 0;
+            }
+        });
+    </script>
+</body>
+</html>

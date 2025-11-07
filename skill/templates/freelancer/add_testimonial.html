@@ -1,0 +1,540 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Add Testimonial - SkillJourney</title>
+    <!-- Bootstrap CSS -->
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" rel="stylesheet">
+    <!-- Bootstrap Icons -->
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.0/font/bootstrap-icons.css">
+    <!-- Google Fonts -->
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800;900&display=swap" rel="stylesheet">
+    
+    <style>
+        /* Clean, professional theme */
+        :root {
+            --primary-color: #667eea;
+            --primary-dark: #5a6fd8;
+            --secondary-color: #4ecdc4;
+            --accent-color: #ff6b6b;
+            --dark-bg: #0f0f23;
+            --darker-bg: #0a0a1a;
+            --card-bg: #1a1a2e;
+            --card-border: rgba(255, 255, 255, 0.1);
+            --text-primary: #ffffff;
+            --text-secondary: #e2e8f0;
+            --text-muted: #94a3b8;
+            --shadow-subtle: 0 8px 30px rgba(0, 0, 0, 0.3);
+            --border-radius: 16px;
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Inter', -apple-system, BlinkMacSystemFont, sans-serif;
+            background: linear-gradient(135deg, var(--dark-bg) 0%, var(--darker-bg) 100%);
+            color: var(--text-primary);
+            min-height: 100vh;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            padding: 2rem;
+            line-height: 1.6;
+        }
+
+        /* Back to Dashboard Button - Right Side */
+        .back-button {
+            position: absolute;
+            top: 2rem;
+            right: 2rem;
+            background: rgba(255, 255, 255, 0.1);
+            border: 1px solid var(--card-border);
+            color: var(--text-secondary);
+            padding: 0.75rem 1.5rem;
+            border-radius: 10px;
+            text-decoration: none;
+            font-weight: 500;
+            transition: all 0.3s ease;
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+            backdrop-filter: blur(10px);
+            z-index: 100;
+        }
+
+        .back-button:hover {
+            background: rgba(255, 255, 255, 0.15);
+            color: var(--text-primary);
+            transform: translateY(-2px);
+            border-color: var(--primary-color);
+        }
+
+        /* Clean background with subtle elements */
+        .bg-animation {
+            position: fixed;
+            inset: 0;
+            z-index: -1;
+            overflow: hidden;
+            background: linear-gradient(135deg, var(--dark-bg) 0%, var(--darker-bg) 100%);
+        }
+
+        /* Subtle floating elements instead of orbs */
+        .floating-element {
+            position: absolute;
+            border-radius: 8px;
+            background: rgba(255, 255, 255, 0.03);
+            border: 1px solid rgba(255, 255, 255, 0.05);
+            animation: float-subtle 20s ease-in-out infinite;
+        }
+
+        .element-1 {
+            width: 80px;
+            height: 80px;
+            top: 15%;
+            left: 8%;
+            animation-delay: 0s;
+        }
+
+        .element-2 {
+            width: 60px;
+            height: 60px;
+            bottom: 20%;
+            right: 10%;
+            animation-delay: 7s;
+        }
+
+        .element-3 {
+            width: 100px;
+            height: 100px;
+            top: 65%;
+            left: 80%;
+            animation-delay: 14s;
+        }
+
+        @keyframes float-subtle {
+            0%, 100% {
+                transform: translateY(0) rotate(0deg);
+            }
+            33% {
+                transform: translateY(-20px) rotate(90deg);
+            }
+            66% {
+                transform: translateY(10px) rotate(180deg);
+            }
+        }
+
+        /* Main Container - Clean Design */
+        .testimonial-container {
+            max-width: 1000px;
+            width: 100%;
+            background: var(--card-bg);
+            border: 1px solid var(--card-border);
+            border-radius: var(--border-radius);
+            box-shadow: var(--shadow-subtle);
+            overflow: hidden;
+            display: flex;
+            min-height: 600px;
+        }
+
+        /* Left Side - Clean Visual Section */
+        .visual-side {
+            flex: 1;
+            background: rgba(30, 30, 60, 0.8);
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            padding: 3rem;
+            position: relative;
+            border-right: 1px solid var(--card-border);
+        }
+
+        .testimonial-icon {
+            width: 100px;
+            height: 100px;
+            background: rgba(102, 126, 234, 0.1);
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            margin-bottom: 2rem;
+            border: 2px solid rgba(102, 126, 234, 0.3);
+            transition: all 0.3s ease;
+        }
+
+        .testimonial-icon:hover {
+            background: rgba(102, 126, 234, 0.15);
+            transform: scale(1.05);
+        }
+
+        .testimonial-icon i {
+            font-size: 2.5rem;
+            color: var(--primary-color);
+        }
+
+        .visual-content {
+            text-align: center;
+        }
+
+        .visual-content h3 {
+            font-size: 1.6rem;
+            font-weight: 700;
+            margin-bottom: 1rem;
+            color: var(--text-primary);
+        }
+
+        .visual-content p {
+            font-size: 1rem;
+            line-height: 1.6;
+            color: var(--text-secondary);
+            max-width: 300px;
+        }
+
+        /* Right Side - Form Section */
+        .form-side {
+            flex: 1;
+            padding: 3rem;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+        }
+
+        .page-title {
+            font-size: 1.8rem;
+            font-weight: 700;
+            margin-bottom: 0.5rem;
+            color: var(--text-primary);
+        }
+
+        .page-subtitle {
+            color: var(--text-secondary);
+            margin-bottom: 2rem;
+            font-size: 1rem;
+        }
+
+        /* Clean Form Styles */
+        .form-label {
+            font-weight: 600;
+            color: var(--text-primary);
+            margin-bottom: 0.75rem;
+            font-size: 0.95rem;
+        }
+
+        .form-control {
+            background: rgba(255, 255, 255, 0.05) !important;
+            border: 1px solid var(--card-border) !important;
+            border-radius: 10px !important;
+            padding: 0.875rem 1rem !important;
+            color: var(--text-primary) !important;
+            transition: all 0.3s ease;
+        }
+
+        .form-control:focus {
+            outline: none !important;
+            border-color: var(--primary-color) !important;
+            box-shadow: 0 0 0 2px rgba(102, 126, 234, 0.1) !important;
+            background: rgba(255, 255, 255, 0.08) !important;
+        }
+
+        .form-control::placeholder {
+            color: var(--text-muted) !important;
+        }
+
+        /* Clean Rating Input */
+        .rating-container {
+            position: relative;
+        }
+
+        .rating-stars {
+            display: flex;
+            gap: 0.4rem;
+            margin-top: 0.5rem;
+        }
+
+        .star {
+            font-size: 1.4rem;
+            color: var(--text-muted);
+            cursor: pointer;
+            transition: all 0.2s ease;
+        }
+
+        .star.active {
+            color: #feca57;
+        }
+
+        .star:hover {
+            transform: scale(1.1);
+        }
+
+        /* Clean Button */
+        .btn-primary {
+            background: var(--primary-color) !important;
+            border: none !important;
+            font-weight: 600 !important;
+            padding: 1rem 2rem !important;
+            border-radius: 10px !important;
+            transition: all 0.3s ease !important;
+            width: 100%;
+            font-size: 1rem;
+        }
+
+        .btn-primary:hover {
+            background: var(--primary-dark) !important;
+            transform: translateY(-2px);
+            box-shadow: 0 5px 15px rgba(102, 126, 234, 0.3) !important;
+        }
+
+        /* Button Container for proper spacing */
+        .button-container {
+            display: flex;
+            gap: 1rem;
+            margin-top: 1rem;
+        }
+
+        .button-container .btn {
+            flex: 1;
+        }
+
+        /* Secondary button style */
+        .btn-secondary {
+            background: rgba(255, 255, 255, 0.1) !important;
+            border: 1px solid var(--card-border) !important;
+            color: var(--text-secondary) !important;
+            font-weight: 500 !important;
+            padding: 1rem 2rem !important;
+            border-radius: 10px !important;
+            transition: all 0.3s ease !important;
+            text-decoration: none;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 0.5rem;
+        }
+
+        .btn-secondary:hover {
+            background: rgba(255, 255, 255, 0.15) !important;
+            color: var(--text-primary) !important;
+            border-color: var(--primary-color) !important;
+            transform: translateY(-2px);
+        }
+
+        /* Responsive Design */
+        @media (max-width: 768px) {
+            .testimonial-container {
+                flex-direction: column;
+                max-width: 500px;
+                min-height: auto;
+            }
+            
+            .visual-side {
+                padding: 2rem;
+                border-right: none;
+                border-bottom: 1px solid var(--card-border);
+            }
+            
+            .form-side {
+                padding: 2rem;
+            }
+            
+            .testimonial-icon {
+                width: 80px;
+                height: 80px;
+            }
+            
+            .testimonial-icon i {
+                font-size: 2rem;
+            }
+            
+            body {
+                padding: 1rem;
+            }
+
+            .back-button {
+                position: relative;
+                top: auto;
+                right: auto;
+                margin-bottom: 1.5rem;
+                align-self: flex-end;
+                width: fit-content;
+                margin-left: auto;
+            }
+        }
+
+        @media (max-width: 480px) {
+            .visual-side, .form-side {
+                padding: 1.5rem;
+            }
+            
+            .page-title {
+                font-size: 1.5rem;
+            }
+
+            .button-container {
+                flex-direction: column;
+            }
+
+            .back-button {
+                align-self: stretch;
+                text-align: center;
+                justify-content: center;
+            }
+        }
+
+        /* Custom Scrollbar */
+        ::-webkit-scrollbar {
+            width: 6px;
+        }
+
+        ::-webkit-scrollbar-track {
+            background: rgba(255, 255, 255, 0.05);
+            border-radius: 3px;
+        }
+
+        ::-webkit-scrollbar-thumb {
+            background: var(--primary-color);
+            border-radius: 3px;
+        }
+    </style>
+</head>
+<body>
+
+    <!-- Back to Dashboard Button - Right Side -->
+    <a href="{% url 'freelancer_dashboard' %}" class="back-button">
+        <i class="bi bi-arrow-left"></i>
+        Back to Dashboard
+    </a>
+
+    <!-- Clean Background -->
+    <div class="bg-animation">
+        <div class="floating-element element-1"></div>
+        <div class="floating-element element-2"></div>
+        <div class="floating-element element-3"></div>
+    </div>
+
+    <div class="testimonial-container">
+        <!-- Left Side - Clean Visual with Icon -->
+        <div class="visual-side">
+            <div class="testimonial-icon">
+                <i class="bi bi-chat-quote"></i>
+            </div>
+            <div class="visual-content">
+                <h3>Share Your Journey</h3>
+                <p>Your experience inspires our community. Tell us how SkillJourney helped shape your career path.</p>
+            </div>
+        </div>
+
+        <!-- Right Side - Clean Form -->
+        <div class="form-side">
+            <h2 class="page-title">Add Your Testimonial</h2>
+            <p class="page-subtitle">Help others discover their potential through your story</p>
+            
+            <form action="{% url 'add_testimonial' %}" method="POST">
+                {% csrf_token %}
+                
+                <div class="mb-4">
+                    <label for="title" class="form-label">Title</label>
+                    <input 
+                        type="text" 
+                        id="title" 
+                        name="title" 
+                        class="form-control" 
+                        placeholder="Enter testimonial title" 
+                        required
+                    >
+                </div>
+
+                <div class="mb-4">
+                    <label for="message" class="form-label">Message</label>
+                    <textarea 
+                        id="message" 
+                        name="message" 
+                        class="form-control" 
+                        rows="5" 
+                        placeholder="Share your experience with SkillJourney..." 
+                        required
+                    ></textarea>
+                </div>
+
+                <div class="mb-4">
+                    <label for="rating" class="form-label">Rating</label>
+                    <div class="rating-container">
+                        <input 
+                            type="number" 
+                            id="rating" 
+                            name="rating" 
+                            class="form-control" 
+                            min="1" 
+                            max="5" 
+                            value="5" 
+                            required
+                            style="display: none;"
+                        >
+                        <div class="rating-stars" id="ratingStars">
+                            <span class="star active" data-rating="1">★</span>
+                            <span class="star active" data-rating="2">★</span>
+                            <span class="star active" data-rating="3">★</span>
+                            <span class="star active" data-rating="4">★</span>
+                            <span class="star active" data-rating="5">★</span>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="button-container">
+                    <button type="submit" class="btn btn-primary">
+                        <i class="bi bi-send me-2"></i>Submit Testimonial
+                    </button>
+                </div>
+            </form>
+        </div>
+    </div>
+
+    <!-- Bootstrap JS -->
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.bundle.min.js"></script>
+    
+    <script>
+        // Star rating functionality
+        document.addEventListener('DOMContentLoaded', function() {
+            const stars = document.querySelectorAll('.star');
+            const ratingInput = document.getElementById('rating');
+            
+            stars.forEach(star => {
+                star.addEventListener('click', function() {
+                    const rating = this.getAttribute('data-rating');
+                    ratingInput.value = rating;
+                    
+                    // Update star appearances
+                    stars.forEach(s => {
+                        if (s.getAttribute('data-rating') <= rating) {
+                            s.classList.add('active');
+                        } else {
+                            s.classList.remove('active');
+                        }
+                    });
+                });
+                
+                star.addEventListener('mouseenter', function() {
+                    const rating = this.getAttribute('data-rating');
+                    stars.forEach(s => {
+                        if (s.getAttribute('data-rating') <= rating) {
+                            s.style.opacity = '1';
+                        } else {
+                            s.style.opacity = '0.5';
+                        }
+                    });
+                });
+                
+                star.addEventListener('mouseleave', function() {
+                    stars.forEach(s => {
+                        s.style.opacity = '';
+                    });
+                });
+            });
+        });
+    </script>
+</body>
+</html>

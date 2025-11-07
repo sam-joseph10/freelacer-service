@@ -1,0 +1,1497 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Build Your Profile - SkillJourney</title>
+    
+    <!-- Bootstrap CSS -->
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" rel="stylesheet">
+    <!-- Bootstrap Icons -->
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.0/font/bootstrap-icons.css">
+    <!-- Google Fonts -->
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800;900&display=swap" rel="stylesheet">
+    
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+        :root {
+            --primary-color: #667eea;
+            --primary-dark: #764ba2;
+            --primary-light: rgba(102, 126, 234, 0.1);
+            --secondary-color: #ff6b6b;
+            --accent-color: #4ecdc4;
+            --text-dark: #ffffff;
+            --text-muted: rgba(255, 255, 255, 0.7);
+            --light-bg: rgba(255, 255, 255, 0.05);
+            --border-color: rgba(255, 255, 255, 0.1);
+            --shadow-sm: 0 0.125rem 0.25rem rgba(0, 0, 0, 0.3);
+            --shadow-md: 0 0.5rem 1rem rgba(0, 0, 0, 0.4);
+            --shadow-lg: 0 1rem 3rem rgba(0, 0, 0, 0.5);
+            --border-radius: 1rem;
+            --glass-bg: rgba(15, 15, 35, 0.85);
+            --glass-border: rgba(255, 255, 255, 0.1);
+        }
+
+        body {
+            font-family: 'Inter', sans-serif;
+            background: linear-gradient(135deg, #0f0f23 0%, #1e1b4b 100%);
+            min-height: 100vh;
+            color: var(--text-dark);
+            overflow-x: hidden;
+            position: relative;
+        }
+
+        /* Simplified Background Elements */
+        .bg-elements {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            z-index: -2;
+            overflow: hidden;
+            pointer-events: none;
+        }
+
+        .floating-shape {
+            position: absolute;
+            border-radius: 50%;
+            background: linear-gradient(135deg, rgba(102, 126, 234, 0.05), rgba(118, 75, 162, 0.05));
+            animation: float-shape 30s infinite linear;
+            filter: blur(60px);
+            will-change: transform;
+        }
+
+        .shape-1 {
+            width: 400px;
+            height: 400px;
+            top: 10%;
+            left: 5%;
+        }
+
+        .shape-2 {
+            width: 300px;
+            height: 300px;
+            bottom: 15%;
+            right: 10%;
+            animation-delay: -10s;
+        }
+
+        .shape-3 {
+            width: 200px;
+            height: 200px;
+            top: 60%;
+            left: 80%;
+            animation-delay: -20s;
+        }
+
+        /* Navigation */
+        .navbar {
+            position: fixed;
+            top: 0;
+            width: 100%;
+            background: rgba(15, 15, 35, 0.95);
+            backdrop-filter: blur(10px);
+            border-bottom: 1px solid var(--glass-border);
+            padding: 1rem 0;
+            z-index: 1000;
+            transition: all 0.2s ease;
+        }
+
+        .navbar.scrolled {
+            background: rgba(15, 15, 35, 0.98);
+        }
+
+        .nav-container {
+            width: 100%;              /* take full navbar width */
+            margin: 0;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 0 2rem;
+        }
+
+        .brand {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            color: white;
+            text-decoration: none;
+        }
+
+        .brand-logo {
+            width: 40px;
+            height: 40px;
+            background: linear-gradient(135deg, var(--primary-color), var(--primary-dark));
+            border-radius: 12px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-weight: 900;
+            font-size: 16px;
+            color: white;
+            transition: transform 0.2s ease;
+        }
+
+        .brand:hover .brand-logo {
+            transform: rotate(5deg) scale(1.1);
+        }
+
+        .brand-text {
+            font-size: 24px;
+            font-weight: 700;
+        }
+       
+        /* Profile Container */
+        .profile-container {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 100px 2rem 2rem;
+        }
+
+        .profile-card {
+            background: var(--glass-bg);
+            backdrop-filter: blur(10px);
+            border-radius: var(--border-radius);
+            box-shadow: var(--shadow-lg);
+            overflow: hidden;
+            margin-bottom: 2rem;
+            border: 1px solid var(--glass-border);
+            animation: slide-up 0.6s ease-out;
+            will-change: transform, opacity;
+        }
+
+        .profile-header {
+            background: linear-gradient(135deg, var(--primary-color) 0%, var(--primary-dark) 100%);
+            color: white;
+            padding: 2.5rem 2rem;
+            text-align: center;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .gradient-text {
+            background: linear-gradient(135deg, #ff6b6b, #4ecdc4, #45b7d1);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+        }
+
+        .completion-badge {
+            position: absolute;
+            top: 20px;
+            right: 20px;
+            background: rgba(255, 255, 255, 0.2);
+            border-radius: 50px;
+            padding: 10px 20px;
+            font-weight: 600;
+            backdrop-filter: blur(5px);
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            border: 1px solid rgba(255,255,255,0.2);
+            transition: all 0.2s ease;
+        }
+
+        .completion-badge:hover {
+            transform: scale(1.05);
+        }
+
+        .completion-badge i {
+            font-size: 1.1rem;
+        }
+
+        .profile-body {
+            padding: 2.5rem;
+            background: rgba(15, 15, 35, 0.7);
+            backdrop-filter: blur(5px);
+        }
+
+        .form-label {
+            font-weight: 600;
+            margin-bottom: 0.75rem;
+            color: var(--text-dark);
+            font-size: 1rem;
+        }
+
+        .form-control, .form-select {
+            border-radius: 12px;
+            padding: 14px 16px;
+            background: rgba(255, 255, 255, 0.08);
+            border: 2px solid var(--border-color);
+            color: white;
+            transition: all 0.2s ease;
+            font-size: 1rem;
+        }
+
+        .form-control:focus, .form-select:focus {
+            background: rgba(255, 255, 255, 0.12);
+            border-color: var(--primary-color);
+            box-shadow: 0 0 0 3px rgba(102, 126, 234, 0.25);
+            transform: translateY(-1px);
+        }
+
+        .form-control::placeholder {
+            color: rgba(255, 255, 255, 0.5);
+        }
+
+        .btn-primary {
+            background: linear-gradient(135deg, var(--primary-color) 0%, var(--primary-dark) 100%);
+            border: none;
+            border-radius: 12px;
+            padding: 14px 28px;
+            font-weight: 600;
+            transition: all 0.2s ease;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .btn-primary:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 6px 20px rgba(102, 126, 234, 0.4);
+        }
+
+        .btn-outline-secondary {
+            background: transparent;
+            border: 2px solid rgba(255,255,255,0.2);
+            color: rgba(255,255,255,0.8);
+            border-radius: 12px;
+            padding: 12px 24px;
+            font-weight: 500;
+            transition: all 0.2s ease;
+        }
+
+        .btn-outline-secondary:hover {
+            border-color: rgba(102, 126, 234, 0.5);
+            background: rgba(102, 126, 234, 0.1);
+            color: white;
+            transform: translateY(-1px);
+        }
+
+        .file-upload {
+            position: relative;
+            overflow: hidden;
+            display: inline-block;
+            width: 100%;
+        }
+
+        .file-upload-btn {
+            border: 2px dashed var(--border-color);
+            border-radius: 12px;
+            padding: 2.5rem;
+            text-align: center;
+            cursor: pointer;
+            transition: all 0.2s ease;
+            width: 100%;
+            background-color: var(--light-bg);
+            color: var(--text-muted);
+        }
+
+        .file-upload-btn:hover {
+            border-color: var(--primary-color);
+            background-color: var(--primary-light);
+            transform: translateY(-2px);
+        }
+
+        .file-upload-input {
+            position: absolute;
+            left: 0;
+            top: 0;
+            opacity: 0;
+            width: 100%;
+            height: 100%;
+            cursor: pointer;
+        }
+
+        .progress-container {
+            margin-top: 2rem;
+            background: rgba(255, 255, 255, 0.05);
+            border-radius: var(--border-radius);
+            box-shadow: var(--shadow-sm);
+            padding: 1.5rem;
+            border: 1px solid var(--glass-border);
+        }
+
+        .progress-steps {
+            display: flex;
+            justify-content: space-between;
+            position: relative;
+            margin-bottom: 2.5rem;
+            counter-reset: step;
+        }
+
+        .progress-steps::before {
+            content: '';
+            position: absolute;
+            top: 20px;
+            left: 0;
+            width: 100%;
+            height: 2px;
+            background: linear-gradient(90deg, 
+                rgba(102, 126, 234, 0.6) 0%, 
+                rgba(102, 126, 234, 0.3) 50%, 
+                rgba(255,255,255,0.1) 100%);
+            z-index: 1;
+        }
+
+        .progress-step {
+            position: relative;
+            z-index: 2;
+            text-align: center;
+            width: 30%;
+            color: rgba(255,255,255,0.6);
+            transition: all 0.2s ease;
+        }
+
+        .progress-step::before {
+            counter-increment: step;
+            content: counter(step);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            width: 40px;
+            height: 40px;
+            background-color: rgba(255,255,255,0.2);
+            color: white;
+            border-radius: 50%;
+            margin: 0 auto 0.75rem;
+            transition: all 0.2s ease;
+            font-weight: 600;
+            font-size: 1rem;
+        }
+
+        .progress-step.active {
+            color: white;
+        }
+
+        .progress-step.active::before {
+            background: linear-gradient(135deg, var(--primary-color) 0%, var(--primary-dark) 100%);
+            box-shadow: 0 3px 10px rgba(102, 126, 234, 0.4);
+            transform: scale(1.05);
+        }
+
+        .progress-step.completed::before {
+            background: linear-gradient(135deg, var(--accent-color), #45b7d1);
+            content: '✓';
+            box-shadow: 0 3px 10px rgba(78, 205, 196, 0.4);
+            transform: scale(1.05);
+        }
+
+        .step-content {
+            display: none;
+        }
+
+        .step-content.active {
+            display: block;
+            animation: contentSlideIn 0.3s ease-out;
+        }
+
+        .skill-tags {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 0.5rem;
+            margin-top: 0.75rem;
+        }
+
+        .skill-tag {
+            background: linear-gradient(135deg, rgba(102, 126, 234, 0.2), rgba(118, 75, 162, 0.2));
+            color: #a3b4ff;
+            padding: 0.4rem 1rem;
+            border-radius: 100px;
+            font-size: 0.9rem;
+            font-weight: 500;
+            display: flex;
+            align-items: center;
+            border: 1px solid rgba(102, 126, 234, 0.3);
+            transition: all 0.2s ease;
+        }
+
+        .skill-tag:hover {
+            transform: translateY(-1px);
+            background: linear-gradient(135deg, rgba(102, 126, 234, 0.3), rgba(118, 75, 162, 0.3));
+        }
+
+        .skill-tag-remove {
+            margin-left: 0.5rem;
+            cursor: pointer;
+            font-weight: bold;
+            color: var(--secondary-color);
+            transition: color 0.2s ease;
+            width: 18px;
+            height: 18px;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            background: rgba(255, 107, 107, 0.1);
+        }
+
+        .skill-tag-remove:hover {
+            color: #ff4757;
+            background: rgba(255, 71, 87, 0.2);
+        }
+
+        .social-input-group {
+            position: relative;
+        }
+
+        .social-input-group .input-group-text {
+            background-color: var(--light-bg);
+            border: 2px solid var(--border-color);
+            border-right: none;
+            border-radius: 12px 0 0 12px;
+            color: var(--text-muted);
+            transition: all 0.2s ease;
+        }
+
+        .social-input-group .form-control {
+            border-left: none;
+            border-radius: 0 12px 12px 0;
+            padding-left: 0.5rem;
+        }
+
+        .social-input-group:hover .input-group-text {
+            border-color: rgba(102, 126, 234, 0.4);
+            background-color: rgba(102, 126, 234, 0.1);
+        }
+
+        /* Progress bar styles */
+        .completion-progress {
+            height: 8px;
+            background-color: rgba(255,255,255,0.1);
+            border-radius: 8px;
+            overflow: hidden;
+            margin-top: 12px;
+        }
+
+        .completion-progress-bar {
+            height: 100%;
+            background: linear-gradient(135deg, var(--primary-color), var(--primary-dark), var(--accent-color));
+            border-radius: 8px;
+            transition: width 0.3s ease-out;
+        }
+
+        .form-text {
+            color: var(--text-muted) !important;
+        }
+
+        .form-check-input {
+            background-color: rgba(255,255,255,0.1);
+            border: 1px solid rgba(255,255,255,0.3);
+        }
+
+        .form-check-input:checked {
+            background-color: var(--primary-color);
+            border-color: var(--primary-color);
+            box-shadow: 0 0 0 3px rgba(102, 126, 234, 0.25);
+        }
+
+        .form-check-label {
+            color: var(--text-muted);
+        }
+
+        .form-check-label a {
+            color: var(--accent-color);
+            text-decoration: none;
+            transition: color 0.2s ease;
+        }
+
+        .form-check-label a:hover {
+            color: var(--secondary-color);
+        }
+
+        .img-thumbnail {
+            background: rgba(255,255,255,0.1);
+            border: 1px solid rgba(255,255,255,0.2);
+            border-radius: 10px;
+            transition: all 0.2s ease;
+        }
+
+        .img-thumbnail:hover {
+            transform: scale(1.03);
+        }
+
+        /* Two-column layout for step 1 */
+        .step-content.active .row {
+            display: flex;
+            flex-wrap: wrap;
+        }
+        
+        .form-column {
+            flex: 0 0 58.333333%;
+            max-width: 58.333333%;
+            padding-right: 1.5rem;
+        }
+        
+        .tips-column {
+            flex: 0 0 41.666667%;
+            max-width: 41.666667%;
+            padding-left: 1rem;
+        }
+        
+        @media (max-width: 992px) {
+            .form-column,
+            .tips-column {
+                flex: 0 0 100%;
+                max-width: 100%;
+                padding: 0;
+            }
+            
+            .tips-column {
+                margin-top: 1.5rem;
+                padding-top: 1.5rem;
+                border-top: 1px solid var(--border-color);
+            }
+        }
+
+        /* Tips Panel Styles */
+        .tips-panel {
+            background: linear-gradient(135deg, rgba(102, 126, 234, 0.1), rgba(118, 75, 162, 0.05));
+            border-radius: var(--border-radius);
+            padding: 1.5rem;
+            border: 1px solid var(--glass-border);
+            backdrop-filter: blur(5px);
+            height: fit-content;
+            position: sticky;
+            top: 20px;
+        }
+
+        .tips-header {
+            display: flex;
+            align-items: center;
+            gap: 0.75rem;
+            margin-bottom: 1rem;
+            padding-bottom: 0.75rem;
+            border-bottom: 1px solid var(--border-color);
+        }
+
+        .tips-header i {
+            font-size: 1.25rem;
+            background: linear-gradient(135deg, var(--primary-color), var(--primary-dark));
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+        }
+
+        .tips-header h5 {
+            margin: 0;
+            font-weight: 600;
+            font-size: 1.1rem;
+        }
+
+        .tip-item {
+            display: flex;
+            align-items: flex-start;
+            gap: 0.75rem;
+            padding: 0.75rem 0;
+            border-bottom: 1px solid rgba(255,255,255,0.05);
+        }
+
+        .tip-item:last-child {
+            border-bottom: none;
+        }
+
+        .tip-icon {
+            flex-shrink: 0;
+            width: 36px;
+            height: 36px;
+            border-radius: 8px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            background: linear-gradient(135deg, var(--primary-color), var(--primary-dark));
+            color: white;
+            font-size: 1rem;
+        }
+
+        .tip-content h6 {
+            margin: 0 0 0.2rem 0;
+            font-weight: 600;
+            color: var(--text-dark);
+            font-size: 0.95rem;
+        }
+
+        .tip-content p {
+            margin: 0;
+            font-size: 0.8rem;
+            color: var(--text-muted);
+            line-height: 1.4;
+        }
+
+        /* Profile Preview Card */
+        .profile-preview {
+            background: rgba(255, 255, 255, 0.05);
+            border-radius: var(--border-radius);
+            padding: 1.5rem;
+            border: 1px solid var(--glass-border);
+            margin-top: 1rem;
+            backdrop-filter: blur(5px);
+        }
+
+        .profile-preview-header {
+            display: flex;
+            align-items: center;
+            gap: 1rem;
+            margin-bottom: 1rem;
+        }
+
+        .preview-avatar {
+            width: 50px;
+            height: 50px;
+            border-radius: 50%;
+            background: linear-gradient(135deg, var(--primary-color), var(--primary-dark));
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: white;
+            font-size: 1.25rem;
+            border: 2px solid rgba(255,255,255,0.1);
+        }
+
+        .preview-info h6 {
+            margin: 0;
+            font-weight: 600;
+            font-size: 1rem;
+        }
+
+        .preview-info p {
+            margin: 0.2rem 0 0 0;
+            font-size: 0.8rem;
+            color: var(--text-muted);
+        }
+
+        .preview-stats {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 0.75rem;
+            margin-top: 0.75rem;
+        }
+
+        .stat-item {
+            text-align: center;
+            padding: 0.6rem;
+            background: rgba(255,255,255,0.03);
+            border-radius: 6px;
+            border: 1px solid rgba(255,255,255,0.05);
+        }
+
+        .stat-value {
+            font-size: 1.1rem;
+            font-weight: 700;
+            background: linear-gradient(135deg, var(--primary-color), var(--primary-dark));
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+            margin-bottom: 0.2rem;
+        }
+
+        .stat-label {
+            font-size: 0.7rem;
+            color: var(--text-muted);
+        }
+
+        /* Quick Stats */
+        .quick-stats {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 0.75rem;
+            margin-top: 1rem;
+        }
+
+        .stat-card {
+            background: rgba(255,255,255,0.03);
+            border-radius: 8px;
+            padding: 0.75rem;
+            text-align: center;
+            border: 1px solid rgba(255,255,255,0.05);
+            transition: all 0.2s ease;
+        }
+
+        .stat-card:hover {
+            transform: translateY(-1px);
+            background: rgba(255,255,255,0.05);
+        }
+
+        .stat-card i {
+            font-size: 1.25rem;
+            margin-bottom: 0.4rem;
+            background: linear-gradient(135deg, var(--primary-color), var(--primary-dark));
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+        }
+
+        .stat-card h4 {
+            margin: 0;
+            font-weight: 700;
+            font-size: 1.3rem;
+        }
+
+        .stat-card p {
+            margin: 0.2rem 0 0 0;
+            font-size: 0.7rem;
+            color: var(--text-muted);
+        }
+
+        /* Profile Completion Styles */
+        .completion-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 1rem;
+            padding-bottom: 1rem;
+            border-bottom: 1px solid var(--border-color);
+        }
+
+        .completion-percentage {
+            font-size: 2rem;
+            font-weight: 700;
+            background: linear-gradient(135deg, var(--primary-color), var(--primary-dark));
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+        }
+
+        .completion-details {
+            margin-top: 1rem;
+        }
+
+        .completion-item {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            padding: 0.75rem 0;
+            border-bottom: 1px solid rgba(255,255,255,0.05);
+        }
+
+        .completion-item:last-child {
+            border-bottom: none;
+        }
+
+        .completion-item-label {
+            display: flex;
+            align-items: center;
+            gap: 0.75rem;
+        }
+
+        .completion-item-icon {
+            width: 32px;
+            height: 32px;
+            border-radius: 8px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            background: rgba(255,255,255,0.1);
+            color: var(--text-muted);
+            font-size: 0.9rem;
+        }
+
+        .completion-item.completed .completion-item-icon {
+            background: linear-gradient(135deg, var(--accent-color), #45b7d1);
+            color: white;
+        }
+
+        .completion-item-status {
+            font-weight: 600;
+            font-size: 0.9rem;
+        }
+
+        .completion-item.completed .completion-item-status {
+            color: var(--accent-color);
+        }
+
+        .completion-item.incomplete .completion-item-status {
+            color: var(--text-muted);
+        }
+
+        /* Optimized Animations */
+        @keyframes slide-up {
+            from {
+                opacity: 0;
+                transform: translateY(20px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        @keyframes float-shape {
+            0% {
+                transform: translateY(0) rotate(0deg);
+            }
+            50% {
+                transform: translateY(-10px) rotate(90deg);
+            }
+            100% {
+                transform: translateY(0) rotate(180deg);
+            }
+        }
+
+        @keyframes contentSlideIn {
+            from {
+                opacity: 0;
+                transform: translateY(10px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        /* Mobile Responsiveness */
+        @media (max-width: 768px) {
+            .profile-container {
+                padding: 80px 1rem 1rem;
+            }
+            
+            .profile-body {
+                padding: 1.5rem;
+            }
+            
+            .progress-steps {
+                flex-direction: column;
+                align-items: flex-start;
+                gap: 0.75rem;
+            }
+            
+            .progress-steps::before {
+                display: none;
+            }
+            
+            .progress-step {
+                width: 100%;
+                display: flex;
+                align-items: center;
+                text-align: left;
+            }
+            
+            .progress-step::before {
+                margin: 0 0.75rem 0 0;
+            }
+            
+            .completion-badge {
+                position: relative;
+                top: 0;
+                right: 0;
+                margin: 0 auto 1rem;
+                width: fit-content;
+            }
+        }
+
+        /* Scroll to top button */
+        .scroll-top {
+            position: fixed;
+            bottom: 20px;
+            right: 20px;
+            width: 50px;
+            height: 50px;
+            background: linear-gradient(135deg, var(--primary-color), var(--primary-dark));
+            border: none;
+            border-radius: 50%;
+            color: white;
+            font-size: 1.25rem;
+            cursor: pointer;
+            opacity: 0;
+            visibility: hidden;
+            transition: all 0.2s ease;
+            z-index: 1000;
+            box-shadow: 0 4px 15px rgba(102, 126, 234, 0.3);
+        }
+
+        .scroll-top.visible {
+            opacity: 1;
+            visibility: visible;
+        }
+
+        .scroll-top:hover {
+            transform: translateY(-2px);
+        }
+    </style>
+</head>
+<body>
+    <!-- Simplified Background Elements -->
+    <div class="bg-elements">
+        <div class="floating-shape shape-1"></div>
+        <div class="floating-shape shape-2"></div>
+        <div class="floating-shape shape-3"></div>
+    </div>
+
+    <!-- Navigation -->
+    <nav class="navbar" id="navbar">
+        <div class="nav-container">
+            <a href="{%url 'home'%}" class="brand">
+                <div class="brand-logo">SJ</div>
+                <span class="brand-text">SkillJourney</span>
+            </a>
+            
+            <div class="nav-buttons">
+            </div>
+        </div>
+    </nav>
+
+    <div class="profile-container">
+        <div class="profile-card">
+            <div class="profile-header">
+                <h1 class="fw-bold display-5">Build Your <span class="gradient-text">Freelancer Profile</span></h1>
+                <p class="mb-0">Complete your profile to get noticed by clients and unlock new opportunities</p>
+                
+                <!-- Profile Completion Badge -->
+                <div class="completion-badge">
+                    <i class="bi bi-check-circle-fill"></i>
+                    <span id="completion-percentage">0%</span> Complete
+                    <a href="{%url 'home'%}" class="btn btn-outline text-white ms-2">Back</a>
+                </div>
+            </div>
+            
+            <div class="progress-container">
+                <!-- Completion Progress Bar -->
+                <div class="completion-progress">
+                    <div class="completion-progress-bar" id="completion-progress-bar" style="width: 0%"></div>
+                </div>
+                
+                <div class="progress-steps">
+                    <div class="progress-step active">
+                        <span>Basic Info</span>   
+                    </div>
+                    <div class="progress-step">
+                        <span>Skills & Expertise</span>
+                    </div>
+                    <div class="progress-step">
+                        <span>Documents</span>
+                    </div>
+                </div>
+                
+                <form method="POST" enctype="multipart/form-data" id="profile-form">
+                    {% csrf_token %}
+                    
+                    <!-- Step 1: Basic Information -->
+                    <div class="step-content active" id="step1">
+                        <div class="row">
+                            <div class="form-column">
+                                <h4 class="fw-bold mb-3">Basic Information</h4>
+                                
+                                <div class="row">
+                                    <div class="col-md-6 mb-3">
+                                        <label class="form-label">First Name</label>
+                                        <input type="text" name="first_name" class="form-control" placeholder="Enter your first name" required oninput="updateCompletion()">
+                                    </div>
+                                    <div class="col-md-6 mb-3">
+                                        <label class="form-label">Last Name</label>
+                                        <input type="text" name="last_name" class="form-control" placeholder="Enter your last name" required oninput="updateCompletion()">
+                                    </div>
+                                </div>
+                                
+                                <div class="mb-3">
+                                    <label class="form-label">Professional Title</label>
+                                    <input type="text" name="professional_title" class="form-control" placeholder="e.g. Web Developer, Graphic Designer" required oninput="updateCompletion()">
+                                </div>
+                                
+                                <div class="mb-3">
+                                    <label class="form-label">City</label>
+                                    <input type="text" name="city" class="form-control" placeholder="e.g. New York" oninput="updateCompletion()">
+                                </div>
+
+                                <div class="mb-3">
+                                    <label class="form-label">Location</label>
+                                    <input type="text" name="location" class="form-control" placeholder="e.g. USA" oninput="updateCompletion()">
+                                    <div class="form-text">Help clients find you by adding your location</div>
+                                </div>
+                                
+                                <div class="mb-3">
+                                    <label class="form-label">LinkedIn Profile</label>
+                                    <div class="social-input-group input-group mb-2">
+                                        <span class="input-group-text"><i class="bi bi-linkedin"></i></span>
+                                        <input type="url" name="linkedin_url" class="form-control" placeholder="https://linkedin.com/in/yourprofile" oninput="updateCompletion()">
+                                    </div>
+                                </div>
+                                
+                                <div class="mb-3">
+                                    <label class="form-label">GitHub Profile</label>
+                                    <div class="social-input-group input-group mb-2">
+                                        <span class="input-group-text"><i class="bi bi-github"></i></span>
+                                        <input type="url" name="github_url" class="form-control" placeholder="https://github.com/yourusername" oninput="updateCompletion()">
+                                    </div>
+                                </div>
+                                
+                                <div class="mb-3">
+                                    <label class="form-label">Bio</label>
+                                    <textarea name="bio" class="form-control" rows="3" placeholder="Tell clients about yourself, your experience, and what you can offer" oninput="updateCompletion()"></textarea>
+                                    <div class="form-text">This will be displayed on your public profile</div>
+                                </div>
+                                
+                                <div class="d-flex justify-content-between mt-4">
+                                    <div></div>
+                                    <button type="button" class="btn btn-primary" onclick="nextStep(2)">Next: Skills <i class="bi bi-arrow-right ms-2"></i></button>
+                                </div>
+                            </div>
+                            
+                            <div class="tips-column">
+                                <!-- Profile Completion Panel -->
+                                <div class="tips-panel">
+                                    <div class="completion-header">
+                                        <h5 class="mb-0">Profile Completion</h5>
+                                        <div class="completion-percentage" id="completion-percentage-panel">0%</div>
+                                    </div>
+                                    
+                                    <div class="completion-details">
+                                        <div class="completion-item" id="completion-name">
+                                            <div class="completion-item-label">
+                                                <div class="completion-item-icon">
+                                                    <i class="bi bi-person"></i>
+                                                </div>
+                                                <span>Name & Title</span>
+                                            </div>
+                                            <div class="completion-item-status incomplete">Incomplete</div>
+                                        </div>
+                                        
+                                        <div class="completion-item" id="completion-city">
+                                            <div class="completion-item-label">
+                                                <div class="completion-item-icon">
+                                                    <i class="bi bi-geo-alt"></i>
+                                                </div>
+                                                <span>City</span>
+                                            </div>
+                                            <div class="completion-item-status incomplete">Incomplete</div>
+                                        </div>
+
+                                        <div class="completion-item" id="completion-location">
+                                            <div class="completion-item-label">
+                                                <div class="completion-item-icon">
+                                                    <i class="bi bi-geo-alt"></i>
+                                                </div>
+                                                <span>Location</span>
+                                            </div>
+                                            <div class="completion-item-status incomplete">Incomplete</div>
+                                        </div>
+                                        
+                                        <div class="completion-item" id="completion-bio">
+                                            <div class="completion-item-label">
+                                                <div class="completion-item-icon">
+                                                    <i class="bi bi-file-text"></i>
+                                                </div>
+                                                <span>Bio</span>
+                                            </div>
+                                            <div class="completion-item-status incomplete">Incomplete</div>
+                                        </div>
+                                        
+                                        <div class="completion-item" id="completion-social">
+                                            <div class="completion-item-label">
+                                                <div class="completion-item-icon">
+                                                    <i class="bi bi-link-45deg"></i>
+                                                </div>
+                                                <span>Social Profiles</span>
+                                            </div>
+                                            <div class="completion-item-status incomplete">Incomplete</div>
+                                        </div>
+                                        
+                                        <div class="completion-item" id="completion-skills">
+                                            <div class="completion-item-label">
+                                                <div class="completion-item-icon">
+                                                    <i class="bi bi-tools"></i>
+                                                </div>
+                                                <span>Skills</span>
+                                            </div>
+                                            <div class="completion-item-status incomplete">Incomplete</div>
+                                        </div>
+                                        
+                                        <div class="completion-item" id="completion-experience">
+                                            <div class="completion-item-label">
+                                                <div class="completion-item-icon">
+                                                    <i class="bi bi-graph-up"></i>
+                                                </div>
+                                                <span>Experience Level</span>
+                                            </div>
+                                            <div class="completion-item-status incomplete">Incomplete</div>
+                                        </div>
+                                        
+                                        <div class="completion-item" id="completion-documents">
+                                            <div class="completion-item-label">
+                                                <div class="completion-item-icon">
+                                                    <i class="bi bi-file-earmark"></i>
+                                                </div>
+                                                <span>Documents</span>
+                                            </div>
+                                            <div class="completion-item-status incomplete">Incomplete</div>
+                                        </div>
+                                        
+                                        <div class="completion-item" id="completion-terms">
+                                            <div class="completion-item-label">
+                                                <div class="completion-item-icon">
+                                                    <i class="bi bi-check-circle"></i>
+                                                </div>
+                                                <span>Terms & Conditions</span>
+                                            </div>
+                                            <div class="completion-item-status incomplete">Incomplete</div>
+                                        </div>
+                                    </div>
+                                </div>
+                                
+                                <!-- Profile Preview -->
+                                <div class="profile-preview">
+                                    <div class="profile-preview-header">
+                                        <div class="preview-avatar">
+                                            <i class="bi bi-person"></i>
+                                        </div>
+                                        <div class="preview-info">
+                                            <h6 id="preview-name">Your Name</h6>
+                                            <p id="preview-title">Professional Title</p>
+                                            <p id="preview-location" class="small"><i class="bi bi-geo-alt"></i> Location</p>
+                                        </div>
+                                    </div>
+                                    
+                                    <div class="preview-stats">
+                                        <div class="stat-item">
+                                            <div class="stat-value" id="preview-completion">0%</div>
+                                            <div class="stat-label">Profile Complete</div>
+                                        </div>
+                                        <div class="stat-item">
+                                            <div class="stat-value" id="preview-skills">0</div>
+                                            <div class="stat-label">Skills Added</div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <!-- Step 2: Skills & Expertise -->
+                    <div class="step-content" id="step2">
+                        <h4 class="fw-bold mb-3">Skills & Expertise</h4>
+                        
+                        <div class="mb-3">
+                            <label class="form-label">Your Skills</label>
+                            <div class="input-group">
+                                <input type="text" id="skill-input" class="form-control" placeholder="Add a skill (e.g. Python, React, UI/UX Design)">
+                                <button class="btn btn-outline-secondary" type="button" onclick="addSkill()">Add Skill</button>
+                            </div>
+                            <div class="form-text">Add the skills that best represent your expertise</div>
+                            
+                            <div class="skill-tags" id="skills-container">
+                                <!-- Skills will be added here dynamically -->
+                            </div>
+                            <input type="hidden" name="skills" id="skills-input">
+                        </div>
+                        
+                        <div class="mb-3">
+                                <label class="form-label">Experience Level</label>
+                                <select name="experience_level" class="form-select" required onchange="updateCompletion()" style="color: black;">
+                                    <option value="">Select your experience level</option>
+                                    <option value="entry">Entry Level (0-2 years)</option>
+                                    <option value="intermediate">Intermediate (2-5 years)</option>
+                                    <option value="expert">Expert (5+ years)</option>
+                                </select>
+                        </div>
+
+                        
+                        <div class="d-flex justify-content-between mt-4">
+                            <button type="button" class="btn btn-outline-secondary" onclick="prevStep(1)"><i class="bi bi-arrow-left me-2"></i>Back</button>
+                            <button type="button" class="btn btn-primary" onclick="nextStep(3)">Next: Documents <i class="bi bi-arrow-right ms-2"></i></button>
+                        </div>
+                    </div>
+                    
+                    <!-- Step 3: Documents -->
+                    <div class="step-content" id="step3">
+                        <h4 class="fw-bold mb-3">Profile Documents</h4>
+                        
+                        <div class="row">
+                            <div class="col-md-6 mb-3">
+                                <label class="form-label">Profile Picture</label>
+                                <div class="file-upload">
+                                    <div class="file-upload-btn">
+                                        <i class="bi bi-cloud-arrow-up display-6 mb-2"></i>
+                                        <p class="mb-1">Click to upload profile photo</p>
+                                        <small class="form-text">JPG, PNG (Max 5MB)</small>
+                                        <input type="file" name="profile_picture" class="file-upload-input" accept="image/*" onchange="previewImage(this); updateCompletion()">
+                                    </div>
+                                </div>
+                                <div id="image-preview" class="mt-2 text-center"></div>
+                            </div>
+                            
+                            <div class="col-md-6 mb-3">
+                                <label class="form-label">Upload Resume</label>
+                                <div class="file-upload">
+                                    <div class="file-upload-btn">
+                                        <i class="bi bi-file-earmark-pdf display-6 mb-2"></i>
+                                        <p class="mb-1">Click to upload resume</p>
+                                        <small class="form-text">PDF, DOC, DOCX (Max 10MB)</small>
+                                        <input type="file" name="resume" class="file-upload-input" accept=".pdf,.doc,.docx" onchange="updateCompletion()">
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        
+                        <div class="mb-3 form-check">
+                            <input type="checkbox" class="form-check-input" id="terms" required onchange="updateCompletion()">
+                            <label class="form-check-label" for="terms">I agree to the <a href="#">Terms of Service</a> and <a href="#">Privacy Policy</a></label>
+                        </div>
+                        
+                        <div class="d-flex justify-content-between mt-4">
+                            <button type="button" class="btn btn-outline-secondary" onclick="prevStep(2)"><i class="bi bi-arrow-left me-2"></i>Back</button>
+                            <button type="submit" class="btn btn-primary">Complete Profile <i class="bi bi-check-lg ms-2"></i></button>
+                        </div>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+
+    <!-- Scroll to Top Button -->
+    <button class="scroll-top" id="scrollTop">
+        <i class="bi bi-arrow-up"></i>
+    </button>
+
+    <script>
+        // Performance optimized JavaScript
+        let skills = [];
+        let completionTimeout;
+
+        // Form step navigation
+        function nextStep(step) {
+            const steps = document.querySelectorAll('.step-content');
+            const progressSteps = document.querySelectorAll('.progress-step');
+            
+            // Hide all steps
+            steps.forEach(content => {
+                content.classList.remove('active');
+            });
+            
+            // Show the selected step
+            const targetStep = document.getElementById('step' + step);
+            if (targetStep) {
+                targetStep.classList.add('active');
+            }
+            
+            // Update progress steps
+            progressSteps.forEach((progressStep, index) => {
+                if (index + 1 < step) {
+                    progressStep.classList.remove('active');
+                    progressStep.classList.add('completed');
+                } else if (index + 1 === step) {
+                    progressStep.classList.add('active');
+                    progressStep.classList.remove('completed');
+                } else {
+                    progressStep.classList.remove('active', 'completed');
+                }
+            });
+            
+            updateCompletion();
+        }
+        
+        function prevStep(step) {
+            nextStep(step);
+        }
+        
+        // Skills management
+        function addSkill() {
+            const skillInput = document.getElementById('skill-input');
+            const skill = skillInput.value.trim();
+            
+            if (skill && !skills.includes(skill)) {
+                skills.push(skill);
+                updateSkillsDisplay();
+                updateCompletion();
+                skillInput.value = '';
+            }
+        }
+        
+        function removeSkill(skill) {
+            skills = skills.filter(s => s !== skill);
+            updateSkillsDisplay();
+            updateCompletion();
+        }
+        
+        function updateSkillsDisplay() {
+            const container = document.getElementById('skills-container');
+            const input = document.getElementById('skills-input');
+            
+            container.innerHTML = '';
+            input.value = skills.join(',');
+            
+            skills.forEach(skill => {
+                const tag = document.createElement('div');
+                tag.className = 'skill-tag';
+                tag.innerHTML = `${skill}<span class="skill-tag-remove" onclick="removeSkill('${skill}')">×</span>`;
+                container.appendChild(tag);
+            });
+        }
+        
+        // Image preview
+        function previewImage(input) {
+            const preview = document.getElementById('image-preview');
+            
+            if (input.files && input.files[0]) {
+                const reader = new FileReader();
+                
+                reader.onload = function(e) {
+                    preview.innerHTML = `
+                        <div class="mt-2">
+                            <img src="${e.target.result}" class="img-thumbnail" style="max-height: 120px;">
+                            <p class="small form-text mt-1">Image preview</p>
+                        </div>
+                    `;
+                }
+                
+                reader.readAsDataURL(input.files[0]);
+            } else {
+                preview.innerHTML = '';
+            }
+        }
+        
+        // Debounced completion update
+        function updateCompletion() {
+            clearTimeout(completionTimeout);
+            completionTimeout = setTimeout(calculateCompletion, 50);
+        }
+        
+        function calculateCompletion() {
+            let completedFields = 0;
+            const totalFields = 13;
+            
+            // Basic info fields
+            const firstName = document.querySelector('input[name="first_name"]').value;
+            const lastName = document.querySelector('input[name="last_name"]').value;
+            const title = document.querySelector('input[name="professional_title"]').value;
+            const city = document.querySelector('input[name="city"]').value;
+            const location = document.querySelector('input[name="location"]').value;
+            const bio = document.querySelector('textarea[name="bio"]').value;
+            const linkedin = document.querySelector('input[name="linkedin_url"]').value;
+            const github = document.querySelector('input[name="github_url"]').value;
+            const experience = document.querySelector('select[name="experience_level"]').value;
+            const profilePic = document.querySelector('input[name="profile_picture"]').files.length > 0;
+            const resume = document.querySelector('input[name="resume"]').files.length > 0;
+            const terms = document.getElementById('terms').checked;
+            
+            // Update completion items
+            updateCompletionItem('completion-name', firstName && lastName && title);
+            updateCompletionItem('completion-city', city);
+            updateCompletionItem('completion-location', location);
+            updateCompletionItem('completion-bio', bio);
+            updateCompletionItem('completion-social', linkedin || github);
+            updateCompletionItem('completion-skills', skills.length > 0);
+            updateCompletionItem('completion-experience', experience);
+            updateCompletionItem('completion-documents', profilePic || resume);
+            updateCompletionItem('completion-terms', terms);
+            
+            // Calculate completion percentage
+            if (firstName) completedFields++;
+            if (lastName) completedFields++;
+            if (title) completedFields++;
+            if (city) completedFields++;
+            if (location) completedFields++;
+            if (bio) completedFields++;
+            
+            // Social fields
+            if (linkedin || github) completedFields++;
+            
+            // Skills
+            if (skills.length > 0) completedFields++;
+            
+            // Experience level
+            if (experience) completedFields++;
+            
+            // Documents
+            if (profilePic || resume) completedFields++;
+            
+            // Terms agreement
+            if (terms) completedFields++;
+            
+            const completionPercentage = Math.min(Math.round((completedFields / totalFields) * 100), 100);
+            
+            // Update UI
+            document.getElementById('completion-percentage').textContent = completionPercentage + '%';
+            document.getElementById('completion-percentage-panel').textContent = completionPercentage + '%';
+            document.getElementById('completion-progress-bar').style.width = completionPercentage + '%';
+            
+            updateProfilePreview(completionPercentage);
+        }
+        
+        function updateCompletionItem(itemId, isCompleted) {
+            const item = document.getElementById(itemId);
+            if (isCompleted) {
+                item.classList.add('completed');
+                item.classList.remove('incomplete');
+                item.querySelector('.completion-item-status').textContent = 'Complete';
+                item.querySelector('.completion-item-status').classList.remove('incomplete');
+            } else {
+                item.classList.remove('completed');
+                item.classList.add('incomplete');
+                item.querySelector('.completion-item-status').textContent = 'Incomplete';
+                item.querySelector('.completion-item-status').classList.add('incomplete');
+            }
+        }
+        
+        // Update profile preview
+        function updateProfilePreview(completion) {
+            const firstName = document.querySelector('input[name="first_name"]').value;
+            const lastName = document.querySelector('input[name="last_name"]').value;
+            const title = document.querySelector('input[name="professional_title"]').value;
+            const city = document.querySelector('input[name="city"]').value;
+            const location = document.querySelector('input[name="location"]').value;
+            
+            // Update name
+            if (firstName || lastName) {
+                document.getElementById('preview-name').textContent = `${firstName} ${lastName}`.trim() || 'Your Name';
+            }
+            
+            // Update title
+            document.getElementById('preview-title').textContent = title || 'Professional Title';
+            
+            // Update location
+            if (city || location) {
+                const locationText = city ? `${city}, ${location}` : location;
+                document.getElementById('preview-location').innerHTML = `<i class="bi bi-geo-alt"></i> ${locationText || 'Location'}`;
+            }
+            
+            // Update skills count
+            document.getElementById('preview-skills').textContent = skills.length;
+            
+            // Update completion in preview
+            document.getElementById('preview-completion').textContent = completion + '%';
+        }
+        
+        // Event listeners
+        document.getElementById('skill-input').addEventListener('keypress', function(e) {
+            if (e.key === 'Enter') {
+                e.preventDefault();
+                addSkill();
+            }
+        });
+        
+        // Scroll effects
+        window.addEventListener('scroll', () => {
+            const navbar = document.getElementById('navbar');
+            const scrollTopBtn = document.getElementById('scrollTop');
+            
+            if (window.scrollY > 100) {
+                navbar.classList.add('scrolled');
+            } else {
+                navbar.classList.remove('scrolled');
+            }
+            
+            if (window.scrollY > 300) {
+                scrollTopBtn.classList.add('visible');
+            } else {
+                scrollTopBtn.classList.remove('visible');
+            }
+        });
+        
+        // Scroll to top
+        document.getElementById('scrollTop').addEventListener('click', () => {
+            window.scrollTo({
+                top: 0,
+                behavior: 'smooth'
+            });
+        });
+        
+        // Initialize
+        document.addEventListener('DOMContentLoaded', function() {
+            calculateCompletion();
+        });
+    </script>
+</body>
+</html>

@@ -1,0 +1,972 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Freelancer Projects & Tasks - SkillJourney</title>
+    
+    <!-- Bootstrap CSS -->
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+    <!-- Font Awesome -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <!-- Google Fonts -->
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800;900&display=swap" rel="stylesheet">
+    
+    <style>
+        /* Premium Color Palette - Matching Your Theme */
+        :root {
+            --primary-gradient: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            --secondary-gradient: linear-gradient(135deg, #4ecdc4 0%, #44a08d 100%);
+            --accent-gradient: linear-gradient(135deg, #ff6b6b 0%, #feca57 100%);
+            --success-gradient: linear-gradient(135deg, #51cf66 0%, #40c057 100%);
+            --rainbow-gradient: linear-gradient(135deg, #667eea, #4ecdc4, #ff6b6b);
+            --glass-bg: rgba(255, 255, 255, 0.08);
+            --glass-border: rgba(255, 255, 255, 0.12);
+            --dark-bg: #0f0f23;
+            --darker-bg: #0a0a1a;
+            --card-bg: rgba(30, 30, 60, 0.6);
+            --text-primary: #ffffff;
+            --text-secondary: #e2e8f0;
+            --text-muted: #94a3b8;
+            --shadow-glow: 0 10px 40px rgba(102, 126, 234, 0.15);
+            --shadow-intense: 0 20px 50px rgba(0, 0, 0, 0.3);
+            --border-radius: 20px;
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Inter', -apple-system, BlinkMacSystemFont, sans-serif;
+            background: linear-gradient(135deg, var(--dark-bg) 0%, var(--darker-bg) 100%);
+            color: var(--text-primary);
+            line-height: 1.6;
+            margin: 0;
+            min-height: 100vh;
+            overflow-x: hidden;
+            padding: 20px;
+        }
+
+        /* Premium Background Animation */
+        .bg-animation {
+            position: fixed;
+            inset: 0;
+            z-index: -1;
+            overflow: hidden;
+            pointer-events: none;
+        }
+
+        .floating-orb {
+            position: absolute;
+            border-radius: 50%;
+            filter: blur(80px);
+            opacity: 0.15;
+            animation: float-orbs 40s ease-in-out infinite;
+        }
+
+        .orb-1 {
+            width: 400px;
+            height: 400px;
+            background: var(--primary-gradient);
+            top: 10%;
+            left: 5%;
+            animation-delay: 0s;
+        }
+
+        .orb-2 {
+            width: 300px;
+            height: 300px;
+            background: var(--secondary-gradient);
+            bottom: 15%;
+            right: 10%;
+            animation-delay: 20s;
+        }
+
+        .orb-3 {
+            width: 350px;
+            height: 350px;
+            background: var(--accent-gradient);
+            top: 60%;
+            left: 70%;
+            animation-delay: 30s;
+        }
+
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+            position: relative;
+            z-index: 1;
+        }
+
+        /* Header Styles */
+        .page-header {
+            text-align: center;
+            margin-bottom: 2rem;
+            padding: 2rem 0;
+            position: relative;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+        }
+
+        .page-title {
+            font-size: 2.8rem;
+            font-weight: 800;
+            background: var(--rainbow-gradient);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+            margin-bottom: 1rem;
+            animation: gradient-shift 4s ease-in-out infinite;
+            background-size: 200% 200%;
+        }
+
+        .page-subtitle {
+            color: var(--text-secondary);
+            font-size: 1.2rem;
+            max-width: 600px;
+            margin: 0 auto;
+        }
+
+        /* Back Button - Right Side */
+        .back-btn {
+            position: absolute;
+            right: 0;
+            top: 50%;
+            transform: translateY(-50%);
+            background: var(--glass-bg);
+            border: 1px solid var(--glass-border);
+            border-radius: 12px;
+            padding: 0.8rem 1.5rem;
+            color: var(--text-primary);
+            text-decoration: none;
+            font-weight: 600;
+            transition: all 0.3s ease;
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+            box-shadow: var(--shadow-glow);
+        }
+
+        .back-btn::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: -100%;
+            width: 100%;
+            height: 100%;
+            background: linear-gradient(90deg, transparent, rgba(255,255,255,0.1), transparent);
+            transition: left 0.6s ease;
+        }
+
+        .back-btn:hover::before {
+            left: 100%;
+        }
+
+        .back-btn:hover {
+            background: rgba(255, 255, 255, 0.12);
+            transform: translateY(-50%) translateX(5px);
+            color: var(--text-primary);
+            text-decoration: none;
+            border-color: rgba(102, 126, 234, 0.5);
+        }
+
+        /* Search Bar */
+        .search-container {
+            background: var(--card-bg);
+            backdrop-filter: blur(25px);
+            border: 1px solid var(--glass-border);
+            border-radius: var(--border-radius);
+            padding: 1.5rem 2rem;
+            margin-bottom: 2.5rem;
+            box-shadow: var(--shadow-glow);
+            transition: all 0.3s ease;
+        }
+
+        .search-container:hover {
+            border-color: rgba(102, 126, 234, 0.3);
+            box-shadow: var(--shadow-intense);
+        }
+
+        .search-box {
+            position: relative;
+            max-width: 600px;
+            margin: 0 auto;
+        }
+
+        .search-input {
+            width: 100%;
+            background: var(--glass-bg);
+            border: 1px solid var(--glass-border);
+            border-radius: 15px;
+            padding: 1rem 1.25rem 1rem 3rem;
+            color: var(--text-primary);
+            font-size: 1rem;
+            transition: all 0.3s ease;
+            font-weight: 500;
+        }
+
+        .search-input:focus {
+            outline: none;
+            border-color: rgba(102, 126, 234, 0.5);
+            box-shadow: 0 0 0 3px rgba(102, 126, 234, 0.1);
+            background: rgba(255, 255, 255, 0.12);
+        }
+
+        .search-input::placeholder {
+            color: var(--text-muted);
+            font-weight: 400;
+        }
+
+        .search-icon {
+            position: absolute;
+            left: 1.25rem;
+            top: 50%;
+            transform: translateY(-50%);
+            color: var(--text-muted);
+            font-size: 1.1rem;
+        }
+
+        .search-results-info {
+            text-align: center;
+            color: var(--text-secondary);
+            margin-top: 1rem;
+            font-size: 0.95rem;
+            min-height: 1.5rem;
+        }
+
+        /* Project Section */
+        .project-section {
+            background: var(--card-bg);
+            backdrop-filter: blur(25px);
+            border: 1px solid var(--glass-border);
+            border-radius: var(--border-radius);
+            padding: 2.5rem;
+            margin-bottom: 2.5rem;
+            box-shadow: var(--shadow-glow);
+            transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+            position: relative;
+            overflow: hidden;
+        }
+
+        .project-section::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 4px;
+            background: var(--rainbow-gradient);
+            transform: scaleX(0);
+            transform-origin: left;
+            transition: transform 0.4s ease;
+        }
+
+        .project-section:hover::before {
+            transform: scaleX(1);
+        }
+
+        .project-section:hover {
+            transform: translateY(-5px);
+            box-shadow: var(--shadow-intense);
+            border-color: rgba(102, 126, 234, 0.3);
+        }
+
+        .project-title {
+            font-size: 1.8rem;
+            font-weight: 700;
+            color: var(--text-primary);
+            margin-bottom: 1rem;
+            display: flex;
+            align-items: center;
+            gap: 1rem;
+        }
+
+        .project-title::before {
+            content: '';
+            width: 8px;
+            height: 8px;
+            border-radius: 50%;
+            background: var(--rainbow-gradient);
+        }
+
+        .project-description {
+            color: var(--text-secondary);
+            font-size: 1.1rem;
+            margin-bottom: 2rem;
+            line-height: 1.7;
+        }
+
+        /* Task Card */
+        .task-card {
+            background: var(--glass-bg);
+            border: 1px solid var(--glass-border);
+            border-radius: 15px;
+            padding: 2rem;
+            margin-bottom: 1.5rem;
+            transition: all 0.3s ease;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .task-card:hover {
+            background: rgba(255, 255, 255, 0.12);
+            transform: translateY(-3px);
+            box-shadow: var(--shadow-glow);
+        }
+
+        .task-header {
+            display: flex;
+            justify-content: between;
+            align-items: flex-start;
+            margin-bottom: 1.5rem;
+            gap: 1rem;
+        }
+
+        .task-title {
+            font-size: 1.4rem;
+            font-weight: 600;
+            color: var(--text-primary);
+            flex: 1;
+        }
+
+        .task-priority {
+            background: var(--accent-gradient);
+            color: white;
+            padding: 0.4rem 1rem;
+            border-radius: 20px;
+            font-size: 0.85rem;
+            font-weight: 600;
+            white-space: nowrap;
+        }
+
+        .task-desc {
+            color: var(--text-secondary);
+            margin-bottom: 1.5rem;
+            line-height: 1.6;
+        }
+
+        .task-meta {
+            display: flex;
+            gap: 2rem;
+            margin-bottom: 1.5rem;
+            flex-wrap: wrap;
+        }
+
+        .meta-item {
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+            color: var(--text-muted);
+            font-size: 0.95rem;
+        }
+
+        .meta-item i {
+            color: var(--text-primary);
+            width: 16px;
+        }
+
+        /* Status Badges */
+        .status-badge {
+            padding: 0.5rem 1rem;
+            border-radius: 20px;
+            font-size: 0.85rem;
+            font-weight: 600;
+            display: inline-flex;
+            align-items: center;
+            gap: 0.5rem;
+        }
+
+        .status-pending {
+            background: rgba(243, 156, 18, 0.2);
+            color: #f39c12;
+            border: 1px solid rgba(243, 156, 18, 0.3);
+        }
+
+        .status-approved {
+            background: rgba(39, 174, 96, 0.2);
+            color: #27ae60;
+            border: 1px solid rgba(39, 174, 96, 0.3);
+        }
+
+        .status-disapproved {
+            background: rgba(231, 76, 60, 0.2);
+            color: #e74c3c;
+            border: 1px solid rgba(231, 76, 60, 0.3);
+        }
+
+        .status-in-progress {
+            background: rgba(52, 152, 219, 0.2);
+            color: #3498db;
+            border: 1px solid rgba(52, 152, 219, 0.3);
+        }
+
+        .status-completed {
+            background: rgba(39, 174, 96, 0.2);
+            color: #27ae60;
+            border: 1px solid rgba(39, 174, 96, 0.3);
+        }
+
+        /* File Reference */
+        .file-reference {
+            display: inline-flex;
+            align-items: center;
+            gap: 0.5rem;
+            padding: 0.75rem 1.25rem;
+            background: var(--glass-bg);
+            border: 1px solid var(--glass-border);
+            border-radius: 10px;
+            color: var(--text-primary);
+            text-decoration: none;
+            transition: all 0.3s ease;
+            margin-bottom: 1.5rem;
+        }
+
+        .file-reference:hover {
+            background: rgba(255, 255, 255, 0.1);
+            transform: translateY(-2px);
+            color: var(--text-primary);
+            text-decoration: none;
+        }
+
+        /* Forms */
+        .task-form {
+            background: rgba(255, 255, 255, 0.05);
+            border: 1px solid var(--glass-border);
+            border-radius: 15px;
+            padding: 2rem;
+            margin-top: 1.5rem;
+        }
+
+        .form-group {
+            margin-bottom: 1.5rem;
+        }
+
+        .form-label {
+            display: block;
+            font-weight: 600;
+            margin-bottom: 0.75rem;
+            color: var(--text-primary);
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+        }
+
+        .form-control, .form-select {
+            width: 100%;
+            background: var(--glass-bg);
+            border: 1px solid var(--glass-border);
+            border-radius: 12px;
+            padding: 1rem 1.25rem;
+            color: var(--text-primary);
+            font-size: 1rem;
+            transition: all 0.3s ease;
+        }
+
+        .form-control:focus, .form-select:focus {
+            outline: none;
+            border-color: rgba(102, 126, 234, 0.5);
+            box-shadow: 0 0 0 3px rgba(102, 126, 234, 0.1);
+            background: rgba(255, 255, 255, 0.12);
+        }
+
+        .file-input {
+            padding: 0.75rem;
+        }
+
+        .file-input::-webkit-file-upload-button {
+            background: var(--glass-bg);
+            color: var(--text-primary);
+            border: 1px solid var(--glass-border);
+            border-radius: 8px;
+            padding: 0.75rem 1.25rem;
+            margin-right: 1rem;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            font-weight: 500;
+        }
+
+        .file-input::-webkit-file-upload-button:hover {
+            background: rgba(102, 126, 234, 0.3);
+            border-color: rgba(102, 126, 234, 0.5);
+        }
+
+        /* Buttons */
+        .btn-primary {
+            background: var(--rainbow-gradient);
+            border: none;
+            border-radius: 12px;
+            padding: 1rem 2rem;
+            font-weight: 600;
+            transition: all 0.3s ease;
+            color: white;
+            font-size: 1.1rem;
+            cursor: pointer;
+            box-shadow: var(--shadow-glow);
+            display: inline-flex;
+            align-items: center;
+            gap: 0.75rem;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .btn-primary::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: -100%;
+            width: 100%;
+            height: 100%;
+            background: linear-gradient(90deg, transparent, rgba(255,255,255,0.2), transparent);
+            transition: left 0.6s ease;
+        }
+
+        .btn-primary:hover::before {
+            left: 100%;
+        }
+
+        .btn-primary:hover {
+            transform: translateY(-3px);
+            box-shadow: 0 15px 30px rgba(102, 126, 234, 0.4);
+        }
+
+        /* Empty State */
+        .empty-state {
+            text-align: center;
+            padding: 4rem 2rem;
+            background: var(--card-bg);
+            backdrop-filter: blur(25px);
+            border: 1px solid var(--glass-border);
+            border-radius: var(--border-radius);
+            box-shadow: var(--shadow-glow);
+        }
+
+        .empty-state i {
+            font-size: 4rem;
+            margin-bottom: 1.5rem;
+            background: var(--rainbow-gradient);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+        }
+
+        .empty-state h3 {
+            color: var(--text-primary);
+            margin-bottom: 1rem;
+            font-weight: 700;
+            font-size: 1.8rem;
+        }
+
+        .empty-state p {
+            color: var(--text-secondary);
+            font-size: 1.1rem;
+            max-width: 500px;
+            margin: 0 auto;
+        }
+
+        /* Search No Results */
+        .no-results {
+            text-align: center;
+            padding: 3rem 2rem;
+            color: var(--text-muted);
+        }
+
+        .no-results i {
+            font-size: 3rem;
+            margin-bottom: 1rem;
+            opacity: 0.5;
+        }
+
+        /* Animations */
+        @keyframes float-orbs {
+            0%, 100% {
+                transform: translateY(0);
+            }
+            50% {
+                transform: translateY(-20px);
+            }
+        }
+
+        @keyframes gradient-shift {
+            0% {
+                background-position: 0% 50%;
+            }
+            50% {
+                background-position: 100% 50%;
+            }
+            100% {
+                background-position: 0% 50%;
+            }
+        }
+
+        /* Responsive Design */
+        @media (max-width: 768px) {
+            .page-title {
+                font-size: 2.2rem;
+            }
+            
+            .page-header {
+                flex-direction: column;
+                gap: 1.5rem;
+                padding-top: 1rem;
+            }
+            
+            .back-btn {
+                position: relative;
+                right: auto;
+                top: auto;
+                transform: none;
+                margin-bottom: 0;
+                display: inline-flex;
+                justify-content: center;
+            }
+            
+            .search-container {
+                padding: 1.25rem 1.5rem;
+            }
+            
+            .project-section {
+                padding: 1.5rem;
+            }
+            
+            .task-header {
+                flex-direction: column;
+                align-items: flex-start;
+                gap: 1rem;
+            }
+            
+            .task-meta {
+                flex-direction: column;
+                gap: 1rem;
+            }
+            
+            .task-form {
+                padding: 1.5rem;
+            }
+        }
+
+        /* Custom Scrollbar */
+        ::-webkit-scrollbar {
+            width: 8px;
+        }
+
+        ::-webkit-scrollbar-track {
+            background: rgba(255, 255, 255, 0.05);
+            border-radius: 10px;
+        }
+
+        ::-webkit-scrollbar-thumb {
+            background: var(--rainbow-gradient);
+            border-radius: 10px;
+        }
+
+        ::-webkit-scrollbar-thumb:hover {
+            background: var(--secondary-gradient);
+        }
+    </style>
+</head>
+<body>
+    <!-- Premium Background Animation -->
+    <div class="bg-animation">
+        <div class="floating-orb orb-1"></div>
+        <div class="floating-orb orb-2"></div>
+        <div class="floating-orb orb-3"></div>
+    </div>
+
+    <div class="container">
+        <!-- Page Header -->
+        <div class="page-header">
+            <div class="header-content">
+                <h1 class="page-title">Projects & Tasks</h1>
+                <p class="page-subtitle">Manage your assigned projects and track task progress in one place</p>
+            </div>
+            <a href="{% url 'freelancer_message' %}" class="back-btn">
+                <i class="fas fa-arrow-left"></i>
+                Back
+            </a>
+        </div>
+
+        <!-- Search Bar -->
+        <div class="search-container">
+            <div class="search-box">
+                <i class="fas fa-search search-icon"></i>
+                <input type="text" class="search-input" id="searchInput" placeholder="Search projects, tasks, descriptions...">
+            </div>
+            <div class="search-results-info" id="searchResultsInfo"></div>
+        </div>
+
+        <!-- Projects & Tasks Content -->
+        <div id="projectsContainer">
+            {% if projects_with_tasks %}
+                {% for item in projects_with_tasks %}
+                    {% if item.tasks %}
+                        <div class="project-section" data-project-title="{{ item.project.title|lower }}" data-project-desc="{{ item.project.description|lower }}">
+                            <h3 class="project-title">{{ item.project.title }}</h3>
+                            <p class="project-description">{{ item.project.description }}</p>
+
+                            {% for task in item.tasks %}
+                                <div class="task-card" data-task-title="{{ task.title|lower }}" data-task-desc="{{ task.description|lower }}" data-task-priority="{{ task.priority|lower }}">
+                                    <div class="task-header">
+                                        <h4 class="task-title">{{ task.title }}</h4>
+                                        <span class="task-priority">{{ task.priority|title }} Priority</span>
+                                    </div>
+                                    
+                                    <p class="task-desc">{{ task.description }}</p>
+                                    
+                                    <div class="task-meta">
+                                        <div class="meta-item">
+                                            <i class="fas fa-calendar-alt"></i>
+                                            <span>Due: {{ task.due_date }}</span>
+                                        </div>
+                                        <div class="meta-item">
+                                            <i class="fas fa-flag"></i>
+                                            <span>Priority: {{ task.priority }}</span>
+                                        </div>
+                                    </div>
+
+                                    {% if task.reference_file %}
+                                        <a href="{{ task.reference_file.url }}" target="_blank" class="file-reference">
+                                            <i class="fas fa-paperclip"></i>
+                                            Reference File
+                                        </a>
+                                    {% endif %}
+
+                                    {% if task.status != 'completed' %}
+                                        <!-- Editable form -->
+                                        <form class="task-form updateTaskForm" data-task-id="{{ task.id }}" enctype="multipart/form-data" method="POST">
+                                            {% csrf_token %}
+                                            
+                                            <div class="form-group">
+                                                <label class="form-label">
+                                                    <i class="fas fa-tasks"></i>
+                                                    Task Status
+                                                </label>
+                                                <select name="status" class="form-select" required>
+                                                    <option value="in_progress" {% if task.status == 'in_progress' %}selected{% endif %}>In Progress</option>
+                                                    <option value="completed" {% if task.status == 'completed' %}selected{% endif %}>Completed</option>
+                                                </select>
+                                            </div>
+
+                                            <div class="form-group">
+                                                <label class="form-label">
+                                                    <i class="fas fa-file-upload"></i>
+                                                    Upload Deliverable
+                                                </label>
+                                                <input type="file" name="freelancer_file" class="form-control file-input" accept="*">
+                                            </div>
+
+                                            <button type="submit" class="btn-primary">
+                                                <i class="fas fa-save"></i>
+                                                Update Task
+                                            </button>
+                                        </form>
+                                    {% else %}
+                                        <!-- Read-only section -->
+                                        <div class="task-status-section">
+                                            <div class="form-group">
+                                                <label class="form-label">
+                                                    <i class="fas fa-tasks"></i>
+                                                    Current Status
+                                                </label>
+                                                <div class="d-flex gap-3 flex-wrap">
+                                                    <span class="status-badge status-completed">
+                                                        <i class="fas fa-check-circle"></i>
+                                                        {{ task.status|title }}
+                                                    </span>
+                                                    
+                                                    {% if task.approval_status == 'approved' %}
+                                                        <span class="status-badge status-approved">
+                                                            <i class="fas fa-check-double"></i>
+                                                            Approved
+                                                        </span>
+                                                    {% elif task.approval_status == 'disapproved' %}
+                                                        <span class="status-badge status-disapproved">
+                                                            <i class="fas fa-times-circle"></i>
+                                                            Disapproved
+                                                        </span>
+                                                    {% else %}
+                                                        <span class="status-badge status-pending">
+                                                            <i class="fas fa-clock"></i>
+                                                            Pending Approval
+                                                        </span>
+                                                    {% endif %}
+                                                </div>
+                                            </div>
+                                        </div>
+                                    {% endif %}
+                                </div>
+                            {% endfor %}
+                        </div>
+                    {% endif %}
+                {% endfor %}
+            {% else %}
+                <!-- Empty State -->
+                <div class="empty-state">
+                    <i class="fas fa-folder-open"></i>
+                    <h3>No Active Projects</h3>
+                    <p>You don't have any active projects with tasks assigned at the moment. Check back later or contact your recruiter for new assignments.</p>
+                </div>
+            {% endif %}
+        </div>
+
+        <!-- No Results State -->
+        <div class="no-results" id="noResults" style="display: none;">
+            <i class="fas fa-search"></i>
+            <h3>No Results Found</h3>
+            <p>No projects or tasks match your search criteria. Try different keywords.</p>
+        </div>
+    </div>
+
+    <script>
+        document.addEventListener('DOMContentLoaded', () => {
+            const forms = document.querySelectorAll('.updateTaskForm');
+            const searchInput = document.getElementById('searchInput');
+            const searchResultsInfo = document.getElementById('searchResultsInfo');
+            const projectsContainer = document.getElementById('projectsContainer');
+            const noResults = document.getElementById('noResults');
+            const projectSections = document.querySelectorAll('.project-section');
+            const taskCards = document.querySelectorAll('.task-card');
+
+            // Form submission functionality
+            forms.forEach(form => {
+                form.addEventListener('submit', async (e) => {
+                    e.preventDefault();
+                    const taskId = form.dataset.taskId;
+                    const formData = new FormData(form);
+                    const submitBtn = form.querySelector('button[type="submit"]');
+                    
+                    // Store original button content
+                    const originalText = submitBtn.innerHTML;
+                    
+                    // Show loading state
+                    submitBtn.innerHTML = '<i class="fas fa-spinner fa-spin"></i> Updating...';
+                    submitBtn.disabled = true;
+
+                    try {
+                        const response = await fetch(`/task/${taskId}/update/`, {
+                            method: 'POST',
+                            headers: {
+                                'X-CSRFToken': form.querySelector('[name=csrfmiddlewaretoken]').value
+                            },
+                            body: formData
+                        });
+                        const data = await response.json();
+                        
+                        if (data.success) {
+                            // Show success state
+                            submitBtn.innerHTML = '<i class="fas fa-check"></i> Updated!';
+                            submitBtn.style.background = 'var(--success-gradient)';
+                            
+                            setTimeout(() => {
+                                location.reload();
+                            }, 1500);
+                        } else {
+                            alert(data.error || 'Error updating task');
+                            // Reset button
+                            submitBtn.innerHTML = originalText;
+                            submitBtn.disabled = false;
+                        }
+                    } catch (err) {
+                        console.error(err);
+                        alert('An error occurred. Please try again.');
+                        // Reset button
+                        submitBtn.innerHTML = originalText;
+                        submitBtn.disabled = false;
+                    }
+                });
+            });
+
+            // Search functionality
+            searchInput.addEventListener('input', function() {
+                const searchTerm = this.value.toLowerCase().trim();
+                let visibleProjects = 0;
+                let visibleTasks = 0;
+
+                if (searchTerm === '') {
+                    // Show all projects and tasks
+                    projectSections.forEach(section => {
+                        section.style.display = 'block';
+                        const tasks = section.querySelectorAll('.task-card');
+                        tasks.forEach(task => task.style.display = 'block');
+                    });
+                    projectsContainer.style.display = 'block';
+                    noResults.style.display = 'none';
+                    searchResultsInfo.textContent = '';
+                    return;
+                }
+
+                projectsContainer.style.display = 'block';
+                noResults.style.display = 'none';
+
+                projectSections.forEach(section => {
+                    const projectTitle = section.dataset.projectTitle;
+                    const projectDesc = section.dataset.projectDesc;
+                    const tasks = section.querySelectorAll('.task-card');
+                    let projectHasVisibleTasks = false;
+
+                    // Check if project matches search
+                    const projectMatches = projectTitle.includes(searchTerm) || projectDesc.includes(searchTerm);
+
+                    tasks.forEach(task => {
+                        const taskTitle = task.dataset.taskTitle;
+                        const taskDesc = task.dataset.taskDesc;
+                        const taskPriority = task.dataset.taskPriority;
+
+                        // Check if task matches search
+                        const taskMatches = taskTitle.includes(searchTerm) || 
+                                          taskDesc.includes(searchTerm) || 
+                                          taskPriority.includes(searchTerm);
+
+                        if (taskMatches || projectMatches) {
+                            task.style.display = 'block';
+                            visibleTasks++;
+                            projectHasVisibleTasks = true;
+                        } else {
+                            task.style.display = 'none';
+                        }
+                    });
+
+                    if (projectHasVisibleTasks) {
+                        section.style.display = 'block';
+                        visibleProjects++;
+                    } else {
+                        section.style.display = 'none';
+                    }
+                });
+
+                // Update results info
+                if (visibleTasks > 0) {
+                    searchResultsInfo.textContent = `Found ${visibleTasks} task(s) in ${visibleProjects} project(s)`;
+                    searchResultsInfo.style.color = 'var(--text-secondary)';
+                } else {
+                    searchResultsInfo.textContent = 'No matching tasks found';
+                    searchResultsInfo.style.color = 'var(--text-muted)';
+                }
+
+                // Show no results state if no matches
+                if (visibleTasks === 0) {
+                    projectsContainer.style.display = 'none';
+                    noResults.style.display = 'block';
+                }
+            });
+
+            // Add animation to cards on load
+            const cards = document.querySelectorAll('.task-card');
+            cards.forEach((card, index) => {
+                card.style.opacity = '0';
+                card.style.transform = 'translateY(20px)';
+                card.style.transition = 'opacity 0.5s ease, transform 0.5s ease';
+                
+                setTimeout(() => {
+                    card.style.opacity = '1';
+                    card.style.transform = 'translateY(0)';
+                }, index * 100);
+            });
+        });
+    </script>
+</body>
+</html>

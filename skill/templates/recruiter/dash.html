@@ -1,0 +1,1617 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Recruiter Dashboard - SkillJourney</title>
+  
+  <!-- Bootstrap CSS -->
+  <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+  <!-- Font Awesome -->
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+  <!-- Google Fonts -->
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800;900&display=swap" rel="stylesheet">
+  <!-- Leaflet CSS for maps -->
+  <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css" />
+  
+  <style>
+    /* All your existing CSS remains exactly the same */
+    :root {
+      --primary-color: #667eea;
+      --primary-dark: #764ba2;
+      --secondary-color: #4ecdc4;
+      --accent-color: #ff6b6b;
+      --success-color: #51cf66;
+      --purple-color: #a855f7;
+      --rainbow-gradient: linear-gradient(135deg, #ff6b6b, #4ecdc4, #45b7d1, #a855f7, #feca57, #667eea);
+      --glass-bg: rgba(255, 255, 255, 0.08);
+      --glass-border: rgba(255, 255, 255, 0.12);
+      --dark-bg: #0f0f23;
+      --darker-bg: #0a0a1a;
+      --card-bg: rgba(30, 30, 60, 0.8);
+      --text-primary: #ffffff;
+      --text-secondary: #e2e8f0;
+      --text-muted: #94a3b8;
+      --shadow-glow: 0 10px 40px rgba(102, 126, 234, 0.15);
+      --shadow-intense: 0 20px 50px rgba(0, 0, 0, 0.3);
+      --border-radius: 20px;
+      --sidebar-width: 260px;
+      --sidebar-collapsed: 70px;
+    }
+    
+    /* ALL YOUR EXISTING CSS STYLES REMAIN EXACTLY THE SAME */
+    body {
+      font-family: 'Inter', -apple-system, BlinkMacSystemFont, sans-serif;
+      background: linear-gradient(135deg, var(--dark-bg) 0%, var(--darker-bg) 100%);
+      color: var(--text-primary);
+      line-height: 1.6;
+      margin: 0;
+      display: flex;
+      min-height: 100vh;
+      overflow-x: hidden;
+    }
+
+    .bg-animation {
+      position: fixed;
+      inset: 0;
+      z-index: -1;
+      overflow: hidden;
+      will-change: transform;
+    }
+
+    .floating-orb {
+      position: absolute;
+      border-radius: 50%;
+      filter: blur(80px);
+      opacity: 0.15;
+      animation: float-orbs 40s ease-in-out infinite;
+      transform: translateZ(0);
+    }
+
+    .orb-1 {
+      width: 400px;
+      height: 400px;
+      background: var(--primary-color);
+      top: 10%;
+      left: 5%;
+      animation-delay: 0s;
+    }
+
+    .orb-2 {
+      width: 300px;
+      height: 300px;
+      background: var(--secondary-color);
+      bottom: 15%;
+      right: 10%;
+      animation-delay: 20s;
+    }
+
+    .orb-3 {
+      width: 350px;
+      height: 350px;
+      background: var(--accent-color);
+      top: 60%;
+      left: 70%;
+      animation-delay: 30s;
+    }
+
+    .sidebar {
+      width: var(--sidebar-width);
+      background: var(--card-bg);
+      backdrop-filter: blur(25px);
+      border-right: 1px solid var(--glass-border);
+      box-shadow: var(--shadow-intense);
+      transition: transform 0.3s ease;
+      position: fixed;
+      height: 100vh;
+      z-index: 1000;
+      overflow-y: auto;
+      overflow-x: hidden;
+      will-change: transform;
+      transform: translateZ(0);
+      display: flex;
+      flex-direction: column;
+    }
+    
+    .sidebar-content {
+      flex: 1;
+      display: flex;
+      flex-direction: column;
+      overflow-y: auto;
+    }
+    
+    .sidebar-header {
+      padding: 1.5rem 1.25rem;
+      border-bottom: 1px solid var(--glass-border);
+      display: flex;
+      align-items: center;
+      position: relative;
+      overflow: hidden;
+      flex-shrink: 0;
+    }
+    
+    .sidebar-brand {
+      display: flex;
+      align-items: center;
+      text-decoration: none;
+      color: var(--text-primary);
+      font-weight: 800;
+      font-size: 1.3rem;
+      position: relative;
+      z-index: 2;
+      gap: 10px;
+    }
+    
+    .brand-logo {
+      width: 40px;
+      height: 40px;
+      background: var(--rainbow-gradient);
+      color: white;
+      border-radius: 12px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-weight: 900;
+      font-size: 16px;
+      box-shadow: var(--shadow-glow);
+      transition: all 0.3s ease;
+      position: relative;
+      overflow: hidden;
+    }
+
+    .brand-logo::before {
+      content: '';
+      position: absolute;
+      top: -50%;
+      left: -50%;
+      width: 200%;
+      height: 200%;
+      background: linear-gradient(45deg, transparent, rgba(255,255,255,0.3), transparent);
+      animation: shimmer 6s linear infinite;
+    }
+
+    .sidebar-brand:hover .brand-logo {
+      transform: rotate(5deg) scale(1.1);
+      box-shadow: 0 15px 40px rgba(102, 126, 234, 0.4);
+    }
+
+    .brand-text {
+      background: var(--rainbow-gradient);
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+      background-clip: text;
+      transition: all 0.3s ease;
+      font-weight: 900;
+      animation: gradient-shift 6s ease-in-out infinite;
+      background-size: 200% 200%;
+    }
+    
+    .sidebar-menu {
+      padding: 1.25rem 0;
+      flex: 1;
+      overflow-y: auto;
+    }
+    
+    .menu-item {
+      display: flex;
+      align-items: center;
+      padding: 0.85rem 1.25rem;
+      color: var(--text-secondary);
+      text-decoration: none;
+      transition: all 0.3s ease;
+      border-left: 4px solid transparent;
+      margin: 0.2rem 0.75rem;
+      border-radius: 12px;
+      position: relative;
+      overflow: hidden;
+    }
+    
+    .menu-item:hover, .menu-item.active {
+      background: var(--glass-bg);
+      color: var(--text-primary);
+      border-left-color: var(--primary-color);
+      transform: translateX(5px) scale(1.02);
+      box-shadow: var(--shadow-glow);
+    }
+    
+    .menu-item i {
+      width: 22px;
+      margin-right: 0.85rem;
+      font-size: 1.2rem;
+      transition: all 0.3s ease;
+    }
+
+    .menu-item:hover i {
+      transform: scale(1.1);
+      color: var(--primary-color);
+    }
+    
+    .menu-text {
+      transition: opacity 0.3s ease;
+      font-weight: 600;
+      font-size: 0.95rem;
+    }
+    
+    .sidebar-footer {
+      padding: 1.25rem 1rem;
+      border-top: 1px solid var(--glass-border);
+      background: var(--card-bg);
+      backdrop-filter: blur(25px);
+      flex-shrink: 0;
+    }
+    
+    .user-info {
+      display: flex;
+      align-items: center;
+      margin-bottom: 1rem;
+      padding: 0.85rem;
+      background: var(--glass-bg);
+      border-radius: 12px;
+      border: 1px solid var(--glass-border);
+      transition: all 0.3s ease;
+    }
+
+    .user-info:hover {
+      background: rgba(255, 255, 255, 0.12);
+      transform: translateY(-2px);
+    }
+    
+    .user-avatar {
+      width: 36px;
+      height: 36px;
+      border-radius: 50%;
+      background: linear-gradient(135deg, var(--primary-color), var(--primary-dark));
+      color: white;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-weight: 700;
+      margin-right: 0.65rem;
+      box-shadow: var(--shadow-glow);
+    }
+
+    .user-name {
+      color: var(--text-primary);
+      font-weight: 600;
+      font-size: 0.95rem;
+    }
+    
+    .main-content {
+      flex: 1;
+      margin-left: var(--sidebar-width);
+      transition: margin-left 0.3s ease;
+      position: relative;
+    }
+    
+    .top-nav {
+      background: var(--card-bg);
+      backdrop-filter: blur(25px);
+      border-bottom: 1px solid var(--glass-border);
+      box-shadow: var(--shadow-glow);
+      padding: 1.25rem 2rem;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      position: sticky;
+      top: 0;
+      z-index: 999;
+      animation: slide-down 0.6s ease-out;
+    }
+    
+    .nav-toggle {
+      background: var(--glass-bg);
+      border: 1px solid var(--glass-border);
+      border-radius: 10px;
+      font-size: 1.1rem;
+      color: var(--text-primary);
+      cursor: pointer;
+      padding: 0.65rem;
+      transition: all 0.3s ease;
+      backdrop-filter: blur(10px);
+    }
+    
+    .nav-toggle:hover {
+      background: var(--primary-color);
+      color: white;
+      transform: translateY(-2px);
+      box-shadow: var(--shadow-glow);
+    }
+
+    /* Rank Button Styles */
+    .rank-btn {
+      background: var(--glass-bg);
+      border: 1px solid var(--glass-border);
+      border-radius: 10px;
+      width: 45px;
+      height: 45px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      color: var(--text-secondary);
+      cursor: pointer;
+      transition: all 0.3s ease;
+      position: relative;
+      backdrop-filter: blur(10px);
+      text-decoration: none;
+      margin-right: 10px;
+    }
+
+    .rank-btn:hover {
+      background: rgba(255, 193, 7, 0.3);
+      color: #ffc107;
+      transform: scale(1.05);
+    }
+
+    /* Notification Styles for Recruiter */
+    .notification-container {
+      position: relative;
+    }
+
+    .notification-btn {
+      background: var(--glass-bg);
+      border: 1px solid var(--glass-border);
+      border-radius: 10px;
+      width: 45px;
+      height: 45px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      color: var(--text-secondary);
+      cursor: pointer;
+      transition: all 0.3s ease;
+      position: relative;
+      backdrop-filter: blur(10px);
+    }
+
+    .notification-btn:hover {
+      background: rgba(102, 126, 234, 0.3);
+      color: var(--text-primary);
+      transform: scale(1.05);
+    }
+
+    .notification-badge {
+      position: absolute;
+      top: -5px;
+      right: -5px;
+      background: var(--accent-color);
+      color: white;
+      border-radius: 50%;
+      width: 20px;
+      height: 20px;
+      font-size: 0.7rem;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-weight: 600;
+      animation: pulse 2s infinite;
+    }
+
+    @keyframes pulse {
+      0% { transform: scale(1); }
+      50% { transform: scale(1.1); }
+      100% { transform: scale(1); }
+    }
+
+    .notification-dropdown {
+      position: absolute;
+      top: 100%;
+      right: 0;
+      width: 420px;
+      background: var(--card-bg);
+      backdrop-filter: blur(30px);
+      border: 1px solid var(--glass-border);
+      border-radius: var(--border-radius);
+      box-shadow: var(--shadow-intense);
+      z-index: 1000;
+      display: none;
+      margin-top: 10px;
+      animation: slideDown 0.3s ease;
+    }
+
+    @keyframes slideDown {
+      from {
+        opacity: 0;
+        transform: translateY(-10px);
+      }
+      to {
+        opacity: 1;
+        transform: translateY(0);
+      }
+    }
+
+    .notification-dropdown.show {
+      display: block;
+    }
+
+    .notification-header {
+      padding: 1.25rem 1.25rem 0.75rem;
+      border-bottom: 1px solid var(--glass-border);
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+    }
+
+    .notification-header h6 {
+      margin: 0;
+      color: var(--text-primary);
+      font-weight: 600;
+    }
+
+    .mark-all-read-btn {
+      background: none;
+      border: none;
+      color: var(--primary-color);
+      font-size: 0.8rem;
+      cursor: pointer;
+      transition: all 0.3s ease;
+    }
+
+    .mark-all-read-btn:hover {
+      text-decoration: underline;
+    }
+
+    .notification-list {
+      max-height: 400px;
+      overflow-y: auto;
+    }
+
+    .notification-item {
+      padding: 1rem 1.25rem;
+      border-bottom: 1px solid var(--glass-border);
+      display: flex;
+      align-items: flex-start;
+      gap: 0.75rem;
+      cursor: pointer;
+      transition: all 0.3s ease;
+      position: relative;
+    }
+
+    .notification-item:hover {
+      background: var(--glass-bg);
+    }
+
+    .notification-item.unread {
+      background: rgba(102, 126, 234, 0.1);
+    }
+
+    .notification-item:last-child {
+      border-bottom: none;
+    }
+
+    .notification-icon {
+      font-size: 1.2rem;
+      margin-top: 0.1rem;
+      flex-shrink: 0;
+    }
+
+    .notification-content {
+      flex: 1;
+    }
+
+    .notification-message {
+      color: var(--text-primary);
+      font-size: 0.9rem;
+      line-height: 1.4;
+      margin: 0;
+    }
+
+    .notification-job {
+      color: var(--text-secondary);
+      font-size: 0.85rem;
+      margin: 0.25rem 0 0 0;
+      font-weight: 500;
+    }
+
+    .notification-time {
+      color: var(--text-muted);
+      font-size: 0.75rem;
+      margin-top: 0.25rem;
+    }
+
+    .notification-indicator {
+      width: 8px;
+      height: 8px;
+      background: var(--primary-color);
+      border-radius: 50%;
+      flex-shrink: 0;
+      margin-top: 0.5rem;
+    }
+
+    .notification-empty {
+      padding: 2rem 1.25rem;
+      text-align: center;
+      color: var(--text-muted);
+    }
+
+    .notification-empty i {
+      font-size: 2rem;
+      margin-bottom: 0.5rem;
+      opacity: 0.5;
+    }
+
+    .notification-footer {
+      padding: 0.75rem 1.25rem;
+      border-top: 1px solid var(--glass-border);
+      text-align: center;
+    }
+
+    .view-all-link {
+      color: var(--primary-color);
+      text-decoration: none;
+      font-size: 0.9rem;
+      font-weight: 500;
+      transition: all 0.3s ease;
+    }
+
+    .view-all-link:hover {
+      text-decoration: underline;
+    }
+
+    .nav-actions {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+    }
+
+    .nav-actions .btn {
+      background: var(--glass-bg);
+      border: 1px solid var(--glass-border);
+      color: var(--text-primary);
+      border-radius: 10px;
+      padding: 0.65rem 0.85rem;
+      transition: all 0.3s ease;
+      backdrop-filter: blur(10px);
+    }
+
+    .nav-actions .btn:hover {
+      background: rgba(255, 255, 255, 0.15);
+      transform: translateY(-2px);
+    }
+    
+    .dashboard-container {
+      max-width: 1400px;
+      margin: 0 auto;
+      padding: 2rem 2rem;
+    }
+    
+    .dashboard-header {
+      margin-bottom: 2.5rem;
+      text-align: center;
+      animation: fade-in-up 0.8s ease-out;
+    }
+    
+    .dashboard-title {
+      font-size: 2.5rem;
+      font-weight: 900;
+      color: var(--text-primary);
+      margin-bottom: 0.75rem;
+    }
+    
+    .dashboard-subtitle {
+      color: var(--text-secondary);
+      font-size: 1.1rem;
+      font-weight: 500;
+    }
+    
+    .stats-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+      gap: 1.75rem;
+      margin-bottom: 2.5rem;
+    }
+    
+    .stat-card {
+      background: var(--card-bg);
+      backdrop-filter: blur(25px);
+      border-radius: var(--border-radius);
+      padding: 1.75rem;
+      box-shadow: var(--shadow-glow);
+      border: 1px solid var(--glass-border);
+      transition: transform 0.3s ease, box-shadow 0.3s ease;
+      text-align: center;
+      position: relative;
+      overflow: hidden;
+      animation: fade-in-up 0.6s ease-out;
+      transform: translateZ(0);
+    }
+    
+    .stat-card:hover {
+      transform: translateY(-8px) scale(1.02);
+      box-shadow: var(--shadow-intense);
+      border-color: rgba(102, 126, 234, 0.3);
+    }
+    
+    .stat-icon {
+      width: 55px;
+      height: 55px;
+      border-radius: 14px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      margin: 0 auto 1.25rem auto;
+      background: linear-gradient(135deg, var(--primary-color), var(--primary-dark));
+      color: white;
+      font-size: 1.4rem;
+      box-shadow: var(--shadow-glow);
+      transition: all 0.3s ease;
+      position: relative;
+      z-index: 2;
+    }
+
+    .stat-card:hover .stat-icon {
+      transform: rotate(10deg) scale(1.1);
+      box-shadow: 0 15px 30px rgba(102, 126, 234, 0.4);
+    }
+    
+    .stat-content h3 {
+      font-size: 2.5rem;
+      font-weight: 900;
+      margin-bottom: 0.5rem;
+      color: var(--text-primary);
+      position: relative;
+      z-index: 2;
+      animation: count-up 2s ease-out;
+    }
+    
+    .stat-content p {
+      color: var(--text-secondary);
+      font-size: 1rem;
+      margin: 0;
+      font-weight: 600;
+      position: relative;
+      z-index: 2;
+    }
+    
+    .btn-primary {
+      background: linear-gradient(135deg, var(--primary-color), var(--primary-dark));
+      border: none;
+      border-radius: 10px;
+      padding: 0.75rem 1.75rem;
+      font-weight: 700;
+      transition: all 0.3s ease;
+      color: white;
+      box-shadow: var(--shadow-glow);
+      position: relative;
+      overflow: hidden;
+    }
+    
+    .btn-primary:hover {
+      transform: translateY(-3px) scale(1.05);
+      box-shadow: 0 15px 40px rgba(102, 126, 234, 0.4);
+      color: white;
+    }
+    
+    .btn-outline {
+      background: var(--glass-bg);
+      border: 2px solid var(--glass-border);
+      color: var(--text-primary);
+      border-radius: 10px;
+      padding: 0.75rem 1.75rem;
+      font-weight: 600;
+      transition: all 0.3s ease;
+      backdrop-filter: blur(10px);
+    }
+    
+    .btn-outline:hover {
+      background: rgba(255, 255, 255, 0.15);
+      border-color: var(--primary-color);
+      color: var(--text-primary);
+      transform: translateY(-2px);
+    }
+    
+    .quick-action-card {
+      background: var(--card-bg);
+      backdrop-filter: blur(25px);
+      border-radius: var(--border-radius);
+      padding: 2.25rem;
+      box-shadow: var(--shadow-glow);
+      border: 1px solid var(--glass-border);
+      height: 100%;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      text-align: center;
+      transition: transform 0.3s ease, box-shadow 0.3s ease;
+      position: relative;
+      overflow: hidden;
+      animation: fade-in-up 0.8s ease-out;
+      transform: translateZ(0);
+    }
+    
+    .quick-action-card:hover {
+      transform: translateY(-10px) scale(1.02);
+      box-shadow: var(--shadow-intense);
+      border-color: rgba(102, 126, 234, 0.3);
+    }
+    
+    .quick-action-icon {
+      width: 75px;
+      height: 75px;
+      border-radius: 18px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      margin-bottom: 1.75rem;
+      background: linear-gradient(135deg, var(--primary-color), var(--primary-dark));
+      color: white;
+      font-size: 1.8rem;
+      box-shadow: var(--shadow-glow);
+      transition: all 0.4s ease;
+      position: relative;
+      z-index: 2;
+    }
+
+    .quick-action-card:hover .quick-action-icon {
+      transform: rotate(10deg) scale(1.1);
+      box-shadow: 0 20px 40px rgba(102, 126, 234, 0.4);
+    }
+    
+    .quick-action-card h4 {
+      font-weight: 700;
+      margin-bottom: 1rem;
+      color: var(--text-primary);
+      font-size: 1.3rem;
+      position: relative;
+      z-index: 2;
+    }
+    
+    .quick-action-card p {
+      color: var(--text-secondary);
+      margin-bottom: 1.75rem;
+      flex-grow: 1;
+      line-height: 1.6;
+      position: relative;
+      z-index: 2;
+      font-size: 0.95rem;
+    }
+    
+    .sidebar-collapsed {
+      width: var(--sidebar-collapsed);
+    }
+    
+    .sidebar-collapsed .menu-text,
+    .sidebar-collapsed .brand-text {
+      opacity: 0;
+      visibility: hidden;
+      width: 0;
+    }
+
+    .sidebar-collapsed .user-info {
+      justify-content: center;
+    }
+
+    .sidebar-collapsed .user-name {
+      display: none;
+    }
+    
+    .sidebar-collapsed + .main-content {
+      margin-left: var(--sidebar-collapsed);
+    }
+    
+    .message-badge {
+      position: absolute;
+      top: 8px;
+      right: 8px;
+      background: var(--accent-color);
+      color: white;
+      border-radius: 50%;
+      width: 18px;
+      height: 18px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 0.65rem;
+      font-weight: bold;
+    }
+
+    /* Custom Scrollbar for Sidebar */
+    .sidebar::-webkit-scrollbar {
+      width: 6px;
+    }
+
+    .sidebar::-webkit-scrollbar-track {
+      background: rgba(255, 255, 255, 0.05);
+      border-radius: 10px;
+    }
+
+    .sidebar::-webkit-scrollbar-thumb {
+      background: var(--primary-color);
+      border-radius: 10px;
+    }
+
+    .sidebar::-webkit-scrollbar-thumb:hover {
+      background: var(--secondary-color);
+    }
+
+    /* Map Container Styles */
+    .map-container {
+      background: var(--card-bg);
+      backdrop-filter: blur(25px);
+      border-radius: var(--border-radius);
+      padding: 1.75rem;
+      box-shadow: var(--shadow-glow);
+      border: 1px solid var(--glass-border);
+      margin-bottom: 2.5rem;
+      position: relative;
+      overflow: hidden;
+      animation: fade-in-up 0.8s ease-out;
+    }
+    
+    .map-header {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      margin-bottom: 1.5rem;
+    }
+    
+    .map-title {
+      font-size: 1.5rem;
+      font-weight: 700;
+      color: var(--text-primary);
+      margin: 0;
+    }
+    
+    .map-filters {
+      display: flex;
+      gap: 1rem;
+      align-items: center;
+    }
+    
+    .map-filter {
+      background: var(--glass-bg);
+      border: 1px solid var(--glass-border);
+      border-radius: 10px;
+      padding: 0.5rem 1rem;
+      color: var(--text-primary);
+      font-size: 0.9rem;
+      cursor: pointer;
+      transition: all 0.3s ease;
+    }
+    
+    .map-filter:hover {
+      background: rgba(255, 255, 255, 0.15);
+      border-color: var(--primary-color);
+    }
+    
+    #freelancerMap {
+      height: 500px;
+      width: 100%;
+      border-radius: 12px;
+      overflow: hidden;
+      box-shadow: var(--shadow-glow);
+      z-index: 1;
+    }
+    
+    .map-legend {
+      display: flex;
+      justify-content: center;
+      margin-top: 1rem;
+      gap: 1.5rem;
+      flex-wrap: wrap;
+    }
+    
+    .legend-item {
+      display: flex;
+      align-items: center;
+      gap: 0.5rem;
+      font-size: 0.9rem;
+      color: var(--text-secondary);
+    }
+    
+    .legend-color {
+      width: 12px;
+      height: 12px;
+      border-radius: 50%;
+    }
+    
+    .legend-available {
+      background-color: var(--success-color);
+    }
+    
+    .legend-busy {
+      background-color: var(--accent-color);
+    }
+    
+    .legend-offline {
+      background-color: var(--text-muted);
+    }
+    
+    .freelancer-list {
+      margin-top: 2rem;
+    }
+    
+    .freelancer-card {
+      background: var(--glass-bg);
+      border-radius: 12px;
+      padding: 1.25rem;
+      margin-bottom: 1rem;
+      border: 1px solid var(--glass-border);
+      transition: all 0.3s ease;
+    }
+    
+    .freelancer-card:hover {
+      background: rgba(255, 255, 255, 0.12);
+      transform: translateY(-3px);
+      box-shadow: var(--shadow-glow);
+    }
+    
+    .freelancer-header {
+      display: flex;
+      justify-content: between;
+      align-items: center;
+      margin-bottom: 0.75rem;
+    }
+    
+    .freelancer-name {
+      font-weight: 600;
+      color: var(--text-primary);
+      margin: 0;
+    }
+    
+    .freelancer-status {
+      font-size: 0.8rem;
+      padding: 0.25rem 0.75rem;
+      border-radius: 20px;
+      font-weight: 600;
+    }
+    
+    .status-available {
+      background-color: rgba(81, 207, 102, 0.2);
+      color: var(--success-color);
+    }
+    
+    .status-busy {
+      background-color: rgba(255, 107, 107, 0.2);
+      color: var(--accent-color);
+    }
+    
+    .status-offline {
+      background-color: rgba(148, 163, 184, 0.2);
+      color: var(--text-muted);
+    }
+    
+    .freelancer-details {
+      display: flex;
+      gap: 1.5rem;
+      font-size: 0.9rem;
+      color: var(--text-secondary);
+    }
+    
+    .freelancer-detail {
+      display: flex;
+      align-items: center;
+      gap: 0.5rem;
+    }
+
+    .loading-spinner {
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      height: 200px;
+      color: var(--text-secondary);
+    }
+
+    .loading-spinner i {
+      font-size: 2rem;
+      margin-right: 1rem;
+    }
+
+    .no-freelancers {
+      text-align: center;
+      padding: 3rem;
+      color: var(--text-muted);
+    }
+
+    .no-freelancers i {
+      font-size: 3rem;
+      margin-bottom: 1rem;
+      opacity: 0.5;
+    }
+
+    /* Responsive Design for Notifications */
+    @media (max-width: 768px) {
+      .sidebar {
+        transform: translateX(-100%);
+        width: var(--sidebar-width);
+      }
+      
+      .sidebar-mobile-open {
+        transform: translateX(0);
+      }
+      
+      .main-content {
+        margin-left: 0;
+      }
+      
+      .dashboard-container {
+        padding: 1.5rem 1rem;
+      }
+      
+      .stats-grid {
+        grid-template-columns: 1fr;
+        gap: 1rem;
+      }
+
+      .dashboard-title {
+        font-size: 2rem;
+      }
+
+      .top-nav {
+        padding: 1rem;
+      }
+      
+      .map-header {
+        flex-direction: column;
+        align-items: flex-start;
+        gap: 1rem;
+      }
+      
+      .map-filters {
+        flex-wrap: wrap;
+      }
+      
+      #freelancerMap {
+        height: 350px;
+      }
+      
+      .floating-orb {
+        animation: none;
+      }
+
+      .notification-dropdown {
+        width: 320px;
+        right: -50px;
+      }
+    }
+
+    @media (max-width: 480px) {
+      .notification-dropdown {
+        width: 280px;
+        right: -80px;
+      }
+    }
+
+    @media (prefers-reduced-motion: reduce) {
+      * {
+        animation-duration: 0.01ms !important;
+        animation-iteration-count: 1 !important;
+        transition-duration: 0.01ms !important;
+      }
+    }
+
+    @keyframes float-orbs {
+      0%, 100% {
+        transform: translateY(0) rotate(0deg);
+      }
+      33% {
+        transform: translateY(-20px) rotate(120deg);
+      }
+      66% {
+        transform: translateY(10px) rotate(240deg);
+      }
+    }
+
+    @keyframes shimmer {
+      0% {
+        transform: translateX(-100%) translateY(-100%) rotate(45deg);
+      }
+      100% {
+        transform: translateX(100%) translateY(100%) rotate(45deg);
+      }
+    }
+
+    @keyframes gradient-shift {
+      0% {
+        background-position: 0% 50%;
+      }
+      50% {
+        background-position: 100% 50%;
+      }
+      100% {
+        background-position: 0% 50%;
+      }
+    }
+
+    @keyframes slide-down {
+      from {
+        opacity: 0;
+        transform: translateY(-30px);
+      }
+      to {
+        opacity: 1;
+        transform: translateY(0);
+      }
+    }
+
+    @keyframes fade-in-up {
+      from {
+        opacity: 0;
+        transform: translateY(30px);
+      }
+      to {
+        opacity: 1;
+        transform: translateY(0);
+      }
+    }
+
+    @keyframes count-up {
+      from {
+        opacity: 0;
+        transform: scale(0.5);
+      }
+      to {
+        opacity: 1;
+        transform: scale(1);
+      }
+    }
+
+    ::-webkit-scrollbar {
+      width: 8px;
+    }
+
+    ::-webkit-scrollbar-track {
+      background: rgba(255, 255, 255, 0.05);
+      border-radius: 10px;
+    }
+
+    ::-webkit-scrollbar-thumb {
+      background: var(--primary-color);
+      border-radius: 10px;
+    }
+
+    ::-webkit-scrollbar-thumb:hover {
+      background: var(--secondary-color);
+    }
+  </style>
+</head>
+<body>
+    <!-- Simplified Background Animation -->
+    <div class="bg-animation">
+        <div class="floating-orb orb-1"></div>
+        <div class="floating-orb orb-2"></div>
+        <div class="floating-orb orb-3"></div>
+    </div>
+
+    <!-- Premium Sidebar -->
+    <div class="sidebar" id="sidebar">
+        <div class="sidebar-content">
+            <div class="sidebar-header">
+                <a href="#" class="sidebar-brand">
+                    <div class="brand-logo">SJ</div>
+                    <span class="brand-text">SkillJourney</span>
+                </a>
+            </div>
+            
+            <div class="sidebar-menu">
+               <a href="{% url 'admin_dashboard' %}" class="menu-item active" target="_blank" rel="noopener noreferrer">
+    <i class="fas fa-tachometer-alt"></i>
+    <span class="menu-text">Dashboard</span>
+</a>
+
+        <a href="{% url 'post_job' %}" class="menu-item" target="_blank" rel="noopener noreferrer">
+            <i class="fas fa-plus-circle"></i>
+            <span class="menu-text">Post Job</span>
+        </a>
+
+        <a href="{% url 'my_jobs' %}" class="menu-item" target="_blank" rel="noopener noreferrer">
+            <i class="fas fa-briefcase"></i>
+            <span class="menu-text">My Jobs</span>
+        </a>
+
+        <a href="{% url 'recruiter_analytics' %}" class="menu-item" target="_blank" rel="noopener noreferrer">
+            <i class="fas fa-chart-line"></i>
+            <span class="menu-text">Analytics</span>
+        </a>
+
+        <!-- UPDATED MAP OPTION - Now links to actual map view -->
+        <a href="{% url 'freelancer_map' %}" class="menu-item" id="mapMenuItem" target="_blank" rel="noopener noreferrer">
+            <i class="fas fa-map-marked-alt"></i>
+            <span class="menu-text">Freelancer Map</span>
+        </a>
+
+        <a href="{% url 'recruiter_profile' %}" class="menu-item" target="_blank" rel="noopener noreferrer">
+            <i class="fas fa-user"></i>
+            <span class="menu-text">Profile</span>
+        </a>
+
+        <a href="{% url 'recruiter_message' %}" class="menu-item" target="_blank" rel="noopener noreferrer">
+            <i class="fas fa-envelope"></i>
+            <span class="menu-text">Messages</span>
+        </a>
+
+        <a href="{% url 'recruiter_discussions' %}" class="menu-item" target="_blank" rel="noopener noreferrer">
+            <i class="fas fa-envelope"></i>
+            <span class="menu-text">Discussions</span>
+        </a>
+
+            </div>
+        </div>
+        
+        <div class="sidebar-footer">
+            <div class="user-info">
+                <div class="user-avatar">R</div>
+                <div class="user-name">Recruiter</div>
+            </div>
+            <a href="{% url 'logout' %}" class="btn btn-outline w-100">
+                <i class="fas fa-sign-out-alt"></i>
+                <span class="menu-text">Logout</span>
+            </a>
+        </div>
+    </div>
+    
+    <!-- Main Content -->
+    <div class="main-content" id="mainContent">
+        <!-- Premium Top Navigation -->
+        <div class="top-nav">
+            <button class="nav-toggle" id="sidebarToggle">
+                <i class="fas fa-bars"></i>
+            </button>
+            
+            <div class="nav-actions">
+                <!-- Rank Button - Now positioned to the LEFT of notification bell -->
+                <a href="{% url 'recruiter_view_rank' %}" class="rank-btn" title="View Rankings">
+                    <i class="fas fa-trophy"></i>
+                </a>
+                
+                <!-- Notification Bell -->
+                <div class="notification-container position-relative">
+                    <button class="notification-btn" id="notificationButton">
+                        <i class="fas fa-bell"></i>
+                        {% if unread_notifications_count > 0 %}
+                        <span class="notification-badge">{{ unread_notifications_count }}</span>
+                        {% endif %}
+                    </button>
+                    
+                    <!-- Notification Dropdown -->
+                    <div class="notification-dropdown" id="notificationDropdown">
+                        <div class="notification-header">
+                            <h6>New Applications</h6>
+                            {% if unread_notifications_count > 0 %}
+                            <button class="mark-all-read-btn" onclick="markAllAsRead()">Mark all as read</button>
+                            {% endif %}
+                        </div>
+                        <div class="notification-list">
+                            {% if notifications %}
+                                {% for notification in notifications %}
+                                <div class="notification-item {% if not notification.is_read %}unread{% endif %}" 
+                                     data-notification-id="{{ notification.id }}"
+                                     onclick="viewApplication('{{ notification.related_job.id }}', '{{ notification.id }}')">
+                                    <div class="notification-icon">
+                                        {% if notification.notification_type == 'new_application' %}
+                                        <i class="fas fa-user-plus text-primary"></i>
+                                        {% elif notification.notification_type == 'application_accepted' %}
+                                        <i class="fas fa-check-circle text-success"></i>
+                                        {% elif notification.notification_type == 'application_rejected' %}
+                                        <i class="fas fa-times-circle text-danger"></i>
+                                        {% else %}
+                                        <i class="fas fa-info-circle text-info"></i>
+                                        {% endif %}
+                                    </div>
+                                    <div class="notification-content">
+                                        <p class="notification-message mb-1">{{ notification.message }}</p>
+                                        {% if notification.related_job %}
+                                        <p class="notification-job mb-1">
+                                            <i class="fas fa-briefcase me-1"></i>{{ notification.related_job.title }}
+                                        </p>
+                                        {% endif %}
+                                        <small class="notification-time">{{ notification.created_at|timesince }} ago</small>
+                                    </div>
+                                    {% if not notification.is_read %}
+                                    <div class="notification-indicator"></div>
+                                    {% endif %}
+                                </div>
+                                {% endfor %}
+                            {% else %}
+                                <div class="notification-empty">
+                                    <i class="fas fa-bell-slash"></i>
+                                    <p>No new applications</p>
+                                </div>
+                            {% endif %}
+                        </div>
+                        <div class="notification-footer">
+                            <a href="{% url 'my_jobs' %}" class="view-all-link">View All Jobs</a>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        
+        <!-- Premium Dashboard Content -->
+        <div class="dashboard-container">
+            <!-- Premium Dashboard Header -->
+            <div class="dashboard-header">
+                <h1 class="dashboard-title">Recruiter Dashboard</h1>
+                <p class="dashboard-subtitle">Manage job postings and review applications with style</p>
+            </div>
+            
+            <!-- Premium Statistics Grid -->
+            <div class="stats-grid">
+                <div class="stat-card">
+                    <div class="stat-icon">
+                        <i class="fas fa-briefcase"></i>
+                    </div>
+                    <div class="stat-content">
+                        <h3>{{total_jobs}}</h3>
+                        <p>Total Jobs Posted</p>
+                    </div>
+                </div>
+                
+                <div class="stat-card">
+                    <div class="stat-icon">
+                        <i class="fas fa-folder-open"></i>
+                    </div>
+                    <div class="stat-content">
+                        <h3>{{open_jobs}}</h3>
+                        <p>Open Jobs</p>
+                    </div>
+                </div>
+                
+                <div class="stat-card">
+                    <div class="stat-icon">
+                        <i class="fas fa-file-alt"></i>
+                    </div>
+                    <div class="stat-content">
+                        <h3>{{total_applications}}</h3>
+                        <p>Applications Received</p>
+                    </div>
+                </div>
+                
+                <div class="stat-card">
+                    <div class="stat-icon">
+                        <i class="fas fa-check-circle"></i>
+                    </div>
+                    <div class="stat-content">
+                        <h3>{{accepted_candidates}}</h3>
+                        <p>Accepted Candidates</p>
+                    </div>
+                </div>
+            </div>
+            
+            <!-- Premium Quick Actions -->
+            <div class="row mt-5" id="quickActions">
+                <div class="col-md-6 mb-4">
+                    <div class="quick-action-card">
+                        <div class="quick-action-icon">
+                            <i class="fas fa-plus"></i>
+                        </div>
+                        <h4>Post a New Job</h4>
+                        <p>Create a new job posting to attract talented candidates and grow your team</p>
+                        <a href="{% url 'post_job' %}" class="btn btn-primary w-100">
+                            <i class="fas fa-rocket me-2"></i>Post Job
+                        </a>
+                    </div>
+                </div>
+                
+                <div class="col-md-6 mb-4">
+                    <div class="quick-action-card">
+                        <div class="quick-action-icon">
+                            <i class="fas fa-briefcase"></i>
+                        </div>
+                        <h4>Manage Jobs</h4>
+                        <p>View and manage all your job postings in one centralized location</p>
+                        <a href="{% url 'my_jobs' %}" class="btn btn-outline w-100">
+                            <i class="fas fa-eye me-2"></i>View Jobs
+                        </a>
+                    </div>
+                </div>
+
+                <div class="col-md-6 mb-4">
+                    <div class="quick-action-card">
+                        <div class="quick-action-icon">
+                            <i class="fas fa-map-marked-alt"></i>
+                        </div>
+                        <h4>Freelancer Map</h4>
+                        <p>Discover freelancers around the world with our interactive geo map</p>
+                        <a href="{% url 'freelancer_map' %}" class="btn btn-primary w-100">
+                            <i class="fas fa-globe me-2"></i>View Map
+                        </a>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Bootstrap JS -->
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+
+    <script>
+        // Enhanced sidebar toggle functionality
+        document.getElementById('sidebarToggle').addEventListener('click', function() {
+            const sidebar = document.getElementById('sidebar');
+            
+            if (window.innerWidth > 768) {
+                // Desktop: toggle collapsed state
+                sidebar.classList.toggle('sidebar-collapsed');
+            } else {
+                // Mobile: toggle visibility
+                sidebar.classList.toggle('sidebar-mobile-open');
+            }
+        });
+        
+        // Close sidebar when clicking outside on mobile
+        document.addEventListener('click', function(event) {
+            const sidebar = document.getElementById('sidebar');
+            const toggleButton = document.getElementById('sidebarToggle');
+            
+            if (window.innerWidth <= 768 && 
+                !sidebar.contains(event.target) && 
+                !toggleButton.contains(event.target) &&
+                sidebar.classList.contains('sidebar-mobile-open')) {
+                sidebar.classList.remove('sidebar-mobile-open');
+            }
+        });
+        
+        // Handle window resize
+        window.addEventListener('resize', function() {
+            const sidebar = document.getElementById('sidebar');
+            
+            if (window.innerWidth > 768) {
+                // Reset mobile state on desktop
+                sidebar.classList.remove('sidebar-mobile-open');
+            }
+        });
+
+        // Notification functionality
+        document.addEventListener('DOMContentLoaded', function() {
+            const notificationButton = document.getElementById('notificationButton');
+            const notificationDropdown = document.getElementById('notificationDropdown');
+            
+            // Toggle notification dropdown
+            if (notificationButton && notificationDropdown) {
+                notificationButton.addEventListener('click', function(e) {
+                    e.stopPropagation();
+                    notificationDropdown.classList.toggle('show');
+                });
+                
+                // Close dropdown when clicking outside
+                document.addEventListener('click', function(e) {
+                    if (!notificationButton.contains(e.target) && !notificationDropdown.contains(e.target)) {
+                        notificationDropdown.classList.remove('show');
+                    }
+                });
+            }
+        });
+
+        // Mark notification as read and redirect to job applications
+        function viewApplication(jobId, notificationId) {
+            // Mark notification as read
+            markAsRead(notificationId);
+            
+            // Redirect to job applications page
+            window.location.href = `/applications/${jobId}/`;
+        }
+
+        // Mark notification as read
+        function markAsRead(notificationId) {
+            fetch(`/notifications/${notificationId}/mark-read/`, {
+                method: 'POST',
+                headers: {
+                    'X-CSRFToken': getCSRFToken(),
+                    'Content-Type': 'application/json',
+                },
+            })
+            .then(response => response.json())
+            .then(data => {
+                if (data.success) {
+                    // Update UI
+                    const notificationItem = document.querySelector(`[data-notification-id="${notificationId}"]`);
+                    if (notificationItem) {
+                        notificationItem.classList.remove('unread');
+                        const indicator = notificationItem.querySelector('.notification-indicator');
+                        if (indicator) {
+                            indicator.remove();
+                        }
+                        
+                        // Update badge count
+                        updateNotificationBadge();
+                    }
+                }
+            })
+            .catch(error => console.error('Error:', error));
+        }
+
+        // Mark all notifications as read
+        function markAllAsRead() {
+            fetch('/notifications/mark-all-read/', {
+                method: 'POST',
+                headers: {
+                    'X-CSRFToken': getCSRFToken(),
+                    'Content-Type': 'application/json',
+                },
+            })
+            .then(response => response.json())
+            .then(data => {
+                if (data.success) {
+                    // Update UI
+                    document.querySelectorAll('.notification-item').forEach(item => {
+                        item.classList.remove('unread');
+                        const indicator = item.querySelector('.notification-indicator');
+                        if (indicator) {
+                            indicator.remove();
+                        }
+                    });
+                    
+                    // Update badge count
+                    updateNotificationBadge();
+                }
+            })
+            .catch(error => console.error('Error:', error));
+        }
+
+        // Update notification badge
+        function updateNotificationBadge() {
+            const badge = document.querySelector('.notification-badge');
+            if (badge) {
+                const unreadCount = document.querySelectorAll('.notification-item.unread').length;
+                if (unreadCount > 0) {
+                    badge.textContent = unreadCount;
+                } else {
+                    badge.remove();
+                }
+            }
+        }
+
+        // Get CSRF token
+        function getCSRFToken() {
+            return document.querySelector('[name=csrfmiddlewaretoken]').value;
+        }
+
+        // Optimized counter animation
+        function animateCounters() {
+            const stats = document.querySelectorAll('.stat-content h3');
+            stats.forEach(stat => {
+                const finalValue = parseInt(stat.textContent);
+                if (isNaN(finalValue)) return;
+                
+                let currentValue = 0;
+                const increment = finalValue / 20;
+                
+                const timer = setInterval(() => {
+                    currentValue += increment;
+                    if (currentValue >= finalValue) {
+                        currentValue = finalValue;
+                        clearInterval(timer);
+                    }
+                    stat.textContent = Math.floor(currentValue);
+                }, 30);
+            });
+        }
+
+        // Initialize animations with performance in mind
+        document.addEventListener('DOMContentLoaded', function() {
+            // Add staggered animation to cards
+            const cards = document.querySelectorAll('.stat-card, .quick-action-card');
+            cards.forEach((card, index) => {
+                card.style.animationDelay = (index * 0.1) + 's';
+            });
+
+            // Start counter animation after a delay
+            setTimeout(animateCounters, 500);
+        });
+
+        // Performance optimization for animations when page is not visible
+        document.addEventListener('visibilitychange', function() {
+            if (document.hidden) {
+                document.querySelectorAll('.floating-orb, .stat-card, .quick-action-card').forEach(el => {
+                    el.style.animationPlayState = 'paused';
+                });
+            } else {
+                document.querySelectorAll('.floating-orb, .stat-card, .quick-action-card').forEach(el => {
+                    el.style.animationPlayState = 'running';
+                });
+            }
+        });
+
+        // Optimize scroll performance
+        let ticking = false;
+        window.addEventListener('scroll', function() {
+            if (!ticking) {
+                requestAnimationFrame(function() {
+                    ticking = false;
+                });
+                ticking = true;
+            }
+        });
+    </script>
+</body>
+</html>

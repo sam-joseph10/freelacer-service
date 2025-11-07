@@ -1,0 +1,1226 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Skill Trends - SkillJourney</title>
+  
+  <!-- Bootstrap CSS -->
+  <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+  <!-- Bootstrap Icons -->
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.0/font/bootstrap-icons.css">
+  <!-- Font Awesome -->
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+  <!-- Google Fonts -->
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800;900&display=swap" rel="stylesheet">
+  <!-- Chart.js -->
+  <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+  
+  <style>
+    :root {
+      --primary-gradient: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+      --secondary-gradient: linear-gradient(135deg, #4ecdc4 0%, #44a08d 100%);
+      --accent-gradient: linear-gradient(135deg, #ff6b6b 0%, #feca57 100%);
+      --success-gradient: linear-gradient(135deg, #51cf66 0%, #40c057 100%);
+      --danger-gradient: linear-gradient(135deg, #ff6b6b 0%, #fa5252 100%);
+      --warning-gradient: linear-gradient(135deg, #feca57 0%, #ff9f43 100%);
+      --rainbow-gradient: linear-gradient(135deg, #ff6b6b, #4ecdc4, #45b7d1, #a855f7, #feca57, #667eea);
+      --glass-bg: rgba(255, 255, 255, 0.08);
+      --glass-border: rgba(255, 255, 255, 0.12);
+      --dark-bg: #0f0f23;
+      --darker-bg: #0a0a1a;
+      --card-bg: rgba(30, 30, 60, 0.6);
+      --text-primary: #ffffff;
+      --text-secondary: #e2e8f0;
+      --text-muted: #94a3b8;
+      --shadow-glow: 0 10px 40px rgba(102, 126, 234, 0.15);
+      --shadow-intense: 0 20px 50px rgba(0, 0, 0, 0.3);
+      --border-radius: 20px;
+    }
+
+    * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+    }
+
+    body {
+      font-family: 'Inter', -apple-system, BlinkMacSystemFont, sans-serif;
+      background: linear-gradient(135deg, var(--dark-bg) 0%, var(--darker-bg) 100%);
+      color: var(--text-primary);
+      overflow-x: hidden;
+      line-height: 1.6;
+      min-height: 100vh;
+    }
+
+    /* Override Bootstrap text colors */
+    .text-muted {
+      color: var(--text-muted) !important;
+    }
+    
+    .text-dark {
+      color: var(--text-primary) !important;
+    }
+    
+    .text-black {
+      color: var(--text-primary) !important;
+    }
+    
+    .text-body {
+      color: var(--text-primary) !important;
+    }
+    
+    .small {
+      color: var(--text-muted) !important;
+    }
+    
+    .mb-0 {
+      color: var(--text-primary) !important;
+    }
+
+    /* Background Animation */
+    .bg-animation {
+      position: fixed;
+      inset: 0;
+      z-index: -1;
+      overflow: hidden;
+    }
+
+    .floating-orb {
+      position: absolute;
+      border-radius: 50%;
+      filter: blur(100px);
+      opacity: 0.15;
+      animation: float-orbs 40s ease-in-out infinite;
+    }
+
+    .orb-1 {
+      width: 400px;
+      height: 400px;
+      background: var(--primary-gradient);
+      top: 10%;
+      left: 5%;
+      animation-delay: 0s;
+    }
+
+    .orb-2 {
+      width: 300px;
+      height: 300px;
+      background: var(--secondary-gradient);
+      bottom: 15%;
+      right: 10%;
+      animation-delay: 20s;
+    }
+
+    .orb-3 {
+      width: 350px;
+      height: 350px;
+      background: var(--accent-gradient);
+      top: 60%;
+      left: 70%;
+      animation-delay: 30s;
+    }
+
+    /* Navigation */
+    .custom-navbar {
+      background: var(--card-bg);
+      backdrop-filter: blur(30px);
+      border: 1px solid var(--glass-border);
+      border-radius: var(--border-radius);
+      box-shadow: var(--shadow-intense);
+      padding: 1.5rem 2rem;
+      margin: 2rem auto;
+      max-width: 1400px;
+      animation: slide-down 0.6s ease-out;
+      position: relative;
+      overflow: hidden;
+    }
+
+    .custom-navbar::before {
+      content: '';
+      position: absolute;
+      top: 0;
+      left: -100%;
+      width: 100%;
+      height: 100%;
+      background: linear-gradient(90deg, transparent, rgba(255,255,255,0.03), transparent);
+      animation: nav-shimmer 6s ease-in-out infinite;
+    }
+
+    .nav-brand-container {
+      display: flex;
+      align-items: center;
+      gap: 1.5rem;
+      position: relative;
+      z-index: 2;
+    }
+
+    .animated-logo {
+      width: 55px;
+      height: 55px;
+      background: var(--rainbow-gradient);
+      border-radius: 15px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 1.5rem;
+      color: white;
+      box-shadow: var(--shadow-glow);
+      transition: all 0.3s ease;
+    }
+
+    .animated-logo:hover {
+      transform: translateY(-2px);
+      box-shadow: 0 15px 40px rgba(102, 126, 234, 0.3);
+    }
+
+    .nav-text-content h3 {
+      color: var(--text-primary);
+      margin-bottom: 0.25rem;
+      font-size: 1.8rem;
+      font-weight: 800;
+      background: var(--rainbow-gradient);
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+      background-clip: text;
+    }
+
+    .nav-text-content p {
+      color: var(--text-muted) !important;
+    }
+
+    .nav-menu {
+      display: flex;
+      gap: 1.5rem;
+      align-items: center;
+      position: relative;
+      z-index: 2;
+    }
+
+    .nav-link {
+      color: var(--text-secondary);
+      text-decoration: none;
+      font-weight: 500;
+      padding: 0.5rem 1rem;
+      border-radius: 10px;
+      transition: all 0.3s ease;
+      display: flex;
+      align-items: center;
+      gap: 0.5rem;
+    }
+
+    .nav-link:hover, .nav-link.active {
+      color: var(--text-primary);
+      background: var(--glass-bg);
+    }
+
+    /* Content */
+    .content-container {
+      max-width: 1400px;
+      margin: 0 auto 3rem;
+      padding: 0 1.5rem;
+    }
+
+    .content-header {
+      margin-bottom: 3rem;
+      text-align: center;
+    }
+
+    .content-header h1 {
+      font-size: 2.5rem;
+      font-weight: 800;
+      margin-bottom: 1rem;
+      background: var(--rainbow-gradient);
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+      background-clip: text;
+    }
+
+    .content-header p {
+      color: var(--text-secondary);
+      font-size: 1.1rem;
+      max-width: 600px;
+      margin: 0 auto;
+    }
+
+    /* Success Alert */
+    .success-alert {
+      position: fixed;
+      top: 20px;
+      right: 20px;
+      z-index: 1000;
+      background: var(--success-gradient);
+      color: white;
+      padding: 1rem 1.5rem;
+      border-radius: var(--border-radius);
+      box-shadow: var(--shadow-glow);
+      display: none;
+      align-items: center;
+      gap: 0.75rem;
+      animation: slideInRight 0.5s ease-out;
+    }
+
+    /* Cards */
+    .trends-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(400px, 1fr));
+      gap: 1.5rem;
+      margin-bottom: 2rem;
+    }
+
+    .trend-card {
+      background: var(--card-bg);
+      backdrop-filter: blur(25px);
+      border: 1px solid var(--glass-border);
+      border-radius: var(--border-radius);
+      box-shadow: var(--shadow-glow);
+      padding: 1.5rem;
+      transition: all 0.3s ease;
+      color: var(--text-primary);
+    }
+
+    .trend-card:hover {
+      transform: translateY(-5px);
+      box-shadow: var(--shadow-intense);
+      border-color: rgba(102, 126, 234, 0.3);
+    }
+
+    .trend-card h3 {
+      font-size: 1.4rem;
+      font-weight: 700;
+      margin-bottom: 1rem;
+      display: flex;
+      align-items: center;
+      gap: 0.75rem;
+      color: var(--text-primary);
+    }
+
+    .trend-card h3 i {
+      background: var(--rainbow-gradient);
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+      background-clip: text;
+    }
+
+    .trend-card p {
+      color: var(--text-muted);
+    }
+
+    /* Skill Items */
+    .skill-item {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      padding: 1rem;
+      margin-bottom: 0.75rem;
+      background: var(--glass-bg);
+      border-radius: 12px;
+      border: 1px solid var(--glass-border);
+      transition: all 0.3s ease;
+      color: var(--text-primary);
+    }
+
+    .skill-item:hover {
+      background: rgba(255, 255, 255, 0.12);
+      transform: translateX(5px);
+    }
+
+    .skill-info {
+      display: flex;
+      align-items: center;
+      gap: 1rem;
+      flex: 1;
+    }
+
+    .skill-name {
+      font-weight: 600;
+      font-size: 1.1rem;
+      color: var(--text-primary);
+    }
+
+    .skill-stats {
+      display: flex;
+      align-items: center;
+      gap: 1rem;
+    }
+
+    .skill-actions {
+      display: flex;
+      align-items: center;
+      gap: 0.5rem;
+    }
+
+    .btn-learn {
+      background: rgba(59, 130, 246, 0.2);
+      color: #3b82f6;
+      border: 1px solid rgba(59, 130, 246, 0.3);
+      padding: 0.4rem 0.8rem;
+      border-radius: 8px;
+      font-size: 0.8rem;
+      font-weight: 500;
+      cursor: pointer;
+      transition: all 0.3s ease;
+      display: flex;
+      align-items: center;
+      gap: 0.4rem;
+    }
+
+    .btn-learn:hover {
+      background: rgba(59, 130, 246, 0.3);
+      transform: translateY(-2px);
+    }
+
+    .btn-learn:disabled {
+      opacity: 0.5;
+      cursor: not-allowed;
+      transform: none;
+    }
+
+    .trend-indicator {
+      display: flex;
+      align-items: center;
+      gap: 0.5rem;
+      font-weight: 600;
+      padding: 0.4rem 0.8rem;
+      border-radius: 20px;
+      font-size: 0.85rem;
+    }
+
+    .trend-up {
+      background: rgba(16, 185, 129, 0.2);
+      color: #10b981;
+      border: 1px solid rgba(16, 185, 129, 0.3);
+    }
+
+    .trend-down {
+      background: rgba(239, 68, 68, 0.2);
+      color: #ef4444;
+      border: 1px solid rgba(239, 68, 68, 0.3);
+    }
+
+    .trend-stable {
+      background: rgba(245, 158, 11, 0.2);
+      color: #f59e0b;
+      border: 1px solid rgba(245, 158, 11, 0.3);
+    }
+
+    .demand-badge {
+      padding: 0.3rem 0.7rem;
+      border-radius: 15px;
+      font-size: 0.75rem;
+      font-weight: 600;
+    }
+
+    .demand-high {
+      background: rgba(16, 185, 129, 0.2);
+      color: #10b981;
+      border: 1px solid rgba(16, 185, 129, 0.3);
+    }
+
+    .demand-medium {
+      background: rgba(245, 158, 11, 0.2);
+      color: #f59e0b;
+      border: 1px solid rgba(245, 158, 11, 0.3);
+    }
+
+    .demand-low {
+      background: rgba(239, 68, 68, 0.2);
+      color: #ef4444;
+      border: 1px solid rgba(239, 68, 68, 0.3);
+    }
+
+    .jobs-count {
+      color: var(--text-muted);
+      font-size: 0.85rem;
+    }
+
+    .salary-badge {
+      background: rgba(168, 85, 247, 0.2);
+      color: #a855f7;
+      border: 1px solid rgba(168, 85, 247, 0.3);
+      padding: 0.3rem 0.7rem;
+      border-radius: 15px;
+      font-size: 0.75rem;
+      font-weight: 600;
+    }
+
+    /* Your Skills Badge */
+    .your-skill-badge {
+      background: rgba(59, 130, 246, 0.2);
+      color: #3b82f6;
+      padding: 0.3rem 0.7rem;
+      border-radius: 15px;
+      font-size: 0.75rem;
+      font-weight: 600;
+      border: 1px solid rgba(59, 130, 246, 0.3);
+    }
+
+    /* Insights Styles */
+    .insights-container {
+      display: flex;
+      flex-direction: column;
+      gap: 0.75rem;
+    }
+
+    .insight-item {
+      display: flex;
+      align-items: flex-start;
+      gap: 0.75rem;
+      padding: 0.75rem;
+      background: var(--glass-bg);
+      border-radius: 12px;
+      border: 1px solid var(--glass-border);
+      font-size: 0.9rem;
+      line-height: 1.4;
+      color: var(--text-primary);
+    }
+
+    .insight-item i {
+      color: #f59e0b;
+      margin-top: 0.1rem;
+      flex-shrink: 0;
+    }
+
+    .insight-item span {
+      color: var(--text-primary);
+    }
+
+    /* Market Stats */
+    .market-stats {
+      border: 1px solid var(--glass-border);
+      border-radius: 12px;
+      padding: 1rem;
+      background: var(--glass-bg);
+    }
+
+    .market-stats h4 {
+      background: var(--rainbow-gradient);
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+      background-clip: text;
+      font-weight: 700;
+      color: var(--text-primary);
+    }
+
+    .market-stats small {
+      color: var(--text-muted) !important;
+    }
+
+    /* Skills Gap */
+    .skills-gap-item {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      padding: 1rem;
+      margin-bottom: 0.75rem;
+      background: var(--glass-bg);
+      border-radius: 12px;
+      border: 1px solid var(--glass-border);
+      color: var(--text-primary);
+    }
+
+    .gap-info {
+      flex: 1;
+    }
+
+    .gap-info .skill-name {
+      color: var(--text-primary);
+    }
+
+    .gap-info small {
+      color: var(--text-muted) !important;
+    }
+
+    .gap-metric {
+      display: flex;
+      align-items: center;
+      gap: 1rem;
+    }
+
+    .priority-badge {
+      padding: 0.3rem 0.7rem;
+      border-radius: 15px;
+      font-size: 0.75rem;
+      font-weight: 600;
+    }
+
+    .priority-high {
+      background: rgba(239, 68, 68, 0.2);
+      color: #ef4444;
+      border: 1px solid rgba(239, 68, 68, 0.3);
+    }
+
+    /* Charts */
+    .chart-container {
+      background: var(--card-bg);
+      backdrop-filter: blur(25px);
+      border: 1px solid var(--glass-border);
+      border-radius: var(--border-radius);
+      box-shadow: var(--shadow-glow);
+      padding: 1.5rem;
+      margin-bottom: 2rem;
+    }
+
+    .chart-header {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      margin-bottom: 1.5rem;
+    }
+
+    .chart-header h3 {
+      font-size: 1.4rem;
+      font-weight: 700;
+      background: var(--rainbow-gradient);
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+      background-clip: text;
+    }
+
+    .chart-header .text-muted {
+      color: var(--text-muted) !important;
+    }
+
+    /* Bootstrap overrides for navbar */
+    .navbar-light .navbar-brand,
+    .navbar-light .navbar-nav .nav-link {
+      color: var(--text-secondary);
+    }
+
+    .navbar-light .navbar-nav .nav-link:hover,
+    .navbar-light .navbar-nav .nav-link:focus {
+      color: var(--text-primary);
+    }
+
+    /* Ensure all text in cards is visible */
+    .card {
+      background: var(--card-bg);
+      color: var(--text-primary);
+      border: 1px solid var(--glass-border);
+    }
+
+    .card-body {
+      color: var(--text-primary);
+    }
+
+    /* Responsive */
+    @media (max-width: 768px) {
+      .custom-navbar {
+        padding: 1rem;
+        margin: 1rem;
+        flex-direction: column;
+        gap: 1rem;
+      }
+      
+      .nav-menu {
+        gap: 1rem;
+      }
+      
+      .content-container {
+        padding: 0 1rem;
+      }
+      
+      .content-header h1 {
+        font-size: 2rem;
+      }
+      
+      .trends-grid {
+        grid-template-columns: 1fr;
+      }
+      
+      .skill-item {
+        flex-direction: column;
+        align-items: flex-start;
+        gap: 0.75rem;
+      }
+      
+      .skill-stats {
+        width: 100%;
+        justify-content: space-between;
+      }
+      
+      .skill-actions {
+        width: 100%;
+        justify-content: flex-end;
+      }
+      
+      .skills-gap-item {
+        flex-direction: column;
+        gap: 0.75rem;
+        align-items: flex-start;
+      }
+      
+      .gap-metric {
+        width: 100%;
+        justify-content: space-between;
+      }
+    }
+
+    /* Animations */
+    @keyframes float-orbs {
+      0%, 100% {
+        transform: translateY(0) rotate(0deg);
+      }
+      50% {
+        transform: translateY(-20px) rotate(180deg);
+      }
+    }
+
+    @keyframes slide-down {
+      from {
+        opacity: 0;
+        transform: translateY(-20px);
+      }
+      to {
+        opacity: 1;
+        transform: translateY(0);
+      }
+    }
+
+    @keyframes nav-shimmer {
+      0% {
+        left: -100%;
+      }
+      50% {
+        left: 100%;
+      }
+      100% {
+        left: 100%;
+      }
+    }
+
+    @keyframes slideInRight {
+      from {
+        transform: translateX(100%);
+        opacity: 0;
+      }
+      to {
+        transform: translateX(0);
+        opacity: 1;
+      }
+    }
+
+    /* Custom Scrollbar */
+    ::-webkit-scrollbar {
+      width: 8px;
+    }
+
+    ::-webkit-scrollbar-track {
+      background: rgba(255, 255, 255, 0.05);
+      border-radius: 10px;
+    }
+
+    ::-webkit-scrollbar-thumb {
+      background: var(--rainbow-gradient);
+      border-radius: 10px;
+    }
+
+    ::-webkit-scrollbar-thumb:hover {
+      background: var(--secondary-gradient);
+    }
+  </style>
+</head>
+<body>
+    <!-- Background Animation -->
+    <div class="bg-animation">
+        <div class="floating-orb orb-1"></div>
+        <div class="floating-orb orb-2"></div>
+        <div class="floating-orb orb-3"></div>
+    </div>
+
+    <!-- Success Alert -->
+    <div class="success-alert" id="successAlert">
+        <i class="bi bi-check-circle-fill"></i>
+        <span id="alertMessage">Skill added successfully!</span>
+    </div>
+
+    <!-- Navigation -->
+    <nav class="navbar navbar-light custom-navbar">
+        <div class="container-fluid">
+            <div class="d-flex align-items-center">
+                <div class="nav-brand-container">
+                    <div class="animated-logo">
+                        <i class="bi bi-graph-up-arrow"></i>
+                    </div>
+                    <div class="nav-text-content">
+                        <h3 class="fw-bold mb-0">Skill Trends & Market Analysis</h3>
+                        <p class="text-muted mb-0 small">Stay ahead with real-time market insights</p>
+                    </div>
+                </div>
+            </div>
+                    
+            <div class="nav-menu">
+                <a href="{% url 'freelancer_dashboard' %}" class="nav-link">
+                    <i class="bi bi-arrow-left"></i> Back to Dashboard
+                </a>
+            </div>
+        </div>
+    </nav>
+
+    <!-- Content -->
+    <div class="content-container">
+        <div class="content-header">
+            <h1>Market Skill Trends</h1>
+            <p>Discover which skills are in demand and plan your learning journey accordingly</p>
+        </div>
+
+        <!-- Market Overview -->
+        <div class="market-stats mb-4">
+            <div class="row text-center">
+                <div class="col-md-3 col-6 mb-3">
+                    <h4 class="mb-1">{{ total_jobs_analyzed }}+</h4>
+                    <small class="text-muted">Jobs Analyzed</small>
+                </div>
+                <div class="col-md-3 col-6 mb-3">
+                    <h4 class="mb-1">{{ total_skills_tracked }}+</h4>
+                    <small class="text-muted">Skills Tracked</small>
+                </div>
+                <div class="col-md-3 col-6 mb-3">
+                    <h4 class="mb-1">{{ rising_skills|length }}+</h4>
+                    <small class="text-muted">Rising Skills</small>
+                </div>
+                <div class="col-md-3 col-6 mb-3">
+                    <h4 class="mb-1">{{ freelancer_skills|length }}+</h4>
+                    <small class="text-muted">Your Skills</small>
+                </div>
+            </div>
+        </div>
+
+        <!-- Overview Cards -->
+        <div class="trends-grid">
+            <!-- Rising Stars Card -->
+            <div class="trend-card">
+                <h3><i class="bi bi-rocket-takeoff"></i> Rising Stars</h3>
+                <p class="text-muted mb-3">Skills with highest growth rate (>15%)</p>
+                {% for skill, data in rising_skills.items %}
+                <div class="skill-item">
+                    <div class="skill-info">
+                        <span class="skill-name">{{ skill|title }}</span>
+                        {% if skill in freelancer_skills %}
+                        <span class="your-skill-badge">Your Skill</span>
+                        {% endif %}
+                    </div>
+                    <div class="skill-stats">
+                        <span class="trend-indicator trend-up">
+                            <i class="bi bi-arrow-up"></i> +{{ data.growth }}%
+                        </span>
+                        <span class="demand-badge demand-{{ data.demand }}">
+                            {{ data.demand|title }}
+                        </span>
+                        {% if data.avg_salary %}
+                        <span class="salary-badge">${{ data.avg_salary|floatformat:0 }}</span>
+                        {% endif %}
+                    </div>
+                    <div class="skill-actions">
+                        {% if skill not in freelancer_skills %}
+                        <button class="btn-learn" onclick="addSkillToProfile('{{ skill }}', this)">
+                            <i class="bi bi-plus-circle"></i> Learn
+                        </button>
+                        {% endif %}
+                    </div>
+                </div>
+                {% endfor %}
+            </div>
+
+            <!-- Stable & Growing Card -->
+            <div class="trend-card">
+                <h3><i class="bi bi-graph-up"></i> Stable & Growing</h3>
+                <p class="text-muted mb-3">Consistently in-demand skills</p>
+                {% for skill, data in stable_skills.items %}
+                <div class="skill-item">
+                    <div class="skill-info">
+                        <span class="skill-name">{{ skill|title }}</span>
+                        {% if skill in freelancer_skills %}
+                        <span class="your-skill-badge">Your Skill</span>
+                        {% endif %}
+                    </div>
+                    <div class="skill-stats">
+                        <span class="trend-indicator {% if data.trend == 'up' %}trend-up{% else %}trend-stable{% endif %}">
+                            <i class="bi bi-arrow-{% if data.trend == 'up' %}up{% else %}right{% endif %}"></i> 
+                            {% if data.trend == 'up' %}+{% endif %}{{ data.growth }}%
+                        </span>
+                        <span class="demand-badge demand-{{ data.demand }}">
+                            {{ data.demand|title }}
+                        </span>
+                        <span class="jobs-count">{{ data.jobs_count }}+ jobs</span>
+                    </div>
+                    <div class="skill-actions">
+                        {% if skill not in freelancer_skills %}
+                        <button class="btn-learn" onclick="addSkillToProfile('{{ skill }}', this)">
+                            <i class="bi bi-plus-circle"></i> Learn
+                        </button>
+                        {% endif %}
+                    </div>
+                </div>
+                {% endfor %}
+            </div>
+
+            <!-- Recommended for You Card -->
+            <div class="trend-card">
+                <h3><i class="bi bi-lightbulb"></i> Recommended for You</h3>
+                <p class="text-muted mb-3">High-growth skills you should learn</p>
+                {% for skill, data in recommended_skills.items %}
+                <div class="skill-item">
+                    <div class="skill-info">
+                        <span class="skill-name">{{ skill|title }}</span>
+                    </div>
+                    <div class="skill-stats">
+                        <span class="trend-indicator trend-up">
+                            <i class="bi bi-arrow-up"></i> +{{ data.growth }}%
+                        </span>
+                        <span class="demand-badge demand-{{ data.demand }}">
+                            {{ data.demand|title }}
+                        </span>
+                        {% if data.avg_salary %}
+                        <span class="salary-badge">${{ data.avg_salary|floatformat:0 }}</span>
+                        {% endif %}
+                    </div>
+                    <div class="skill-actions">
+                        <button class="btn-learn" onclick="addSkillToProfile('{{ skill }}', this)">
+                            <i class="bi bi-plus-circle"></i> Learn
+                        </button>
+                    </div>
+                </div>
+                {% endfor %}
+            </div>
+
+            <!-- Industry Insights Card -->
+            <div class="trend-card">
+                <h3><i class="bi bi-bar-chart"></i> Market Insights</h3>
+                <p class="text-muted mb-3">Industry analysis and trends</p>
+                
+                <div class="insights-container">
+                    {% for insight in industry_insights %}
+                    <div class="insight-item">
+                        <i class="bi bi-info-circle"></i>
+                        <span>{{ insight }}</span>
+                    </div>
+                    {% endfor %}
+                </div>
+            </div>
+
+            <!-- Complementary Skills Card -->
+            {% if complementary_skills %}
+            <div class="trend-card">
+                <h3><i class="bi bi-puzzle"></i> Complementary Skills</h3>
+                <p class="text-muted mb-3">Skills that work well with your expertise</p>
+                
+                {% for skill, data in complementary_skills.items %}
+                <div class="skill-item">
+                    <div class="skill-info">
+                        <span class="skill-name">{{ skill|title }}</span>
+                    </div>
+                    <div class="skill-stats">
+                        <span class="trend-indicator trend-up">
+                            <i class="bi bi-arrow-up"></i> +{{ data.growth }}%
+                        </span>
+                        <span class="demand-badge demand-{{ data.demand }}">
+                            {{ data.demand|title }}
+                        </span>
+                    </div>
+                    <div class="skill-actions">
+                        <button class="btn-learn" onclick="addSkillToProfile('{{ skill }}', this)">
+                            <i class="bi bi-plus-circle"></i> Learn
+                        </button>
+                    </div>
+                </div>
+                {% endfor %}
+            </div>
+            {% endif %}
+
+            <!-- Skills Gap Card -->
+            {% if skills_gap %}
+            <div class="trend-card">
+                <h3><i class="bi bi-exclamation-triangle"></i> Skills Gap</h3>
+                <p class="text-muted mb-3">High-demand skills you're missing</p>
+                
+                {% for skill, data in skills_gap.items %}
+                <div class="skills-gap-item">
+                    <div class="gap-info">
+                        <div class="skill-name">{{ skill|title }}</div>
+                        <small class="text-muted">{{ data.jobs_count }}+ jobs • ${{ data.avg_salary|floatformat:0 }} avg salary</small>
+                    </div>
+                    <div class="gap-metric">
+                        <span class="priority-badge priority-high">High Priority</span>
+                        <button class="btn-learn" onclick="addSkillToProfile('{{ skill }}', this)">
+                            <i class="bi bi-plus-circle"></i> Add
+                        </button>
+                    </div>
+                </div>
+                {% endfor %}
+            </div>
+            {% endif %}
+        </div>
+
+        <!-- Charts Section -->
+        <div class="chart-container">
+            <div class="chart-header">
+                <h3>Skill Growth Trends</h3>
+                <span class="text-muted">Last 6 months analysis</span>
+            </div>
+            <canvas id="trendsChart" height="100"></canvas>
+        </div>
+
+        <div class="chart-container">
+            <div class="chart-header">
+                <h3>Your Skills vs Market Demand</h3>
+                <span class="text-muted">Personalized skill analysis</span>
+            </div>
+            <canvas id="skillsChart" height="100"></canvas>
+        </div>
+    </div>
+
+    <!-- Bootstrap JS -->
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+
+    <script>
+        // CSRF Token for AJAX requests
+        function getCSRFToken() {
+            return document.querySelector('[name=csrfmiddlewaretoken]')?.value || '{{ csrf_token }}';
+        }
+
+        // Show success alert
+        function showSuccessAlert(message) {
+            const alert = document.getElementById('successAlert');
+            const alertMessage = document.getElementById('alertMessage');
+            alertMessage.textContent = message;
+            alert.style.display = 'flex';
+            
+            setTimeout(() => {
+                alert.style.display = 'none';
+            }, 3000);
+        }
+
+        // Add skill to profile
+        async function addSkillToProfile(skillName, button) {
+            if (!confirm(`Add "${skillName}" to your skills?`)) {
+                return;
+            }
+
+            // Disable button and show loading
+            button.disabled = true;
+            button.innerHTML = '<i class="bi bi-hourglass-split"></i> Adding...';
+
+            try {
+                const response = await fetch('{% url "add_skill_to_profile" %}', {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json',
+                        'X-CSRFToken': getCSRFToken(),
+                        'X-Requested-With': 'XMLHttpRequest'
+                    },
+                    body: JSON.stringify({
+                        'skill': skillName
+                    })
+                });
+
+                const data = await response.json();
+
+                if (data.success) {
+                    showSuccessAlert(data.message);
+                    
+                    // Update UI
+                    button.innerHTML = '<i class="bi bi-check-circle"></i> Added';
+                    button.style.background = 'rgba(16, 185, 129, 0.2)';
+                    button.style.color = '#10b981';
+                    button.style.borderColor = 'rgba(16, 185, 129, 0.3)';
+                    button.disabled = true;
+                    
+                    // Add "Your Skill" badge
+                    const skillItem = button.closest('.skill-item');
+                    const skillInfo = skillItem.querySelector('.skill-info');
+                    const yourSkillBadge = document.createElement('span');
+                    yourSkillBadge.className = 'your-skill-badge';
+                    yourSkillBadge.textContent = 'Your Skill';
+                    skillInfo.appendChild(yourSkillBadge);
+                    
+                } else {
+                    alert('Error: ' + data.error);
+                    button.disabled = false;
+                    button.innerHTML = '<i class="bi bi-plus-circle"></i> Learn';
+                }
+
+            } catch (error) {
+                console.error('Error:', error);
+                alert('An error occurred while adding the skill');
+                button.disabled = false;
+                button.innerHTML = '<i class="bi bi-plus-circle"></i> Learn';
+            }
+        }
+
+        // Initialize Charts
+        document.addEventListener('DOMContentLoaded', function() {
+            // Skill Trends Chart
+            const trendsCtx = document.getElementById('trendsChart').getContext('2d');
+            const trendsChart = new Chart(trendsCtx, {
+                type: 'line',
+                data: {
+                    labels: ['6m ago', '5m ago', '4m ago', '3m ago', '2m ago', 'Current'],
+                    datasets: [
+                        {
+                            label: 'AI/ML Skills',
+                            data: [45, 52, 58, 65, 72, 85],
+                            borderColor: '#10b981',
+                            backgroundColor: 'rgba(16, 185, 129, 0.1)',
+                            tension: 0.4,
+                            fill: true,
+                            borderWidth: 2
+                        },
+                        {
+                            label: 'Web Development',
+                            data: [65, 68, 72, 75, 78, 82],
+                            borderColor: '#3b82f6',
+                            backgroundColor: 'rgba(59, 130, 246, 0.1)',
+                            tension: 0.4,
+                            fill: true,
+                            borderWidth: 2
+                        },
+                        {
+                            label: 'Cloud Technologies',
+                            data: [55, 60, 68, 75, 82, 90],
+                            borderColor: '#f59e0b',
+                            backgroundColor: 'rgba(245, 158, 11, 0.1)',
+                            tension: 0.4,
+                            fill: true,
+                            borderWidth: 2
+                        },
+                        {
+                            label: 'Mobile Development',
+                            data: [50, 55, 62, 70, 78, 85],
+                            borderColor: '#8b5cf6',
+                            backgroundColor: 'rgba(139, 92, 246, 0.1)',
+                            tension: 0.4,
+                            fill: true,
+                            borderWidth: 2
+                        }
+                    ]
+                },
+                options: {
+                    responsive: true,
+                    plugins: {
+                        legend: {
+                            position: 'top',
+                            labels: {
+                                color: '#e2e8f0',
+                                font: {
+                                    size: 11
+                                }
+                            }
+                        },
+                        tooltip: {
+                            backgroundColor: 'rgba(30, 30, 60, 0.9)',
+                            titleColor: '#e2e8f0',
+                            bodyColor: '#e2e8f0',
+                            borderColor: 'rgba(255, 255, 255, 0.1)',
+                            borderWidth: 1
+                        }
+                    },
+                    scales: {
+                        y: {
+                            beginAtZero: true,
+                            grid: {
+                                color: 'rgba(255, 255, 255, 0.1)'
+                            },
+                            ticks: {
+                                color: '#94a3b8'
+                            }
+                        },
+                        x: {
+                            grid: {
+                                color: 'rgba(255, 255, 255, 0.1)'
+                            },
+                            ticks: {
+                                color: '#94a3b8'
+                            }
+                        }
+                    }
+                }
+            });
+
+            // Skills Comparison Chart
+            const skillsCtx = document.getElementById('skillsChart').getContext('2d');
+            const skillsChart = new Chart(skillsCtx, {
+                type: 'bar',
+                data: {
+                    labels: ['React', 'Python', 'Node.js', 'TypeScript', 'Docker', 'AWS'],
+                    datasets: [
+                        {
+                            label: 'Your Skill Level',
+                            data: [85, 90, 70, 40, 60, 30],
+                            backgroundColor: 'rgba(59, 130, 246, 0.8)',
+                            borderColor: '#3b82f6',
+                            borderWidth: 1,
+                            borderRadius: 6
+                        },
+                        {
+                            label: 'Market Demand',
+                            data: [95, 88, 85, 90, 85, 92],
+                            backgroundColor: 'rgba(16, 185, 129, 0.8)',
+                            borderColor: '#10b981',
+                            borderWidth: 1,
+                            borderRadius: 6
+                        }
+                    ]
+                },
+                options: {
+                    responsive: true,
+                    plugins: {
+                        legend: {
+                            position: 'top',
+                            labels: {
+                                color: '#e2e8f0',
+                                font: {
+                                    size: 11
+                                }
+                            }
+                        },
+                        tooltip: {
+                            backgroundColor: 'rgba(30, 30, 60, 0.9)',
+                            titleColor: '#e2e8f0',
+                            bodyColor: '#e2e8f0',
+                            borderColor: 'rgba(255, 255, 255, 0.1)',
+                            borderWidth: 1
+                        }
+                    },
+                    scales: {
+                        y: {
+                            beginAtZero: true,
+                            max: 100,
+                            grid: {
+                                color: 'rgba(255, 255, 255, 0.1)'
+                            },
+                            ticks: {
+                                color: '#94a3b8',
+                                callback: function(value) {
+                                    return value + '%';
+                                }
+                            }
+                        },
+                        x: {
+                            grid: {
+                                color: 'rgba(255, 255, 255, 0.1)'
+                            },
+                            ticks: {
+                                color: '#94a3b8'
+                            }
+                        }
+                    }
+                }
+            });
+
+            // Add animations to skill items
+            const skillItems = document.querySelectorAll('.skill-item');
+            skillItems.forEach((item, index) => {
+                item.style.opacity = '0';
+                item.style.transform = 'translateX(-20px)';
+                
+                setTimeout(() => {
+                    item.style.transition = 'all 0.5s ease';
+                    item.style.opacity = '1';
+                    item.style.transform = 'translateX(0)';
+                }, index * 100);
+            });
+        });
+    </script>
+</body>
+</html>

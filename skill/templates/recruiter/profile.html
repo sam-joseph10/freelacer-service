@@ -1,0 +1,979 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Company Profile - SkillJourney</title>
+  
+  <!-- Bootstrap CSS -->
+  <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+  <!-- Font Awesome -->
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+  <!-- Google Fonts -->
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800;900&display=swap" rel="stylesheet">
+  
+  <style>
+    /* Premium Landing Page Theme Colors */
+    :root {
+      --primary-gradient: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+      --secondary-gradient: linear-gradient(135deg, #4ecdc4 0%, #44a08d 100%);
+      --accent-gradient: linear-gradient(135deg, #ff6b6b 0%, #feca57 100%);
+      --success-gradient: linear-gradient(135deg, #51cf66 0%, #40c057 100%);
+      --purple-gradient: linear-gradient(135deg, #a855f7 0%, #3b82f6 100%);
+      --rainbow-gradient: linear-gradient(135deg, #ff6b6b, #4ecdc4, #45b7d1, #a855f7, #feca57, #667eea);
+      --glass-bg: rgba(255, 255, 255, 0.08);
+      --glass-border: rgba(255, 255, 255, 0.12);
+      --dark-bg: #0f0f23;
+      --darker-bg: #0a0a1a;
+      --card-bg: rgba(30, 30, 60, 0.6);
+      --text-primary: #ffffff;
+      --text-secondary: #e2e8f0;
+      --text-muted: #94a3b8;
+      --shadow-glow: 0 10px 40px rgba(102, 126, 234, 0.15);
+      --shadow-intense: 0 20px 50px rgba(0, 0, 0, 0.3);
+      --shadow-ultimate: 0 30px 70px rgba(0, 0, 0, 0.4);
+      --border-radius: 20px;
+    }
+    
+    * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+    }
+
+    html {
+      scroll-behavior: smooth;
+    }
+    
+    body {
+      font-family: 'Inter', -apple-system, BlinkMacSystemFont, sans-serif;
+      background: linear-gradient(135deg, var(--dark-bg) 0%, var(--darker-bg) 100%);
+      color: var(--text-primary);
+      line-height: 1.6;
+      margin: 0;
+      min-height: 100vh;
+      overflow-x: hidden;
+      -webkit-font-smoothing: antialiased;
+      -moz-osx-font-smoothing: grayscale;
+    }
+
+    /* Simplified Background Animation - Optimized */
+    .bg-animation {
+      position: fixed;
+      inset: 0;
+      z-index: -1;
+      overflow: hidden;
+      pointer-events: none;
+    }
+
+    .floating-orb {
+      position: absolute;
+      border-radius: 50%;
+      filter: blur(80px);
+      opacity: 0.2;
+      animation: float-orbs 25s ease-in-out infinite;
+      will-change: transform;
+    }
+
+    .orb-1 {
+      width: 400px;
+      height: 400px;
+      background: var(--primary-gradient);
+      top: 10%;
+      left: 5%;
+      animation-delay: 0s;
+    }
+
+    .orb-2 {
+      width: 300px;
+      height: 300px;
+      background: var(--secondary-gradient);
+      bottom: 15%;
+      right: 8%;
+      animation-delay: 8s;
+    }
+
+    .orb-3 {
+      width: 350px;
+      height: 350px;
+      background: var(--accent-gradient);
+      top: 60%;
+      left: 75%;
+      animation-delay: 16s;
+    }
+
+    /* Premium Header Navigation - Optimized */
+    .header-nav {
+      background: var(--card-bg);
+      backdrop-filter: blur(30px);
+      border-bottom: 1px solid var(--glass-border);
+      padding: 1.25rem 2rem; /* Reduced padding */
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      position: sticky;
+      top: 0;
+      z-index: 999;
+      box-shadow: var(--shadow-intense);
+      transition: all 0.2s ease; /* Faster transition */
+    }
+    
+    .header-nav.scrolled {
+      padding: 1rem 2rem;
+      background: rgba(30, 30, 60, 0.95);
+    }
+    
+    .header-brand {
+      display: flex;
+      align-items: center;
+      text-decoration: none;
+      color: var(--text-primary);
+      font-weight: 800;
+      font-size: 1.4rem; /* Slightly smaller */
+      transition: all 0.2s ease; /* Faster transition */
+      gap: 10px; /* Reduced gap */
+    }
+    
+    .brand-logo {
+      width: 40px; /* Smaller */
+      height: 40px; /* Smaller */
+      background: var(--rainbow-gradient);
+      color: white;
+      border-radius: 12px; /* Slightly smaller */
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-weight: 900;
+      font-size: 16px; /* Smaller */
+      transition: all 0.2s ease; /* Faster transition */
+      box-shadow: var(--shadow-glow);
+      position: relative;
+      overflow: hidden;
+    }
+
+    .header-brand:hover .brand-logo {
+      transform: rotate(5deg) scale(1.1);
+      box-shadow: 0 15px 40px rgba(102, 126, 234, 0.4);
+    }
+
+    .header-brand span {
+      background: var(--rainbow-gradient);
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+      background-clip: text;
+    }
+    
+    .header-menu {
+      display: flex;
+      gap: 1.25rem; /* Reduced gap */
+      align-items: center;
+    }
+    
+    .header-menu a {
+      color: var(--text-secondary);
+      text-decoration: none;
+      font-weight: 600;
+      transition: all 0.2s ease; /* Faster transition */
+      padding: 0.65rem 1.1rem; /* Reduced padding */
+      border-radius: 10px; /* Slightly smaller */
+      display: flex;
+      align-items: center;
+      gap: 0.5rem;
+      background: var(--glass-bg);
+      border: 1px solid var(--glass-border);
+      backdrop-filter: blur(10px);
+    }
+    
+    .header-menu a:hover, .header-menu a.active {
+      color: var(--text-primary);
+      background: rgba(255, 255, 255, 0.15);
+      transform: translateY(-2px);
+      box-shadow: var(--shadow-glow);
+    }
+    
+    /* Premium Profile Container */
+    .profile-container {
+      max-width: 1100px;
+      margin: 2.5rem auto; /* Reduced margin */
+      padding: 0 2rem;
+      display: grid;
+      grid-template-columns: 1fr 1.5fr;
+      gap: 1.75rem; /* Reduced gap */
+    }
+    
+    /* Company Banner Section - Optimized */
+    .company-banner {
+      background: var(--card-bg);
+      backdrop-filter: blur(25px);
+      border: 1px solid var(--glass-border);
+      border-radius: var(--border-radius);
+      padding: 1.75rem; /* Reduced padding */
+      box-shadow: var(--shadow-intense);
+      position: relative;
+      overflow: hidden;
+      transition: all 0.3s ease; /* Faster transition */
+      height: fit-content;
+    }
+
+    .company-banner:hover {
+      transform: translateY(-5px); /* Reduced transform */
+      box-shadow: var(--shadow-ultimate);
+    }
+
+    .company-image {
+      width: 100%;
+      height: 180px; /* Slightly smaller */
+      background: linear-gradient(135deg, rgba(102, 126, 234, 0.2), rgba(118, 75, 162, 0.2));
+      border-radius: 15px;
+      margin-bottom: 1.25rem; /* Reduced margin */
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      overflow: hidden;
+      position: relative;
+    }
+
+    .company-image-placeholder {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      color: var(--text-muted);
+      gap: 8px; /* Reduced gap */
+    }
+
+    .company-image-placeholder i {
+      font-size: 2.5rem; /* Smaller */
+      background: var(--rainbow-gradient);
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+      background-clip: text;
+    }
+
+    .company-stats {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 1rem;
+      margin-top: 1.25rem; /* Reduced margin */
+    }
+
+    .stat-item {
+      background: var(--glass-bg);
+      border: 1px solid var(--glass-border);
+      border-radius: 10px; /* Slightly smaller */
+      padding: 0.85rem; /* Reduced padding */
+      text-align: center;
+      transition: all 0.2s ease; /* Faster transition */
+    }
+
+    .stat-item:hover {
+      background: rgba(255, 255, 255, 0.12);
+      transform: translateY(-2px); /* Reduced transform */
+    }
+
+    .stat-value {
+      font-size: 1.4rem; /* Smaller */
+      font-weight: 800;
+      background: var(--rainbow-gradient);
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+      background-clip: text;
+      margin-bottom: 0.25rem;
+    }
+
+    .stat-label {
+      font-size: 0.85rem;
+      color: var(--text-muted);
+    }
+    
+    /* Profile Card - Optimized */
+    .profile-card {
+      background: var(--card-bg);
+      backdrop-filter: blur(25px);
+      border: 1px solid var(--glass-border);
+      border-radius: var(--border-radius);
+      padding: 2.5rem; /* Reduced padding */
+      box-shadow: var(--shadow-intense);
+      position: relative;
+      overflow: hidden;
+      transition: all 0.3s ease; /* Faster transition */
+    }
+
+    .profile-card:hover {
+      transform: translateY(-5px); /* Reduced transform */
+      box-shadow: var(--shadow-ultimate);
+    }
+    
+    .profile-header {
+      margin-bottom: 2.5rem; /* Reduced margin */
+      text-align: center;
+      position: relative;
+    }
+    
+    .profile-header h1 {
+      font-size: 2.25rem; /* Smaller */
+      font-weight: 900;
+      background: var(--rainbow-gradient);
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+      background-clip: text;
+      margin-bottom: 0.85rem; /* Reduced margin */
+    }
+    
+    .profile-header p {
+      color: var(--text-secondary);
+      margin: 0;
+      font-size: 1.1rem; /* Smaller */
+      font-weight: 500;
+    }
+    
+    /* Premium Profile Info Section - Optimized */
+    .profile-info {
+      display: flex;
+      align-items: center;
+      margin-bottom: 2.5rem; /* Reduced margin */
+      padding: 1.75rem; /* Reduced padding */
+      background: var(--glass-bg);
+      border-radius: 18px; /* Slightly smaller */
+      border: 1px solid var(--glass-border);
+      backdrop-filter: blur(15px);
+      transition: all 0.2s ease; /* Faster transition */
+      position: relative;
+      overflow: hidden;
+    }
+
+    .profile-info:hover {
+      background: rgba(255, 255, 255, 0.12);
+      transform: translateY(-2px); /* Reduced transform */
+      box-shadow: var(--shadow-glow);
+    }
+    
+    .profile-avatar {
+      width: 90px; /* Smaller */
+      height: 90px; /* Smaller */
+      border-radius: 50%;
+      background: var(--rainbow-gradient);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      color: white;
+      font-size: 2.25rem; /* Smaller */
+      font-weight: 900;
+      margin-right: 1.75rem; /* Reduced margin */
+      box-shadow: var(--shadow-intense);
+      transition: all 0.3s ease; /* Faster transition */
+      position: relative;
+      z-index: 2;
+      overflow: hidden;
+    }
+
+    .profile-avatar:hover {
+      transform: scale(1.05); /* Reduced transform */
+      box-shadow: var(--shadow-ultimate);
+    }
+    
+    .profile-details {
+      flex: 1;
+      position: relative;
+      z-index: 2;
+    }
+
+    .profile-details h2 {
+      margin: 0 0 0.65rem 0; /* Reduced margin */
+      font-size: 1.8rem; /* Smaller */
+      font-weight: 800;
+      background: var(--rainbow-gradient);
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+      background-clip: text;
+    }
+    
+    .profile-details p {
+      margin: 0;
+      color: var(--text-secondary);
+      font-size: 1rem; /* Smaller */
+      display: flex;
+      align-items: center;
+      gap: 0.5rem;
+    }
+
+    .profile-details i {
+      background: var(--rainbow-gradient);
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+      background-clip: text;
+    }
+    
+    /* Premium Form Styles - Optimized */
+    .form-group {
+      margin-bottom: 1.75rem; /* Reduced margin */
+      position: relative;
+    }
+    
+    .form-label {
+      display: block;
+      font-weight: 700;
+      margin-bottom: 0.65rem; /* Reduced margin */
+      color: var(--text-primary);
+      font-size: 1.05rem; /* Slightly smaller */
+      display: flex;
+      align-items: center;
+      gap: 0.5rem;
+    }
+
+    .form-label i {
+      background: var(--rainbow-gradient);
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+      background-clip: text;
+      font-size: 0.95rem; /* Slightly smaller */
+    }
+    
+    .form-control {
+      width: 100%;
+      padding: 0.9rem 1.25rem; /* Reduced padding */
+      border: 2px solid var(--glass-border);
+      border-radius: 12px; /* Slightly smaller */
+      font-size: 1rem;
+      transition: all 0.2s ease; /* Faster transition */
+      background: var(--glass-bg);
+      color: var(--text-primary);
+      backdrop-filter: blur(10px);
+      font-weight: 500;
+    }
+
+    .form-control::placeholder {
+      color: var(--text-muted);
+    }
+    
+    .form-control:focus {
+      outline: none;
+      border-color: rgba(102, 126, 234, 0.6);
+      box-shadow: 0 0 0 3px rgba(102, 126, 234, 0.1); /* Reduced shadow */
+      background: rgba(255, 255, 255, 0.1);
+      transform: translateY(-1px); /* Reduced transform */
+    }
+    
+    textarea.form-control {
+      min-height: 120px; /* Slightly smaller */
+      resize: vertical;
+    }
+    
+    .form-error {
+      color: #ff6b6b;
+      font-size: 0.875rem;
+      margin-top: 0.5rem;
+      font-weight: 600;
+    }
+
+    .form-help {
+      color: var(--text-muted);
+      font-size: 0.85rem; /* Slightly smaller */
+      margin-top: 0.5rem;
+      font-style: italic;
+    }
+    
+    /* Premium Button - Optimized */
+    .btn-primary {
+      background: var(--rainbow-gradient);
+      border: none;
+      border-radius: 12px; /* Slightly smaller */
+      padding: 0.9rem 1.75rem; /* Reduced padding */
+      font-weight: 700;
+      transition: all 0.2s ease; /* Faster transition */
+      color: white;
+      font-size: 1.05rem; /* Slightly smaller */
+      width: 100%;
+      margin-top: 1.75rem; /* Reduced margin */
+      box-shadow: var(--shadow-glow);
+      position: relative;
+      overflow: hidden;
+    }
+    
+    .btn-primary:hover {
+      transform: translateY(-2px) scale(1.01); /* Reduced transform */
+      box-shadow: var(--shadow-ultimate);
+    }
+
+    .btn-primary:active {
+      transform: translateY(0) scale(0.98);
+    }
+
+    /* Company Building Background */
+    .company-bg {
+      position: absolute;
+      top: 15px; /* Adjusted position */
+      right: 15px; /* Adjusted position */
+      width: 120px; /* Smaller */
+      height: 80px; /* Smaller */
+      background: url('https://images.unsplash.com/photo-1758813240178-19ef760ded2c?crop=entropy&cs=tinysrgb&fit=max&fm=jpg&ixid=M3w3Nzg4Nzd8MHwxfHNlYXJjaHwxfHxtb2Rlcm4lMjBvZmZpY2UlMjBidWlsZGluZyUyMGNvcnBvcmF0ZXxlbnwxfHx8fDE3NTkzMDE4MTR8MA&ixlib=rb-4.1.0&q=80&w=1080') center/cover;
+      border-radius: 12px; /* Slightly smaller */
+      opacity: 0.1;
+      z-index: 1;
+      filter: blur(1px);
+    }
+
+    /* Enhanced Scrollbar */
+    ::-webkit-scrollbar {
+      width: 10px; /* Smaller */
+    }
+
+    ::-webkit-scrollbar-track {
+      background: rgba(255, 255, 255, 0.05);
+      border-radius: 8px; /* Slightly smaller */
+    }
+
+    ::-webkit-scrollbar-thumb {
+      background: var(--rainbow-gradient);
+      border-radius: 8px; /* Slightly smaller */
+      transition: all 0.2s ease; /* Faster transition */
+    }
+
+    ::-webkit-scrollbar-thumb:hover {
+      background: var(--secondary-gradient);
+    }
+    
+    /* Responsive Design */
+    @media (max-width: 992px) {
+      .profile-container {
+        grid-template-columns: 1fr;
+      }
+    }
+    
+    @media (max-width: 768px) {
+      .header-nav {
+        padding: 1rem;
+        flex-direction: column;
+        gap: 1rem;
+      }
+      
+      .header-menu {
+        gap: 1rem;
+        flex-wrap: wrap;
+        justify-content: center;
+      }
+      
+      .profile-container {
+        padding: 0 1rem;
+        margin: 2rem auto;
+      }
+      
+      .profile-card {
+        padding: 2rem;
+      }
+      
+      .profile-info {
+        flex-direction: column;
+        text-align: center;
+        padding: 1.5rem;
+      }
+      
+      .profile-avatar {
+        margin-right: 0;
+        margin-bottom: 1.25rem; /* Reduced margin */
+        width: 80px;
+        height: 80px;
+        font-size: 2rem;
+      }
+
+      .profile-header h1 {
+        font-size: 2rem;
+      }
+
+      .company-bg {
+        width: 100px;
+        height: 70px;
+        top: 15px;
+        right: 15px;
+      }
+
+      .company-stats {
+        grid-template-columns: 1fr;
+      }
+    }
+
+    /* Optimized Animations - Removed complex animations */
+    @keyframes float-orbs {
+      0%, 100% {
+        transform: translateY(0);
+      }
+      50% {
+        transform: translateY(-20px);
+      }
+    }
+
+    @keyframes slide-down {
+      from {
+        opacity: 0;
+        transform: translateY(-20px);
+      }
+      to {
+        opacity: 1;
+        transform: translateY(0);
+      }
+    }
+
+    @keyframes fade-up {
+      from {
+        opacity: 0;
+        transform: translateY(20px);
+      }
+      to {
+        opacity: 1;
+        transform: translateY(0);
+      }
+    }
+
+    /* Performance Optimizations */
+    .performance-optimized {
+      transform: translateZ(0);
+      backface-visibility: hidden;
+      perspective: 1000px;
+    }
+
+    /* Success animation - Simplified */
+    @keyframes success-pulse {
+      0% {
+        transform: scale(1);
+      }
+      50% {
+        transform: scale(1.02);
+      }
+      100% {
+        transform: scale(1);
+      }
+    }
+
+    .success-animation {
+      animation: success-pulse 0.4s ease-out; /* Faster animation */
+    }
+  </style>
+</head>
+<body>
+    <!-- Simplified Background Animation -->
+    <div class="bg-animation">
+        <div class="floating-orb orb-1"></div>
+        <div class="floating-orb orb-2"></div>
+        <div class="floating-orb orb-3"></div>
+    </div>
+
+    <!-- Premium Header Navigation -->
+    <nav class="header-nav" id="headerNav">
+        <a href="{% url 'admin_dashboard' %}" class="header-brand">
+            <div class="brand-logo">SJ</div>
+            <span>SkillJourney</span>
+        </a>
+        
+        <div class="header-menu">
+            <a href="{% url 'admin_dashboard' %}">
+                <i class="fas fa-arrow-left"></i> Back to Dashboard
+            </a>
+        </div>
+    </nav>
+    
+    <!-- Premium Profile Content -->
+    <div class="profile-container">
+        <!-- Company Banner Section -->
+        <div class="company-banner performance-optimized">
+            <div class="company-image">
+                <div class="company-image-placeholder" id="imagePlaceholder">
+                    <i class="fas fa-building"></i>
+                    <span>Add Company Image</span>
+                </div>
+                <img id="companyImage" src="" alt="Company Image" style="display: none;">
+            </div>
+            
+            <h3>Company Overview</h3>
+            <p class="text-muted">Showcase your company with a professional image and key statistics</p>
+            
+            <div class="company-stats">
+                <div class="stat-item">
+                    <div class="stat-value" id="employeeCount">150+</div>
+                    <div class="stat-label">Employees</div>
+                </div>
+                <div class="stat-item">
+                    <div class="stat-value" id="yearFounded">2015</div>
+                    <div class="stat-label">Founded</div>
+                </div>
+            </div>
+            
+            <button class="btn-primary mt-3" id="uploadImageBtn" style="margin-top: 1rem !important;">
+                <i class="fas fa-upload"></i> Upload Company Image
+            </button>
+        </div>
+        
+        <!-- Profile Form Section -->
+        <div class="profile-card performance-optimized">
+            <!-- Company Building Background -->
+            <div class="company-bg"></div>
+            
+            <div class="profile-header">
+                <h1>Company Profile</h1>
+                <p>Manage your company information and create an impressive profile</p>
+            </div>
+            
+            <!-- Premium Profile Info Section -->
+            <div class="profile-info">
+                <div class="profile-avatar">
+                    {% if form.company_name.value %}
+                        {{ form.company_name.value|slice:":1"|upper }}
+                    {% else %}
+                        C
+                    {% endif %}
+                </div>
+                <div class="profile-details">
+                    <h2>
+                        {% if form.company_name.value %}
+                            {{ form.company_name.value }}
+                        {% else %}
+                            Your Company Name
+                        {% endif %}
+                    </h2>
+                    <p>
+                        <i class="fas fa-map-marker-alt"></i>
+                        {% if form.location.value %}
+                            {{ form.location.value }}
+                        {% else %}
+                            Add your company location
+                        {% endif %}
+                    </p>
+                </div>
+            </div>
+            
+            <!-- Premium Profile Form -->
+            <form method="POST" id="profileForm">
+                {% csrf_token %}
+                {{ form.non_field_errors }}
+                
+                <div class="form-group">
+                    <label for="{{ form.company_name.id_for_label }}" class="form-label">
+                        <i class="fas fa-building"></i> Company Name
+                    </label>
+                    {{ form.company_name.errors }}
+                    {{ form.company_name }}
+                </div>
+                
+                <div class="form-group">
+                    <label for="{{ form.phone.id_for_label }}" class="form-label">
+                        <i class="fas fa-phone"></i> Phone Number
+                    </label>
+                    {{ form.phone.errors }}
+                    {{ form.phone }}
+                </div>
+                
+                <div class="form-group">
+                    <label for="{{ form.location.id_for_label }}" class="form-label">
+                        <i class="fas fa-map-marker-alt"></i> Company Location
+                    </label>
+                    {{ form.location.errors }}
+                    {{ form.location }}
+                </div>
+                
+                <div class="form-group">
+                    <label for="{{ form.company_description.id_for_label }}" class="form-label">
+                        <i class="fas fa-file-alt"></i> Company Description
+                    </label>
+                    {{ form.company_description.errors }}
+                    {{ form.company_description }}
+                    <div class="form-help">
+                        <i class="fas fa-lightbulb"></i> Tell candidates about your company culture, mission, and values to attract top talent.
+                    </div>
+                </div>
+                
+                <button type="submit" class="btn-primary" id="saveButton">
+                    <i class="fas fa-save"></i> Save Company Profile
+                </button>
+            </form>
+        </div>
+    </div>
+
+    <!-- Bootstrap JS -->
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+
+    <script>
+        // Enhanced interactive elements with optimized performance
+        document.addEventListener('DOMContentLoaded', function() {
+            // Add CSS classes to form fields
+            const formFields = document.querySelectorAll('input, textarea, select');
+            formFields.forEach(field => {
+                field.classList.add('form-control');
+                
+                // Add placeholder text if not present
+                if (!field.placeholder) {
+                    switch(field.type) {
+                        case 'text':
+                            if (field.name.includes('company_name')) {
+                                field.placeholder = 'Enter your company name';
+                            } else if (field.name.includes('location')) {
+                                field.placeholder = 'Enter company location';
+                            } else if (field.name.includes('phone')) {
+                                field.placeholder = 'Enter phone number';
+                            }
+                            break;
+                        default:
+                            if (field.tagName === 'TEXTAREA') {
+                                field.placeholder = 'Describe your company, its mission, culture, and what makes it a great place to work...';
+                            }
+                    }
+                }
+            });
+            
+            // Update profile avatar with company initial
+            const companyNameField = document.getElementById('{{ form.company_name.id_for_label }}');
+            if (companyNameField) {
+                companyNameField.addEventListener('input', function() {
+                    const initial = this.value ? this.value.charAt(0).toUpperCase() : 'C';
+                    const avatar = document.querySelector('.profile-avatar');
+                    avatar.textContent = initial;
+                    
+                    // Add animation
+                    avatar.classList.add('success-animation');
+                    setTimeout(() => avatar.classList.remove('success-animation'), 400);
+                    
+                    // Update company name
+                    const nameElement = document.querySelector('.profile-details h2');
+                    nameElement.textContent = this.value || 'Your Company Name';
+                });
+            }
+            
+            // Update location in profile info
+            const locationField = document.getElementById('{{ form.location.id_for_label }}');
+            if (locationField) {
+                locationField.addEventListener('input', function() {
+                    const locationElement = document.querySelector('.profile-details p');
+                    const locationText = this.value || 'Add your company location';
+                    locationElement.innerHTML = `<i class="fas fa-map-marker-alt"></i> ${locationText}`;
+                });
+            }
+
+            // Header scroll effect
+            const headerNav = document.getElementById('headerNav');
+            window.addEventListener('scroll', function() {
+                if (window.scrollY > 50) {
+                    headerNav.classList.add('scrolled');
+                } else {
+                    headerNav.classList.remove('scrolled');
+                }
+            });
+
+            // Enhanced form submission
+            const form = document.getElementById('profileForm');
+            const saveButton = document.getElementById('saveButton');
+            
+            form.addEventListener('submit', function(e) {
+                // Add visual feedback
+                saveButton.classList.add('success-animation');
+                saveButton.innerHTML = '<i class="fas fa-spinner fa-spin"></i> Saving...';
+                
+                // Re-enable normal submission after animation
+                setTimeout(() => {
+                    saveButton.innerHTML = '<i class="fas fa-check"></i> Saved Successfully!';
+                }, 800);
+            });
+
+            // Add focus effects to form fields
+            formFields.forEach(field => {
+                field.addEventListener('focus', function() {
+                    this.style.transform = 'translateY(-1px)';
+                    this.style.boxShadow = '0 0 0 3px rgba(102, 126, 234, 0.1)';
+                });
+                
+                field.addEventListener('blur', function() {
+                    this.style.transform = 'translateY(0)';
+                });
+            });
+
+            // Smooth scroll to top functionality
+            const scrollToTop = document.createElement('button');
+            scrollToTop.innerHTML = '<i class="fas fa-chevron-up"></i>';
+            scrollToTop.style.cssText = `
+                position: fixed;
+                bottom: 25px;
+                right: 25px;
+                width: 50px;
+                height: 50px;
+                background: var(--rainbow-gradient);
+                border: none;
+                border-radius: 50%;
+                color: white;
+                font-size: 1.2rem;
+                cursor: pointer;
+                box-shadow: var(--shadow-intense);
+                transition: all 0.2s ease;
+                z-index: 1000;
+                display: none;
+                backdrop-filter: blur(10px);
+            `;
+            document.body.appendChild(scrollToTop);
+
+            scrollToTop.addEventListener('click', function() {
+                window.scrollTo({
+                    top: 0,
+                    behavior: 'smooth'
+                });
+            });
+
+            window.addEventListener('scroll', function() {
+                if (window.scrollY > 300) {
+                    scrollToTop.style.display = 'flex';
+                    scrollToTop.style.alignItems = 'center';
+                    scrollToTop.style.justifyContent = 'center';
+                } else {
+                    scrollToTop.style.display = 'none';
+                }
+            });
+
+            // Add hover effects to scroll to top button
+            scrollToTop.addEventListener('mouseenter', function() {
+                this.style.transform = 'translateY(-3px) scale(1.05)';
+                this.style.boxShadow = 'var(--shadow-ultimate)';
+            });
+
+            scrollToTop.addEventListener('mouseleave', function() {
+                this.style.transform = 'translateY(0) scale(1)';
+                this.style.boxShadow = 'var(--shadow-intense)';
+            });
+
+            // Performance optimization - throttle scroll events
+            let ticking = false;
+            function updateOnScroll() {
+                // Scroll-based animations here
+                ticking = false;
+            }
+
+            window.addEventListener('scroll', function() {
+                if (!ticking) {
+                    requestAnimationFrame(updateOnScroll);
+                    ticking = true;
+                }
+            });
+
+            // Company image upload simulation
+            const uploadImageBtn = document.getElementById('uploadImageBtn');
+            const imagePlaceholder = document.getElementById('imagePlaceholder');
+            const companyImage = document.getElementById('companyImage');
+            
+            uploadImageBtn.addEventListener('click', function(e) {
+                e.preventDefault();
+                
+                // Simulate image upload
+                companyImage.src = 'https://images.unsplash.com/photo-1568992688065-536aad8a12f6?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=1000&q=80';
+                companyImage.style.display = 'block';
+                imagePlaceholder.style.display = 'none';
+                
+                // Update stats with random values
+                document.getElementById('employeeCount').textContent = Math.floor(Math.random() * 500) + 50;
+                document.getElementById('yearFounded').textContent = Math.floor(Math.random() * 30) + 1990;
+                
+                // Add success animation
+                this.innerHTML = '<i class="fas fa-check"></i> Image Uploaded';
+                this.classList.add('success-animation');
+                
+                setTimeout(() => {
+                    this.innerHTML = '<i class="fas fa-sync-alt"></i> Change Image';
+                }, 1500);
+            });
+        });
+    </script>
+</body>
+</html>

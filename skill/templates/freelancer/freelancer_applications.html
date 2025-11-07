@@ -1,0 +1,774 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>My Applications - SkillJourney</title>
+  
+  <!-- Bootstrap CSS -->
+  <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+  <!-- Bootstrap Icons -->
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.0/font/bootstrap-icons.css">
+  <!-- Font Awesome -->
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+  <!-- Google Fonts -->
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800;900&display=swap" rel="stylesheet">
+  
+  <style>
+    /* Premium Color Palette - Matching Landing Page */
+    :root {
+      --primary-gradient: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+      --secondary-gradient: linear-gradient(135deg, #4ecdc4 0%, #44a08d 100%);
+      --accent-gradient: linear-gradient(135deg, #ff6b6b 0%, #feca57 100%);
+      --success-gradient: linear-gradient(135deg, #51cf66 0%, #40c057 100%);
+      --purple-gradient: linear-gradient(135deg, #a855f7 0%, #3b82f6 100%);
+      --rainbow-gradient: linear-gradient(135deg, #ff6b6b, #4ecdc4, #45b7d1, #a855f7, #feca57, #667eea);
+      --glass-bg: rgba(255, 255, 255, 0.08);
+      --glass-border: rgba(255, 255, 255, 0.12);
+      --dark-bg: #0f0f23;
+      --darker-bg: #0a0a1a;
+      --card-bg: rgba(30, 30, 60, 0.6);
+      --text-primary: #ffffff;
+      --text-secondary: #e2e8f0;
+      --text-muted: #94a3b8;
+      --shadow-glow: 0 10px 40px rgba(102, 126, 234, 0.15);
+      --shadow-intense: 0 20px 50px rgba(0, 0, 0, 0.3);
+      --border-radius: 20px;
+    }
+
+    * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+    }
+
+    body {
+      font-family: 'Inter', -apple-system, BlinkMacSystemFont, sans-serif;
+      background: linear-gradient(135deg, var(--dark-bg) 0%, var(--darker-bg) 100%);
+      color: var(--text-primary);
+      overflow-x: hidden;
+      line-height: 1.6;
+      min-height: 100vh;
+    }
+
+    /* Subtle Background Animation */
+    .bg-animation {
+      position: fixed;
+      inset: 0;
+      z-index: -1;
+      overflow: hidden;
+    }
+
+    .floating-orb {
+      position: absolute;
+      border-radius: 50%;
+      filter: blur(100px);
+      opacity: 0.15;
+      animation: float-orbs 40s ease-in-out infinite;
+    }
+
+    .orb-1 {
+      width: 400px;
+      height: 400px;
+      background: var(--primary-gradient);
+      top: 10%;
+      left: 5%;
+      animation-delay: 0s;
+    }
+
+    .orb-2 {
+      width: 300px;
+      height: 300px;
+      background: var(--secondary-gradient);
+      bottom: 15%;
+      right: 10%;
+      animation-delay: 20s;
+    }
+
+    .orb-3 {
+      width: 350px;
+      height: 350px;
+      background: var(--accent-gradient);
+      top: 60%;
+      left: 70%;
+      animation-delay: 30s;
+    }
+
+    /* Premium Navigation Bar */
+    .custom-navbar {
+      background: var(--card-bg);
+      backdrop-filter: blur(30px);
+      border: 1px solid var(--glass-border);
+      border-radius: var(--border-radius);
+      box-shadow: var(--shadow-intense);
+      padding: 1.5rem 2rem;
+      margin: 2rem auto;
+      max-width: 1200px;
+      animation: slide-down 0.6s ease-out;
+      position: relative;
+      overflow: hidden;
+    }
+
+    .custom-navbar::before {
+      content: '';
+      position: absolute;
+      top: 0;
+      left: -100%;
+      width: 100%;
+      height: 100%;
+      background: linear-gradient(90deg, transparent, rgba(255,255,255,0.03), transparent);
+      animation: nav-shimmer 6s ease-in-out infinite;
+    }
+
+    .nav-brand-container {
+      display: flex;
+      align-items: center;
+      gap: 1.5rem;
+      position: relative;
+      z-index: 2;
+    }
+
+    .animated-logo {
+      width: 55px;
+      height: 55px;
+      background: var(--rainbow-gradient);
+      border-radius: 15px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 1.5rem;
+      color: white;
+      box-shadow: var(--shadow-glow);
+      transition: all 0.3s ease;
+    }
+
+    .animated-logo:hover {
+      transform: translateY(-2px);
+      box-shadow: 0 15px 40px rgba(102, 126, 234, 0.3);
+    }
+
+    .nav-text-content h3 {
+      color: var(--text-primary);
+      margin-bottom: 0.25rem;
+      font-size: 1.8rem;
+      font-weight: 800;
+      background: var(--rainbow-gradient);
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+      background-clip: text;
+    }
+
+    .welcome-text {
+      color: var(--text-secondary);
+      font-size: 1rem;
+    }
+
+    .username-highlight {
+      background: var(--primary-gradient);
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+      background-clip: text;
+      font-weight: 700;
+    }
+
+    .nav-menu {
+      display: flex;
+      gap: 1.5rem;
+      align-items: center;
+      position: relative;
+      z-index: 2;
+    }
+
+    .nav-link {
+      color: var(--text-secondary);
+      text-decoration: none;
+      font-weight: 500;
+      padding: 0.5rem 1rem;
+      border-radius: 10px;
+      transition: all 0.3s ease;
+      display: flex;
+      align-items: center;
+      gap: 0.5rem;
+    }
+
+    .nav-link:hover, .nav-link.active {
+      color: var(--text-primary);
+      background: var(--glass-bg);
+    }
+
+    /* Content Container */
+    .content-container {
+      max-width: 1200px;
+      margin: 0 auto 3rem;
+      padding: 0 1.5rem;
+    }
+
+    .content-card {
+      background: var(--card-bg);
+      backdrop-filter: blur(25px);
+      border: 1px solid var(--glass-border);
+      border-radius: var(--border-radius);
+      box-shadow: var(--shadow-glow);
+      padding: 2rem;
+      transition: all 0.3s ease;
+      position: relative;
+      overflow: hidden;
+    }
+
+    .content-card:hover {
+      transform: translateY(-3px);
+      box-shadow: var(--shadow-intense);
+      border-color: rgba(102, 126, 234, 0.3);
+    }
+
+    .content-header {
+      margin-bottom: 2rem;
+      text-align: center;
+    }
+
+    .content-header h1 {
+      font-size: 2.5rem;
+      font-weight: 800;
+      margin-bottom: 1rem;
+      background: var(--rainbow-gradient);
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+      background-clip: text;
+    }
+
+    .content-header p {
+      color: var(--text-secondary);
+      font-size: 1.1rem;
+      max-width: 600px;
+      margin: 0 auto;
+    }
+
+    /* Applications Table */
+    .applications-table {
+      width: 100%;
+      border-collapse: separate;
+      border-spacing: 0;
+      border-radius: var(--border-radius);
+      overflow: hidden;
+      background: var(--glass-bg);
+    }
+
+    .applications-table th {
+      background: var(--glass-bg);
+      color: var(--text-primary);
+      font-weight: 600;
+      padding: 1.25rem 1.5rem;
+      text-align: left;
+      border-bottom: 1px solid var(--glass-border);
+      font-size: 0.9rem;
+      text-transform: uppercase;
+      letter-spacing: 0.5px;
+    }
+
+    .applications-table td {
+      padding: 1.25rem 1.5rem;
+      border-bottom: 1px solid var(--glass-border);
+      vertical-align: middle;
+      color: var(--text-secondary);
+    }
+
+    .applications-table tr:last-child td {
+      border-bottom: none;
+    }
+
+    .applications-table tr {
+      transition: all 0.3s ease;
+    }
+
+    .applications-table tr:hover {
+      background: rgba(255, 255, 255, 0.05);
+      transform: translateX(5px);
+    }
+
+    /* Status Badges */
+    .status-badge {
+      display: inline-flex;
+      align-items: center;
+      gap: 0.5rem;
+      padding: 0.5rem 1rem;
+      border-radius: 20px;
+      font-size: 0.875rem;
+      font-weight: 600;
+      border: 1px solid transparent;
+    }
+
+    .status-pending {
+      background: rgba(245, 158, 11, 0.15);
+      color: #f59e0b;
+      border-color: rgba(245, 158, 11, 0.3);
+    }
+
+    .status-accepted {
+      background: rgba(34, 197, 94, 0.15);
+      color: #22c55e;
+      border-color: rgba(34, 197, 94, 0.3);
+      animation: pulse-accepted 2s infinite;
+    }
+
+    .status-rejected {
+      background: rgba(239, 68, 68, 0.15);
+      color: #ef4444;
+      border-color: rgba(239, 68, 68, 0.3);
+    }
+
+    /* Application Stats */
+    .stats-container {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+      gap: 1.5rem;
+      margin-bottom: 2rem;
+    }
+
+    .stat-card {
+      background: var(--glass-bg);
+      border: 1px solid var(--glass-border);
+      border-radius: 15px;
+      padding: 1.5rem;
+      text-align: center;
+      transition: all 0.3s ease;
+    }
+
+    .stat-card:hover {
+      transform: translateY(-3px);
+      background: rgba(255, 255, 255, 0.1);
+    }
+
+    .stat-value {
+      font-size: 2rem;
+      font-weight: 800;
+      margin-bottom: 0.5rem;
+    }
+
+    .stat-pending .stat-value {
+      color: #f59e0b;
+    }
+
+    .stat-accepted .stat-value {
+      color: #22c55e;
+    }
+
+    .stat-rejected .stat-value {
+      color: #ef4444;
+    }
+
+    .stat-label {
+      color: var(--text-muted);
+      font-size: 0.9rem;
+      font-weight: 500;
+      text-transform: uppercase;
+      letter-spacing: 0.5px;
+    }
+
+    /* Empty State */
+    .empty-state {
+      text-align: center;
+      padding: 4rem 1rem;
+      color: var(--text-muted);
+    }
+
+    .empty-state i {
+      font-size: 4rem;
+      margin-bottom: 1.5rem;
+      color: var(--text-muted);
+      opacity: 0.5;
+    }
+
+    .empty-state h3 {
+      color: var(--text-secondary);
+      margin-bottom: 1rem;
+      font-weight: 600;
+    }
+
+    /* Celebration System */
+    .celebration-overlay {
+      position: fixed;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      background: rgba(0, 0, 0, 0.8);
+      backdrop-filter: blur(10px);
+      display: none;
+      justify-content: center;
+      align-items: center;
+      z-index: 9999;
+      opacity: 0;
+      transition: opacity 0.5s ease;
+    }
+
+    .celebration-modal {
+      background: var(--card-bg);
+      border: 1px solid var(--glass-border);
+      border-radius: var(--border-radius);
+      padding: 3rem;
+      text-align: center;
+      max-width: 500px;
+      width: 90%;
+      box-shadow: var(--shadow-intense);
+      transform: scale(0.8);
+      opacity: 0;
+      transition: all 0.5s ease;
+    }
+
+    .celebration-modal.show {
+      transform: scale(1);
+      opacity: 1;
+    }
+
+    .celebration-icon {
+      font-size: 4rem;
+      margin-bottom: 1.5rem;
+      background: var(--success-gradient);
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+      background-clip: text;
+    }
+
+    .celebration-title {
+      font-size: 2rem;
+      font-weight: 800;
+      margin-bottom: 1rem;
+      background: var(--rainbow-gradient);
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+      background-clip: text;
+    }
+
+    .celebration-message {
+      color: var(--text-secondary);
+      margin-bottom: 2rem;
+      line-height: 1.6;
+    }
+
+    .btn-celebration {
+      background: var(--rainbow-gradient);
+      color: white;
+      border: none;
+      border-radius: 12px;
+      padding: 0.75rem 2rem;
+      font-weight: 600;
+      cursor: pointer;
+      transition: all 0.3s ease;
+      box-shadow: var(--shadow-glow);
+    }
+
+    .btn-celebration:hover {
+      transform: translateY(-2px);
+      box-shadow: 0 10px 25px rgba(102, 126, 234, 0.4);
+    }
+
+    /* Confetti Animation */
+    .confetti {
+      position: fixed;
+      width: 10px;
+      height: 10px;
+      opacity: 0;
+      pointer-events: none;
+      z-index: 10000;
+    }
+
+    /* Animations */
+    @keyframes float-orbs {
+      0%, 100% {
+        transform: translateY(0) rotate(0deg);
+      }
+      50% {
+        transform: translateY(-20px) rotate(180deg);
+      }
+    }
+
+    @keyframes slide-down {
+      from {
+        opacity: 0;
+        transform: translateY(-20px);
+      }
+      to {
+        opacity: 1;
+        transform: translateY(0);
+      }
+    }
+
+    @keyframes nav-shimmer {
+      0% {
+        left: -100%;
+      }
+      50% {
+        left: 100%;
+      }
+      100% {
+        left: 100%;
+      }
+    }
+
+    @keyframes pulse-accepted {
+      0% { transform: scale(1); }
+      50% { transform: scale(1.05); }
+      100% { transform: scale(1); }
+    }
+
+    @keyframes confetti-fall {
+      0% { 
+        transform: translateY(-100px) rotate(0deg); 
+        opacity: 1; 
+      }
+      100% { 
+        transform: translateY(100vh) rotate(360deg); 
+        opacity: 0; 
+      }
+    }
+
+    /* Responsive */
+    @media (max-width: 768px) {
+      .custom-navbar {
+        padding: 1rem;
+        margin: 1rem;
+        flex-direction: column;
+        gap: 1rem;
+      }
+      
+      .nav-menu {
+        gap: 1rem;
+      }
+      
+      .content-container {
+        padding: 0 1rem;
+      }
+      
+      .content-card {
+        padding: 1.5rem;
+      }
+      
+      .applications-table {
+        display: block;
+        overflow-x: auto;
+      }
+      
+      .stats-container {
+        grid-template-columns: 1fr;
+      }
+      
+      .celebration-modal {
+        padding: 2rem;
+      }
+    }
+  </style>
+</head>
+<body>
+    <!-- Subtle Background Animation -->
+    <div class="bg-animation">
+        <div class="floating-orb orb-1"></div>
+        <div class="floating-orb orb-2"></div>
+        <div class="floating-orb orb-3"></div>
+    </div>
+
+    <!-- Premium Navigation -->
+    <nav class="navbar navbar-light custom-navbar">
+        <div class="container-fluid">
+            <div class="d-flex align-items-center">
+                <div class="nav-brand-container">
+                    <div class="animated-logo">
+                        <i class="bi bi-file-earmark-text-fill"></i>
+                    </div>
+                    <div class="nav-text-content">
+                        <h3 class="fw-bold mb-0">My Applications</h3>
+                        <p class="text-muted mb-0 small welcome-text">Track your journey on <span class="username-highlight">SkillJourney</span></p>
+                    </div>
+                </div>
+            </div>
+                    
+            <div class="nav-menu">
+                <a href="{% url 'freelancer_dashboard' %}" class="nav-link active">
+                    <i class="bi bi-arrow-left"></i> Back to Dashboard
+                </a>
+            </div>
+        </div>
+    </nav>
+
+    <!-- Content -->
+    <div class="content-container">
+        <div class="content-card">
+            <div class="content-header">
+                <h1>Application History</h1>
+                <p>Track the status of all your job applications in one place</p>
+            </div>
+            
+            <!-- Application Statistics -->
+            
+            
+            {% if applications %}
+                <table class="applications-table">
+                    <thead>
+                        <tr>
+                            <th>Job Title</th>
+                            <th>Company</th>
+                            <th>Status</th>
+                            <th>Applied On</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        {% for app in applications %}
+                        <tr class="application-row" data-status="{{ app.status }}" data-id="{{ app.id }}">
+                            <td>
+                                <strong>{{ app.job.title }}</strong>
+                            </td>
+                            <td>{{ app.job.recruiter.company_name }}</td>
+                            <td>
+                                {% if app.status == "Pending" %}
+                                    <span class="status-badge status-pending">
+                                        <i class="bi bi-clock"></i> {{ app.status }}
+                                    </span>
+                                {% elif app.status == "Accepted" %}
+                                    <span class="status-badge status-accepted">
+                                        <i class="bi bi-check-circle-fill"></i> {{ app.status }}
+                                    </span>
+                                {% else %}
+                                    <span class="status-badge status-rejected">
+                                        <i class="bi bi-x-circle-fill"></i> {{ app.status }}
+                                    </span>
+                                {% endif %}
+                            </td>
+                            <td>{{ app.applied_at|date:"d M Y" }}</td>
+                        </tr>
+                        {% endfor %}
+                    </tbody>
+                </table>
+            {% else %}
+                <div class="empty-state">
+                    <i class="bi bi-file-earmark-text"></i>
+                    <h3>No Applications Yet</h3>
+                    <p>You haven't applied to any jobs yet. Start browsing opportunities to begin your journey!</p>
+                </div>
+            {% endif %}
+        </div>
+    </div>
+    
+    <!-- Celebration System -->
+    <div class="celebration-overlay" id="celebrationOverlay">
+        <div class="celebration-modal" id="celebrationModal">
+            <div class="celebration-icon">
+                <i class="bi bi-trophy-fill"></i>
+            </div>
+            <h2 class="celebration-title">Congratulations!</h2>
+            <p class="celebration-message">
+                Your application has been accepted! This is a significant milestone in your career journey. 
+                Celebrate this achievement and get ready for the next steps.
+            </p>
+            <button class="btn-celebration" onclick="closeCelebration()">
+                Continue Journey
+            </button>
+        </div>
+    </div>
+
+    <!-- Bootstrap JS -->
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+
+    <script>
+        // Smart Celebration System
+        document.addEventListener('DOMContentLoaded', function() {
+            // Check if there are any accepted applications
+            const acceptedApplications = document.querySelectorAll('.application-row[data-status="Accepted"]');
+            
+            if (acceptedApplications.length > 0) {
+                // Check localStorage to see if we've shown celebration recently
+                const lastCelebration = localStorage.getItem('skilljourney_last_celebration');
+                const now = new Date().getTime();
+                
+                // Show celebration only if:
+                // 1. We haven't shown it before, OR
+                // 2. It's been more than 5 minutes since last celebration
+                if (!lastCelebration || (now - parseInt(lastCelebration)) > (5 * 60 * 1000)) {
+                    // Store the current time in localStorage
+                    localStorage.setItem('skilljourney_last_celebration', now.toString());
+                    
+                    // Show celebration after a short delay
+                    setTimeout(showCelebration, 1500);
+                }
+            }
+            
+            // Add enhanced hover effects to table rows
+            const tableRows = document.querySelectorAll('.applications-table tbody tr');
+            tableRows.forEach(row => {
+                row.addEventListener('mouseenter', function() {
+                    this.style.transition = 'all 0.3s ease';
+                });
+                
+                // Add click effect for accepted applications
+                if (this.getAttribute('data-status') === 'Accepted') {
+                    row.style.cursor = 'pointer';
+                    row.addEventListener('click', function() {
+                        this.style.transform = 'scale(0.98)';
+                        setTimeout(() => {
+                            this.style.transform = '';
+                        }, 150);
+                    });
+                }
+            });
+        });
+        
+        function showCelebration() {
+            const overlay = document.getElementById('celebrationOverlay');
+            const modal = document.getElementById('celebrationModal');
+            
+            // Show overlay
+            overlay.style.display = 'flex';
+            setTimeout(() => {
+                overlay.style.opacity = '1';
+            }, 10);
+            
+            // Show modal with animation
+            setTimeout(() => {
+                modal.classList.add('show');
+            }, 300);
+            
+            // Create confetti effect
+            createConfetti();
+        }
+        
+        function closeCelebration() {
+            const overlay = document.getElementById('celebrationOverlay');
+            const modal = document.getElementById('celebrationModal');
+            
+            // Hide modal with animation
+            modal.classList.remove('show');
+            
+            // Hide overlay after animation
+            setTimeout(() => {
+                overlay.style.opacity = '0';
+                setTimeout(() => {
+                    overlay.style.display = 'none';
+                }, 500);
+            }, 300);
+        }
+        
+        function createConfetti() {
+            const colors = ['#667eea', '#764ba2', '#4ecdc4', '#ff6b6b', '#feca57', '#a855f7', '#3b82f6'];
+            
+            for (let i = 0; i < 200; i++) {
+                const confetti = document.createElement('div');
+                confetti.className = 'confetti';
+                confetti.style.left = Math.random() * 100 + 'vw';
+                confetti.style.backgroundColor = colors[Math.floor(Math.random() * colors.length)];
+                confetti.style.animation = `confetti-fall ${Math.random() * 3 + 2}s linear forwards`;
+                confetti.style.animationDelay = Math.random() * 2 + 's';
+                document.body.appendChild(confetti);
+                
+                // Remove confetti after animation
+                setTimeout(() => {
+                    confetti.remove();
+                }, 5000);
+            }
+        }
+        
+        // Handle page refresh - don't show celebration again
+        window.addEventListener('beforeunload', function() {
+            // We don't need to do anything here as we're using localStorage
+            // to track when we last showed the celebration
+        });
+    </script>
+</body>
+</html>

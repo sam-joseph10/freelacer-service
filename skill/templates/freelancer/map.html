@@ -1,0 +1,1037 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Freelancer 3D Globe - SkillJourney</title>
+    
+    <!-- Bootstrap CSS -->
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+    <!-- Font Awesome -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <!-- Google Fonts -->
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800;900&display=swap" rel="stylesheet">
+    
+    <style>
+        :root {
+            --primary-color: #667eea;
+            --primary-dark: #764ba2;
+            --secondary-color: #4ecdc4;
+            --accent-color: #ff6b6b;
+            --success-color: #51cf66;
+            --purple-color: #a855f7;
+            --rainbow-gradient: linear-gradient(135deg, #ff6b6b, #4ecdc4, #45b7d1, #a855f7, #feca57, #667eea);
+            --glass-bg: rgba(255, 255, 255, 0.08);
+            --glass-border: rgba(255, 255, 255, 0.12);
+            --dark-bg: #0f0f23;
+            --darker-bg: #0a0a1a;
+            --card-bg: rgba(30, 30, 60, 0.8);
+            --text-primary: #ffffff;
+            --text-secondary: #e2e8f0;
+            --text-muted: #94a3b8;
+            --shadow-glow: 0 10px 40px rgba(102, 126, 234, 0.15);
+            --shadow-intense: 0 20px 50px rgba(0, 0, 0, 0.3);
+            --border-radius: 20px;
+        }
+        
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        html {
+            scroll-behavior: smooth;
+        }
+
+        body {
+            font-family: 'Inter', -apple-system, BlinkMacSystemFont, sans-serif;
+            background: linear-gradient(135deg, var(--dark-bg) 0%, var(--darker-bg) 100%);
+            color: var(--text-primary);
+            line-height: 1.6;
+            margin: 0;
+            min-height: 100vh;
+            overflow-x: hidden;
+        }
+
+        .bg-animation {
+            position: fixed;
+            inset: 0;
+            z-index: -1;
+            overflow: hidden;
+        }
+
+        .floating-orb {
+            position: absolute;
+            border-radius: 50%;
+            filter: blur(80px);
+            opacity: 0.15;
+            animation: float-orbs 40s ease-in-out infinite;
+        }
+
+        .orb-1 {
+            width: 400px;
+            height: 400px;
+            background: var(--primary-color);
+            top: 10%;
+            left: 5%;
+            animation-delay: 0s;
+        }
+
+        .orb-2 {
+            width: 300px;
+            height: 300px;
+            background: var(--secondary-color);
+            bottom: 15%;
+            right: 10%;
+            animation-delay: 20s;
+        }
+
+        .orb-3 {
+            width: 350px;
+            height: 350px;
+            background: var(--accent-color);
+            top: 60%;
+            left: 70%;
+            animation-delay: 30s;
+        }
+
+        .dashboard-container {
+            max-width: 1600px;
+            margin: 0 auto;
+            padding: 2rem;
+            width: 100%;
+        }
+        
+        .dashboard-header {
+            margin-bottom: 2rem;
+            text-align: center;
+            position: relative;
+        }
+        
+        .back-button {
+            position: absolute;
+            right: 0;
+            top: 50%;
+            transform: translateY(-50%);
+            background: var(--glass-bg);
+            border: 1px solid var(--glass-border);
+            border-radius: 10px;
+            padding: 0.75rem 1.25rem;
+            color: var(--text-primary);
+            text-decoration: none;
+            font-weight: 600;
+            transition: all 0.3s ease;
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+            box-shadow: var(--shadow-glow);
+        }
+        
+        .back-button:hover {
+            background: var(--primary-color);
+            transform: translateY(-50%) translateX(5px);
+            color: white;
+        }
+        
+        .dashboard-title {
+            font-size: 2.5rem;
+            font-weight: 900;
+            color: var(--text-primary);
+            margin-bottom: 0.75rem;
+        }
+        
+        .dashboard-subtitle {
+            color: var(--text-secondary);
+            font-size: 1.1rem;
+            font-weight: 500;
+        }
+        
+        .map-container {
+            background: var(--card-bg);
+            backdrop-filter: blur(25px);
+            border-radius: var(--border-radius);
+            padding: 2rem;
+            box-shadow: var(--shadow-glow);
+            border: 1px solid var(--glass-border);
+            margin-bottom: 2rem;
+        }
+        
+        .map-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 1.75rem;
+            flex-wrap: wrap;
+            gap: 1rem;
+        }
+        
+        .map-title {
+            font-size: 1.5rem;
+            font-weight: 700;
+            color: var(--text-primary);
+            margin: 0;
+        }
+        
+        .map-filters {
+            display: flex;
+            gap: 0.75rem;
+            align-items: center;
+            flex-wrap: wrap;
+        }
+        
+        .map-filter {
+            background: var(--glass-bg);
+            border: 1px solid var(--glass-border);
+            border-radius: 10px;
+            padding: 0.6rem 1rem;
+            color: var(--text-primary);
+            font-size: 0.9rem;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            font-weight: 500;
+        }
+
+        .map-filter:focus {
+            outline: none;
+            border-color: var(--primary-color);
+            box-shadow: 0 0 0 3px rgba(102, 126, 234, 0.1);
+        }
+
+        .map-filter:hover {
+            background: rgba(255, 255, 255, 0.12);
+            border-color: var(--primary-color);
+        }
+        
+        #globeViz {
+            height: 70vh;
+            min-height: 500px;
+            max-height: 700px;
+            width: 100%;
+            border-radius: 16px;
+            overflow: hidden;
+            box-shadow: var(--shadow-glow);
+            background: radial-gradient(circle at center, rgba(30, 30, 60, 0.5), rgba(10, 10, 26, 0.9));
+            position: relative;
+        }
+
+        .globe-loading {
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            z-index: 5;
+            text-align: center;
+            color: var(--text-secondary);
+        }
+
+        .globe-loading i {
+            font-size: 3rem;
+            margin-bottom: 1rem;
+            animation: pulse 2s ease-in-out infinite;
+        }
+
+        @keyframes pulse {
+            0%, 100% {
+                opacity: 0.5;
+                transform: scale(1);
+            }
+            50% {
+                opacity: 1;
+                transform: scale(1.1);
+            }
+        }
+
+        .globe-controls {
+            position: absolute;
+            top: 15px;
+            right: 15px;
+            display: flex;
+            flex-direction: column;
+            gap: 8px;
+            z-index: 10;
+        }
+
+        .globe-control-btn {
+            background: var(--card-bg);
+            backdrop-filter: blur(10px);
+            border: 1px solid var(--glass-border);
+            border-radius: 10px;
+            color: var(--text-primary);
+            padding: 12px;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            font-size: 1rem;
+            width: 45px;
+            height: 45px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.3);
+        }
+
+        .globe-control-btn:hover {
+            background: var(--primary-color);
+            transform: scale(1.08);
+            box-shadow: 0 6px 20px rgba(102, 126, 234, 0.4);
+        }
+
+        .globe-control-btn.active {
+            background: var(--primary-color);
+            box-shadow: 0 6px 20px rgba(102, 126, 234, 0.5);
+        }
+        
+        .freelancer-list {
+            margin-top: 2.5rem;
+        }
+
+        .freelancer-list h3 {
+            color: var(--text-primary);
+            font-weight: 700;
+            margin-bottom: 1.5rem;
+        }
+        
+        .freelancer-card {
+            background: var(--glass-bg);
+            border-radius: 12px;
+            padding: 1.25rem;
+            margin-bottom: 1rem;
+            border: 1px solid var(--glass-border);
+            transition: all 0.3s ease;
+            animation: fadeInUp 0.5s ease forwards;
+            opacity: 0;
+        }
+
+        @keyframes fadeInUp {
+            from {
+                opacity: 0;
+                transform: translateY(20px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+        
+        .freelancer-card:hover {
+            background: rgba(255, 255, 255, 0.12);
+            transform: translateY(-3px);
+            box-shadow: var(--shadow-glow);
+        }
+        
+        .freelancer-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 0.75rem;
+        }
+        
+        .freelancer-name {
+            font-weight: 600;
+            color: var(--text-primary);
+            margin: 0;
+        }
+        
+        .freelancer-status {
+            font-size: 0.8rem;
+            padding: 0.25rem 0.75rem;
+            border-radius: 20px;
+            font-weight: 600;
+        }
+        
+        .status-available {
+            background-color: rgba(81, 207, 102, 0.2);
+            color: var(--success-color);
+        }
+        
+        .status-busy {
+            background-color: rgba(255, 107, 107, 0.2);
+            color: var(--accent-color);
+        }
+        
+        .status-offline {
+            background-color: rgba(148, 163, 184, 0.2);
+            color: var(--text-muted);
+        }
+        
+        .freelancer-details {
+            display: flex;
+            gap: 1.5rem;
+            font-size: 0.9rem;
+            color: var(--text-secondary);
+        }
+        
+        .freelancer-detail {
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+        }
+
+        .loading-spinner {
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            height: 200px;
+            color: var(--text-secondary);
+        }
+
+        .loading-spinner i {
+            font-size: 2rem;
+            margin-right: 1rem;
+        }
+
+        .no-freelancers {
+            text-align: center;
+            padding: 3rem;
+            color: var(--text-muted);
+        }
+
+        .no-freelancers i {
+            font-size: 3rem;
+            margin-bottom: 1rem;
+            opacity: 0.5;
+        }
+
+        .btn-primary {
+            background: linear-gradient(135deg, var(--primary-color), var(--primary-dark));
+            border: none;
+            border-radius: 10px;
+            padding: 0.6rem 1.5rem;
+            font-weight: 600;
+            transition: all 0.3s ease;
+            color: white;
+            box-shadow: var(--shadow-glow);
+            font-size: 0.9rem;
+            white-space: nowrap;
+        }
+        
+        .btn-primary:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 15px 40px rgba(102, 126, 234, 0.4);
+            color: white;
+        }
+
+        .btn-primary i {
+            margin-right: 0.5rem;
+        }
+
+        .btn-outline {
+            background: transparent;
+            border: 1px solid var(--glass-border);
+            border-radius: 10px;
+            padding: 0.5rem 1rem;
+            color: var(--text-primary);
+            transition: all 0.3s ease;
+        }
+
+        .btn-outline:hover {
+            background: var(--glass-bg);
+            border-color: var(--primary-color);
+        }
+
+        .btn-sm {
+            padding: 0.5rem 1rem;
+            font-size: 0.85rem;
+        }
+
+        .w-100 {
+            width: 100%;
+        }
+
+        .mt-3 {
+            margin-top: 1rem;
+        }
+
+        .mb-3 {
+            margin-bottom: 1rem;
+        }
+
+        .me-1 {
+            margin-right: 0.25rem;
+        }
+
+        .tooltip-content {
+            background: rgba(10, 10, 26, 0.95);
+            backdrop-filter: blur(10px);
+            border: 1px solid var(--glass-border);
+            border-radius: 12px;
+            padding: 15px;
+            color: var(--text-primary);
+            font-family: 'Inter', sans-serif;
+            max-width: 280px;
+            box-shadow: 0 10px 40px rgba(0, 0, 0, 0.5);
+        }
+
+        .tooltip-content h4 {
+            margin: 0 0 10px 0;
+            color: var(--primary-color);
+            border-bottom: 2px solid var(--primary-color);
+            padding-bottom: 5px;
+            font-size: 1.1rem;
+        }
+
+        .tooltip-content p {
+            margin: 5px 0;
+            font-size: 0.9rem;
+        }
+
+        .tooltip-content strong {
+            color: var(--text-secondary);
+        }
+
+        .tooltip-view-btn {
+            background: var(--primary-color);
+            color: white;
+            border: none;
+            padding: 8px 15px;
+            border-radius: 8px;
+            cursor: pointer;
+            margin-top: 10px;
+            width: 100%;
+            font-weight: 600;
+            transition: all 0.3s ease;
+        }
+
+        .tooltip-view-btn:hover {
+            background: var(--primary-dark);
+            transform: scale(1.02);
+        }
+
+        @keyframes float-orbs {
+            0%, 100% {
+                transform: translateY(0) rotate(0deg);
+            }
+            33% {
+                transform: translateY(-20px) rotate(120deg);
+            }
+            66% {
+                transform: translateY(10px) rotate(240deg);
+            }
+        }
+
+        @media (max-width: 1200px) {
+            .dashboard-container {
+                padding: 1.5rem;
+            }
+
+            #globeViz {
+                height: 60vh;
+                min-height: 450px;
+            }
+        }
+
+        @media (max-width: 992px) {
+            .map-header {
+                flex-direction: column;
+                align-items: stretch;
+            }
+
+            .map-filters {
+                width: 100%;
+                justify-content: flex-start;
+            }
+
+            .map-filter {
+                flex: 1;
+                min-width: 120px;
+            }
+        }
+
+        @media (max-width: 768px) {
+            .dashboard-container {
+                padding: 1rem;
+            }
+
+            .dashboard-header {
+                margin-bottom: 1.5rem;
+                text-align: center;
+            }
+
+            .back-button {
+                position: relative;
+                right: auto;
+                top: auto;
+                transform: none;
+                margin-bottom: 1rem;
+                display: inline-flex;
+                justify-content: center;
+                margin-left: auto;
+                margin-right: auto;
+            }
+
+            .dashboard-title {
+                font-size: 1.75rem;
+            }
+
+            .dashboard-subtitle {
+                font-size: 1rem;
+            }
+
+            .map-container {
+                padding: 1.25rem;
+            }
+            
+            .map-header {
+                flex-direction: column;
+                align-items: stretch;
+                gap: 1rem;
+            }
+
+            .map-title {
+                font-size: 1.25rem;
+            }
+            
+            .map-filters {
+                flex-direction: column;
+                width: 100%;
+                gap: 0.75rem;
+            }
+
+            .map-filter {
+                width: 100%;
+            }
+
+            .btn-primary {
+                width: 100%;
+                justify-content: center;
+                display: flex;
+                align-items: center;
+            }
+            
+            #globeViz {
+                height: 50vh;
+                min-height: 350px;
+                max-height: 450px;
+            }
+
+            .globe-controls {
+                top: 10px;
+                right: 10px;
+                gap: 6px;
+            }
+
+            .globe-control-btn {
+                width: 40px;
+                height: 40px;
+                padding: 10px;
+                font-size: 0.9rem;
+            }
+
+            .freelancer-details {
+                flex-direction: column;
+                gap: 0.75rem;
+            }
+        }
+
+        @media (max-width: 480px) {
+            .dashboard-title {
+                font-size: 1.5rem;
+            }
+
+            #globeViz {
+                height: 45vh;
+                min-height: 300px;
+            }
+
+            .map-container {
+                padding: 1rem;
+            }
+
+            .freelancer-card {
+                padding: 1rem;
+            }
+        }
+    </style>
+</head>
+<body>
+    <!-- Background Animation -->
+    <div class="bg-animation">
+        <div class="floating-orb orb-1"></div>
+        <div class="floating-orb orb-2"></div>
+        <div class="floating-orb orb-3"></div>
+    </div>
+
+    <!-- Main Content -->
+    <div class="main-content" id="mainContent">
+        <!-- Map Content -->
+        <div class="dashboard-container">
+            <!-- Header -->
+            <div class="dashboard-header">
+                <h1 class="dashboard-title">🌍 Worldwide Freelancer</h1>
+                <p class="dashboard-subtitle">Explore freelancers around the world</p>
+                <a href="{% url 'freelancer_dashboard' %}" class="back-button">
+                    <i class="fas fa-arrow-left"></i>
+                    Back to Dashboard
+                </a>
+            </div>
+            
+            <!-- Globe Container -->
+            <div class="map-container">
+                <div class="map-header">
+                    <h2 class="map-title">Interactive Globe</h2>
+                    <div class="map-filters">
+                        <select class="map-filter" id="countryFilter">
+                            <option value="all">All Countries</option>
+                            <option value="india">India</option>
+                            <option value="usa">USA</option>
+                            <option value="uk">UK</option>
+                            <option value="canada">Canada</option>
+                            <option value="australia">Australia</option>
+                            <option value="germany">Germany</option>
+                            <option value="uae">UAE</option>
+                            <option value="singapore">Singapore</option>
+                        </select>
+                        <select class="map-filter" id="statusFilter">
+                            <option value="all">All Status</option>
+                            <option value="available">Available</option>
+                            <option value="busy">Busy</option>
+                            <option value="offline">Offline</option>
+                        </select>
+                        <select class="map-filter" id="skillFilter">
+                            <option value="all">All Skills</option>
+                            <option value="web">Web Development</option>
+                            <option value="mobile">Mobile Development</option>
+                            <option value="design">UI/UX Design</option>
+                            <option value="marketing">Digital Marketing</option>
+                            <option value="writing">Content Writing</option>
+                            <option value="python">Python</option>
+                            <option value="javascript">JavaScript</option>
+                            <option value="java">Java</option>
+                            <option value="react">React</option>
+                        </select>
+                        <button class="btn btn-primary" id="refreshMap">
+                            <i class="fas fa-sync-alt"></i> Refresh
+                        </button>
+                    </div>
+                </div>
+                
+                <div id="globeViz" style="position: relative;">
+                    <div class="globe-loading" id="globeLoading">
+                        <i class="fas fa-globe"></i>
+                        <p>Loading 3D Globe...</p>
+                    </div>
+                    <div class="globe-controls">
+                        <button class="globe-control-btn active" id="autoRotateBtn" title="Toggle Auto-Rotation">
+                            <i class="fas fa-sync-alt"></i>
+                        </button>
+                        <button class="globe-control-btn" id="resetViewBtn" title="Reset View">
+                            <i class="fas fa-undo"></i>
+                        </button>
+                    </div>
+                </div>
+                
+                    <div class="loading-spinner" id="loadingSpinner">
+                                            <div id="freelancerCardsContainer">
+
+
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Bootstrap JS -->
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+    
+    <!-- Globe.gl Library -->
+    <script src="//unpkg.com/globe.gl"></script>
+
+    <script>
+    // Globe functionality
+    let globe;
+    let allFreelancers = [];
+    let filteredFreelancers = [];
+    let autoRotate = true;
+
+    // Initialize the 3D globe
+    function initializeGlobe() {
+        const globeContainer = document.getElementById('globeViz');
+        const globeLoading = document.getElementById('globeLoading');
+        
+        // Get the actual container dimensions
+        const containerHeight = globeContainer.offsetHeight;
+        const containerWidth = globeContainer.offsetWidth;
+        
+        globe = Globe()
+            (globeContainer)
+            .globeImageUrl('//unpkg.com/three-globe/example/img/earth-blue-marble.jpg')
+            .bumpImageUrl('//unpkg.com/three-globe/example/img/earth-topology.png')
+            .backgroundImageUrl('//unpkg.com/three-globe/example/img/night-sky.png')
+            .atmosphereColor('#667eea')
+            .atmosphereAltitude(0.25)
+            .pointOfView({ lat: 20, lng: 78, altitude: 2.5 })
+            .width(containerWidth)
+            .height(containerHeight);
+
+        // Hide loading indicator after a short delay
+        setTimeout(() => {
+            if (globeLoading) {
+                globeLoading.style.opacity = '0';
+                globeLoading.style.transition = 'opacity 0.5s ease';
+                setTimeout(() => {
+                    globeLoading.style.display = 'none';
+                }, 500);
+            }
+        }, 1500);
+
+        // Enable auto-rotation
+        if (autoRotate) {
+            globe.controls().autoRotate = true;
+            globe.controls().autoRotateSpeed = 0.5;
+        }
+
+        // Add smooth animations
+        globe.controls().enableDamping = true;
+        globe.controls().dampingFactor = 0.1;
+        globe.controls().rotateSpeed = 0.5;
+        globe.controls().minDistance = 200;
+        globe.controls().maxDistance = 800;
+
+        // Load freelancer data
+        loadFreelancerData();
+
+        // Handle window resize
+        let resizeTimeout;
+        window.addEventListener('resize', () => {
+            clearTimeout(resizeTimeout);
+            resizeTimeout = setTimeout(() => {
+                const newHeight = globeContainer.offsetHeight;
+                const newWidth = globeContainer.offsetWidth;
+                globe.width(newWidth);
+                globe.height(newHeight);
+            }, 250);
+        });
+    }
+
+    // Load freelancer data from API
+    function loadFreelancerData() {
+        const loadingSpinner = document.getElementById('loadingSpinner');
+        const freelancerCardsContainer = document.getElementById('freelancerCardsContainer');
+        
+        loadingSpinner.style.display = 'flex';
+        freelancerCardsContainer.innerHTML = '';
+
+        fetch("{% url 'get_freelancer_data' %}")
+            .then(response => {
+                if (!response.ok) {
+                    throw new Error('Network response was not ok');
+                }
+                return response.json();
+            })
+            .then(data => {
+                loadingSpinner.style.display = 'none';
+                allFreelancers = data.freelancers || [];
+                console.log('Loaded freelancers:', allFreelancers);
+                filteredFreelancers = [...allFreelancers];
+                updateGlobeWithFreelancers(filteredFreelancers);
+                renderFreelancerCards(filteredFreelancers);
+            })
+            .catch(error => {
+                console.error('Error loading freelancer data:', error);
+                loadingSpinner.style.display = 'none';
+                freelancerCardsContainer.innerHTML = `
+                    <div class="no-freelancers">
+                        <i class="fas fa-exclamation-circle"></i>
+                        <h4>Error loading data</h4>
+                        <p>Please try again later</p>
+                    </div>
+                `;
+            });
+    }
+
+    // Update globe with freelancer markers
+    function updateGlobeWithFreelancers(freelancers) {
+        // Transform freelancers data for globe visualization
+        const pointsData = freelancers.map(f => ({
+            lat: f.lat,
+            lng: f.lng,
+            size: 0.5,
+            color: getStatusColor(f.status),
+            freelancer: f
+        }));
+
+        // Add points to globe
+        globe.pointsData(pointsData)
+            .pointAltitude(0.01)
+            .pointRadius('size')
+            .pointColor('color')
+            .pointLabel(d => {
+                const f = d.freelancer;
+                return `
+                    <div class="tooltip-content">
+                        <h4>${f.name}</h4>
+                        <p><strong>Title:</strong> ${f.professional_title}</p>
+                        <p><strong>Status:</strong> <span style="color: ${getStatusColor(f.status)}">${f.status.charAt(0).toUpperCase() + f.status.slice(1)}</span></p>
+                        <p><strong>Country:</strong> ${f.location}</p>
+                        <p><strong>Skills:</strong> ${f.skills}</p>
+                        <p><strong>Experience:</strong> ${f.experience_level}</p>
+                        <button class="tooltip-view-btn" onclick="window.location.href='${f.profile_url}'">View Profile</button>
+                    </div>
+                `;
+            })
+            .onPointClick(point => {
+                // Animate camera to point
+                globe.pointOfView({ lat: point.lat, lng: point.lng, altitude: 1.5 }, 1000);
+            })
+            .onPointHover(point => {
+                // Change cursor on hover
+                globeContainer.style.cursor = point ? 'pointer' : 'grab';
+            });
+
+        // Add arcs between random freelancers for visual effect
+        if (freelancers.length > 1) {
+            const arcsData = [];
+            const numArcs = Math.min(20, Math.floor(freelancers.length / 2));
+            
+            for (let i = 0; i < numArcs; i++) {
+                const start = freelancers[Math.floor(Math.random() * freelancers.length)];
+                const end = freelancers[Math.floor(Math.random() * freelancers.length)];
+                
+                if (start !== end) {
+                    arcsData.push({
+                        startLat: start.lat,
+                        startLng: start.lng,
+                        endLat: end.lat,
+                        endLng: end.lng,
+                        color: ['rgba(102, 126, 234, 0.3)', 'rgba(78, 205, 196, 0.3)']
+                    });
+                }
+            }
+
+            globe.arcsData(arcsData)
+                .arcColor('color')
+                .arcDashLength(0.4)
+                .arcDashGap(0.2)
+                .arcDashAnimateTime(3000)
+                .arcStroke(0.5);
+        }
+
+        // Add rings for better visual effect
+        globe.ringsData(pointsData.slice(0, 10))
+            .ringColor(() => 'rgba(102, 126, 234, 0.5)')
+            .ringMaxRadius(2)
+            .ringPropagationSpeed(2)
+            .ringRepeatPeriod(1000);
+    }
+
+    // Get color based on status
+    function getStatusColor(status) {
+        switch(status.toLowerCase()) {
+            case 'available':
+                return '#51cf66';
+            case 'busy':
+                return '#ff6b6b';
+            case 'offline':
+                return '#94a3b8';
+            default:
+                return '#667eea';
+        }
+    }
+
+    // Render freelancer cards
+    function renderFreelancerCards(freelancers) {
+        const container = document.getElementById('freelancerCardsContainer');
+        
+        if (freelancers.length === 0) {
+            container.innerHTML = `
+                <div class="no-freelancers">
+                    <i class="fas fa-search"></i>
+                    <h4>No freelancers found</h4>
+                    <p>Try adjusting your filters to see more results</p>
+                </div>
+            `;
+            return;
+        }
+
+        container.innerHTML = freelancers.map((freelancer, index) => `
+            <div class="freelancer-card" style="animation-delay: ${index * 0.05}s">
+                <div class="freelancer-header">
+                    <h4 class="freelancer-name">${freelancer.name}</h4>
+                    <span class="freelancer-status status-${freelancer.status}">${freelancer.status.charAt(0).toUpperCase() + freelancer.status.slice(1)}</span>
+                </div>
+                <div class="freelancer-details">
+                    <div class="freelancer-detail">
+                        <i class="fas fa-map-marker-alt"></i>
+                        <span>${freelancer.location} (${freelancer.country})</span>
+                    </div>
+                    <div class="freelancer-detail">
+                        <i class="fas fa-clock"></i>
+                        <span>${freelancer.timezone}</span>
+                    </div>
+                    <div class="freelancer-detail">
+                        <i class="fas fa-code"></i>
+                        <span>${freelancer.skills.substring(0, 30)}${freelancer.skills.length > 30 ? '...' : ''}</span>
+                    </div>
+                </div>
+                <div class="mt-3">
+                    <a href="${freelancer.profile_url}" class="btn btn-outline btn-sm">
+                        <i class="fas fa-eye me-1"></i> View Profile
+                    </a>
+                </div>
+            </div>
+        `).join('');
+    }
+
+    // Filter functionality
+    function applyFilters() {
+        const countryFilter = document.getElementById('countryFilter').value;
+        const statusFilter = document.getElementById('statusFilter').value;
+        const skillFilter = document.getElementById('skillFilter').value;
+
+        filteredFreelancers = allFreelancers;
+
+        // Apply country filter
+        if (countryFilter !== 'all') {
+            filteredFreelancers = filteredFreelancers.filter(freelancer => 
+                freelancer.country.toLowerCase() === countryFilter.toLowerCase()
+            );
+        }
+
+        // Apply status filter
+        if (statusFilter !== 'all') {
+            filteredFreelancers = filteredFreelancers.filter(freelancer => 
+                freelancer.status.toLowerCase() === statusFilter.toLowerCase()
+            );
+        }
+
+        // Apply skill filter
+        if (skillFilter !== 'all') {
+            filteredFreelancers = filteredFreelancers.filter(freelancer => 
+                freelancer.skills.toLowerCase().includes(skillFilter.toLowerCase())
+            );
+        }
+
+        updateGlobeWithFreelancers(filteredFreelancers);
+        renderFreelancerCards(filteredFreelancers);
+
+        // Zoom to first filtered location if available
+        if (filteredFreelancers.length > 0) {
+            const first = filteredFreelancers[0];
+            globe.pointOfView({ lat: first.lat, lng: first.lng, altitude: 2 }, 1000);
+        }
+    }
+
+    // Event listeners
+    document.getElementById('countryFilter').addEventListener('change', applyFilters);
+    document.getElementById('statusFilter').addEventListener('change', applyFilters);
+    document.getElementById('skillFilter').addEventListener('change', applyFilters);
+    document.getElementById('refreshMap').addEventListener('click', loadFreelancerData);
+
+    // Globe controls
+    document.getElementById('autoRotateBtn').addEventListener('click', function() {
+        autoRotate = !autoRotate;
+        globe.controls().autoRotate = autoRotate;
+        this.classList.toggle('active');
+    });
+
+    document.getElementById('resetViewBtn').addEventListener('click', function() {
+        globe.pointOfView({ lat: 20, lng: 78, altitude: 2.5 }, 1000);
+    });
+
+    // Initialize when page loads
+    document.addEventListener('DOMContentLoaded', function() {
+        initializeGlobe();
+    });
+</script>
+</body>
+</html>

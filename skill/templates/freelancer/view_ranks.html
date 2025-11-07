@@ -1,0 +1,630 @@
+<!DOCTYPE html>
+{% load static %}
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Freelancer Rankings - SkillJourney</title>
+    
+    <!-- Font Awesome -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <!-- Google Fonts -->
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800;900&display=swap" rel="stylesheet">
+    
+    <style>
+        :root {
+            --primary-color: #667eea;
+            --primary-dark: #764ba2;
+            --secondary-color: #4ecdc4;
+            --accent-color: #ff6b6b;
+            --success-color: #51cf66;
+            --purple-color: #a855f7;
+            --rainbow-gradient: linear-gradient(135deg, #ff6b6b, #4ecdc4, #45b7d1, #a855f7, #feca57, #667eea);
+            --glass-bg: rgba(255, 255, 255, 0.08);
+            --glass-border: rgba(255, 255, 255, 0.12);
+            --dark-bg: #0f0f23;
+            --darker-bg: #0a0a1a;
+            --card-bg: rgba(30, 30, 60, 0.8);
+            --text-primary: #ffffff;
+            --text-secondary: #e2e8f0;
+            --text-muted: #94a3b8;
+            --shadow-glow: 0 10px 40px rgba(102, 126, 234, 0.15);
+            --shadow-intense: 0 20px 50px rgba(0, 0, 0, 0.3);
+            --border-radius: 20px;
+            
+            /* Medal Colors */
+            --gold-color: #ffd700;
+            --silver-color: #c0c0c0;
+            --bronze-color: #cd7f32;
+            
+            /* Current User Colors */
+            --current-user-bg: rgba(59, 130, 246, 0.1);
+            --current-user-border: rgba(59, 130, 246, 0.3);
+        }
+        
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Inter', -apple-system, BlinkMacSystemFont, sans-serif;
+            background: linear-gradient(135deg, var(--dark-bg) 0%, var(--darker-bg) 100%);
+            color: var(--text-primary);
+            line-height: 1.6;
+            margin: 0;
+            min-height: 100vh;
+            overflow-x: hidden;
+            -webkit-font-smoothing: antialiased;
+            -moz-osx-font-smoothing: grayscale;
+            padding: 20px;
+        }
+
+        /* Background Animation */
+        .bg-animation {
+            position: fixed;
+            inset: 0;
+            z-index: -1;
+            overflow: hidden;
+            pointer-events: none;
+        }
+
+        .floating-orb {
+            position: absolute;
+            border-radius: 50%;
+            filter: blur(80px);
+            opacity: 0.15;
+            animation: float-orbs 40s ease-in-out infinite;
+            will-change: transform;
+        }
+
+        .orb-1 {
+            width: 400px;
+            height: 400px;
+            background: var(--primary-color);
+            top: 10%;
+            left: 5%;
+            animation-delay: 0s;
+        }
+
+        .orb-2 {
+            width: 300px;
+            height: 300px;
+            background: var(--secondary-color);
+            bottom: 15%;
+            right: 10%;
+            animation-delay: 20s;
+        }
+
+        .orb-3 {
+            width: 350px;
+            height: 350px;
+            background: var(--accent-color);
+            top: 60%;
+            left: 70%;
+            animation-delay: 30s;
+        }
+
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 20px;
+            position: relative;
+        }
+
+        /* Back Button */
+        .back-button {
+            position: absolute;
+            top: 0;
+            right: 0;
+            background: var(--glass-bg);
+            backdrop-filter: blur(25px);
+            border: 1px solid var(--glass-border);
+            border-radius: 50px;
+            padding: 12px 24px;
+            color: var(--text-primary);
+            font-weight: 600;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            box-shadow: var(--shadow-glow);
+            z-index: 10;
+        }
+
+        .back-button:hover {
+            background: var(--primary-color);
+            transform: translateY(-2px);
+            box-shadow: var(--shadow-intense);
+        }
+
+        .back-button i {
+            font-size: 1rem;
+        }
+
+        .header {
+            text-align: center;
+            margin-bottom: 30px;
+            animation: fade-in-up 0.8s ease-out;
+            padding-top: 20px;
+        }
+
+        .header h1 {
+            font-size: 2.5rem;
+            font-weight: 800;
+            margin-bottom: 10px;
+            background: var(--rainbow-gradient);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+        }
+
+        .header p {
+            color: var(--text-secondary);
+            font-size: 1.1rem;
+            max-width: 600px;
+            margin: 0 auto;
+        }
+
+        /* Current User Position */
+        .current-user-position {
+            background: var(--current-user-bg);
+            backdrop-filter: blur(25px);
+            border: 1px solid var(--current-user-border);
+            border-radius: 15px;
+            padding: 15px 20px;
+            margin-bottom: 20px;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            flex-wrap: wrap;
+            gap: 15px;
+        }
+
+        .current-user-info {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+        }
+
+        .current-user-avatar {
+            width: 40px;
+            height: 40px;
+            border-radius: 50%;
+            background: var(--primary-color);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 1rem;
+            color: white;
+        }
+
+        .current-user-details h3 {
+            font-size: 1.1rem;
+            margin-bottom: 4px;
+            color: var(--text-primary);
+        }
+
+        .current-user-details p {
+            color: var(--text-secondary);
+            font-size: 0.85rem;
+        }
+
+        .current-user-stats {
+            display: flex;
+            gap: 20px;
+            text-align: center;
+        }
+
+        .stat-item {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+        }
+
+        .stat-value {
+            font-size: 1.2rem;
+            font-weight: 700;
+            color: var(--primary-color);
+        }
+
+        .stat-label {
+            font-size: 0.75rem;
+            color: var(--text-muted);
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+        }
+
+        .table-container {
+            background: var(--card-bg);
+            backdrop-filter: blur(25px);
+            border-radius: var(--border-radius);
+            box-shadow: var(--shadow-intense);
+            border: 1px solid var(--glass-border);
+            overflow: hidden;
+            animation: fade-in-up 0.8s ease-out;
+        }
+
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            margin: 0;
+        }
+
+        thead {
+            background: var(--glass-bg);
+            border-bottom: 1px solid var(--glass-border);
+        }
+
+        th {
+            padding: 18px 15px;
+            text-align: center;
+            color: var(--text-primary);
+            font-weight: 600;
+            font-size: 0.9rem;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+        }
+
+        tbody tr {
+            transition: all 0.3s ease;
+            border-bottom: 1px solid var(--glass-border);
+        }
+
+        tbody tr:last-child {
+            border-bottom: none;
+        }
+
+        tbody tr:hover {
+            background: rgba(255, 255, 255, 0.05);
+        }
+
+        /* Current User Row */
+        tbody tr.current-user {
+            background: var(--current-user-bg);
+            border-left: 3px solid var(--primary-color);
+        }
+
+        td {
+            padding: 16px 15px;
+            text-align: center;
+            color: var(--text-secondary);
+            font-weight: 500;
+            transition: all 0.3s ease;
+        }
+
+        .rank-cell {
+            font-weight: 700;
+            font-size: 1rem;
+        }
+
+        .rank-1 {
+            color: var(--gold-color);
+        }
+
+        .rank-2 {
+            color: var(--silver-color);
+        }
+
+        .rank-3 {
+            color: var(--bronze-color);
+        }
+
+        .rank-medal {
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            width: 32px;
+            height: 32px;
+            border-radius: 50%;
+            margin-right: 8px;
+            font-size: 1rem;
+        }
+
+        .rank-1 .rank-medal {
+            background: var(--gold-color);
+            color: #000;
+        }
+
+        .rank-2 .rank-medal {
+            background: var(--silver-color);
+            color: #000;
+        }
+
+        .rank-3 .rank-medal {
+            background: var(--bronze-color);
+            color: white;
+        }
+
+        .name-cell {
+            font-weight: 600;
+            color: var(--text-primary);
+        }
+
+        .stats-cell {
+            font-weight: 500;
+        }
+
+        .completion-cell {
+            font-weight: 600;
+        }
+
+        .high-completion {
+            color: var(--success-color);
+        }
+
+        .medium-completion {
+            color: #feca57;
+        }
+
+        .low-completion {
+            color: var(--accent-color);
+        }
+
+        .empty-state {
+            text-align: center;
+            padding: 60px 20px;
+            color: var(--text-muted);
+        }
+
+        .empty-state i {
+            font-size: 3rem;
+            margin-bottom: 15px;
+            opacity: 0.5;
+        }
+
+        .empty-state h3 {
+            font-size: 1.3rem;
+            margin-bottom: 10px;
+            color: var(--text-primary);
+        }
+
+        .empty-state p {
+            max-width: 500px;
+            margin: 0 auto;
+            font-size: 0.9rem;
+        }
+
+        /* Animations */
+        @keyframes float-orbs {
+            0%, 100% {
+                transform: translateY(0);
+            }
+            50% {
+                transform: translateY(-15px);
+            }
+        }
+
+        @keyframes fade-in-up {
+            from {
+                opacity: 0;
+                transform: translateY(20px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        /* Custom Scrollbar */
+        ::-webkit-scrollbar {
+            width: 6px;
+        }
+
+        ::-webkit-scrollbar-track {
+            background: rgba(255, 255, 255, 0.05);
+            border-radius: 8px;
+        }
+
+        ::-webkit-scrollbar-thumb {
+            background: var(--primary-color);
+            border-radius: 8px;
+        }
+
+        ::-webkit-scrollbar-thumb:hover {
+            background: var(--secondary-color);
+        }
+
+        /* Responsive Design */
+        @media (max-width: 768px) {
+            .container {
+                padding: 10px;
+            }
+            
+            .back-button {
+                position: relative;
+                margin-bottom: 15px;
+                align-self: flex-end;
+            }
+            
+            .header {
+                padding-top: 0;
+                margin-bottom: 20px;
+            }
+            
+            .header h1 {
+                font-size: 2rem;
+            }
+            
+            .header p {
+                font-size: 0.95rem;
+            }
+            
+            .current-user-position {
+                flex-direction: column;
+                text-align: center;
+                padding: 12px 15px;
+            }
+            
+            .current-user-info {
+                justify-content: center;
+                text-align: center;
+            }
+            
+            .current-user-stats {
+                justify-content: center;
+                width: 100%;
+                gap: 15px;
+            }
+            
+            table {
+                display: block;
+                overflow-x: auto;
+            }
+            
+            th, td {
+                padding: 14px 10px;
+                font-size: 0.85rem;
+            }
+            
+            .rank-medal {
+                width: 28px;
+                height: 28px;
+                font-size: 0.9rem;
+            }
+        }
+
+        @media (max-width: 480px) {
+            .header h1 {
+                font-size: 1.7rem;
+            }
+            
+            th, td {
+                padding: 12px 8px;
+                font-size: 0.8rem;
+            }
+            
+            .back-button {
+                padding: 10px 18px;
+                font-size: 0.9rem;
+            }
+            
+            .current-user-avatar {
+                width: 35px;
+                height: 35px;
+                font-size: 0.9rem;
+            }
+            
+            .current-user-details h3 {
+                font-size: 1rem;
+            }
+            
+            .stat-value {
+                font-size: 1.1rem;
+            }
+            
+            .stat-label {
+                font-size: 0.7rem;
+            }
+        }
+    </style>
+</head>
+<body>
+    <!-- Background Animation -->
+    <div class="bg-animation">
+        <div class="floating-orb orb-1"></div>
+        <div class="floating-orb orb-2"></div>
+        <div class="floating-orb orb-3"></div>
+    </div>
+
+    <div class="container">
+        <!-- Back Button -->
+        <button class="back-button" onclick="goBack()">
+            <i class="fas fa-arrow-left"></i> Back
+        </button>
+
+        <div class="header">
+            <h1><i class="fas fa-trophy"></i> Freelancer Rankings</h1>
+            <p>Top performers based on task completion rates</p>
+        </div>
+
+        <!-- Current User Position -->
+        {% if current_user_rank %}
+        <div class="current-user-position">
+            <div class="current-user-info">
+                <div class="current-user-avatar">
+                    <i class="fas fa-user"></i>
+                </div>
+                <div class="current-user-details">
+                    <h3>Your Position: #{{ current_user_rank.rank }}</h3>
+                    <p>{{ current_user_rank.completion_rate|floatformat:1 }}% success rate</p>
+                </div>
+            </div>
+           
+        </div>
+        {% endif %}
+
+        <div class="table-container">
+            <table>
+                <thead>
+                    <tr>
+                        <th>Rank</th>
+                        <th>Name</th>
+                        <th>Total Tasks</th>
+                        <th>Approved</th>
+                        <th>Success Rate</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    {% for f in freelancers %}
+                    <tr {% if f.is_current_user %}class="current-user"{% endif %}>
+                        <td class="rank-cell rank-{{ f.rank }}">
+                            {% if f.rank == 1 %}
+                                <span class="rank-medal"><i class="fas fa-crown"></i></span>
+                            {% elif f.rank == 2 %}
+                                <span class="rank-medal"><i class="fas fa-medal"></i></span>
+                            {% elif f.rank == 3 %}
+                                <span class="rank-medal"><i class="fas fa-award"></i></span>
+                            {% else %}
+                                {{ f.rank }}
+                            {% endif %}
+                        </td>
+                        <td class="name-cell">
+                            {% if f.is_current_user %}
+                                <strong>You</strong>
+                            {% else %}
+                                {{ f.profile.full_name }}
+                            {% endif %}
+                        </td>
+                        <td class="stats-cell">{{ f.total_tasks }}</td>
+                        <td class="stats-cell">{{ f.approved_tasks }}</td>
+                        <td class="completion-cell 
+                            {% if f.completion_rate >= 80 %}high-completion
+                            {% elif f.completion_rate >= 60 %}medium-completion
+                            {% else %}low-completion{% endif %}">
+                            {{ f.completion_rate|floatformat:1 }}%
+                        </td>
+                    </tr>
+                    {% empty %}
+                    <tr>
+                        <td colspan="5" class="empty-state">
+                            <i class="fas fa-user-friends"></i>
+                            <h3>No Freelancers Found</h3>
+                            <p>There are currently no freelancers to display in the rankings.</p>
+                        </td>
+                    </tr>
+                    {% endfor %}
+                </tbody>
+            </table>
+        </div>
+    </div>
+
+    <script>
+        // Back button functionality
+        function goBack() {
+            window.history.back();
+        }
+
+        // Add animation to table rows
+        document.addEventListener('DOMContentLoaded', function() {
+            const rows = document.querySelectorAll('tbody tr');
+            rows.forEach((row, index) => {
+                row.style.animationDelay = (index * 0.1) + 's';
+                row.style.animation = 'fade-in-up 0.6s ease-out forwards';
+                row.style.opacity = '0';
+            });
+        });
+    </script>
+</body>
+</html>

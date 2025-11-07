@@ -1,0 +1,1487 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>{{ freelancer.user.username }} - Profile</title>
+  
+  <!-- Bootstrap CSS -->
+  <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+  <!-- Bootstrap Icons -->
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.0/font/bootstrap-icons.css">
+  <!-- Font Awesome -->
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+  <!-- Google Fonts -->
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800;900&display=swap" rel="stylesheet">
+  
+  <style>
+    /* Premium Landing Page Theme Colors */
+    :root {
+      --primary-gradient: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+      --secondary-gradient: linear-gradient(135deg, #4ecdc4 0%, #44a08d 100%);
+      --accent-gradient: linear-gradient(135deg, #ff6b6b 0%, #feca57 100%);
+      --success-gradient: linear-gradient(135deg, #51cf66 0%, #40c057 100%);
+      --purple-gradient: linear-gradient(135deg, #a855f7 0%, #3b82f6 100%);
+      --rainbow-gradient: linear-gradient(135deg, #ff6b6b, #4ecdc4, #45b7d1, #a855f7, #feca57, #667eea);
+      --glass-bg: rgba(255, 255, 255, 0.08);
+      --glass-border: rgba(255, 255, 255, 0.12);
+      --dark-bg: #0f0f23;
+      --darker-bg: #0a0a1a;
+      --card-bg: rgba(30, 30, 60, 0.6);
+      --text-primary: #ffffff;
+      --text-secondary: #e2e8f0;
+      --text-muted: #94a3b8;
+      --shadow-glow: 0 10px 40px rgba(102, 126, 234, 0.15);
+      --shadow-intense: 0 20px 50px rgba(0, 0, 0, 0.3);
+      --shadow-ultimate: 0 30px 70px rgba(0, 0, 0, 0.4);
+      --border-radius: 20px;
+    }
+
+    * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+    }
+
+    html {
+      scroll-behavior: smooth;
+    }
+
+    body {
+      font-family: 'Inter', -apple-system, BlinkMacSystemFont, sans-serif;
+      background: linear-gradient(135deg, var(--dark-bg) 0%, var(--darker-bg) 100%);
+      color: var(--text-primary);
+      overflow-x: hidden;
+      line-height: 1.6;
+      min-height: 100vh;
+      -webkit-font-smoothing: antialiased;
+      -moz-osx-font-smoothing: grayscale;
+    }
+
+    /* Simplified Background Animation */
+    .bg-animation {
+      position: fixed;
+      inset: 0;
+      z-index: -1;
+      overflow: hidden;
+      pointer-events: none;
+    }
+
+    .floating-orb {
+      position: absolute;
+      border-radius: 50%;
+      filter: blur(80px);
+      opacity: 0.2;
+    }
+
+    .orb-1 {
+      width: 400px;
+      height: 400px;
+      background: var(--primary-gradient);
+      top: 10%;
+      left: 5%;
+    }
+
+    .orb-2 {
+      width: 300px;
+      height: 300px;
+      background: var(--secondary-gradient);
+      bottom: 15%;
+      right: 8%;
+    }
+
+    .orb-3 {
+      width: 350px;
+      height: 350px;
+      background: var(--accent-gradient);
+      top: 60%;
+      left: 75%;
+    }
+
+    /* Premium Header Navigation */
+    .header-nav {
+      background: var(--card-bg);
+      backdrop-filter: blur(30px);
+      border-bottom: 1px solid var(--glass-border);
+      padding: 1.5rem 2rem;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      position: sticky;
+      top: 0;
+      z-index: 999;
+      box-shadow: var(--shadow-intense);
+      transition: all 0.3s ease;
+    }
+    
+    .header-nav.scrolled {
+      padding: 1rem 2rem;
+      background: rgba(30, 30, 60, 0.95);
+    }
+    
+    .header-brand {
+      display: flex;
+      align-items: center;
+      text-decoration: none;
+      color: var(--text-primary);
+      font-weight: 800;
+      font-size: 1.5rem;
+      transition: all 0.3s ease;
+      gap: 12px;
+    }
+    
+    .brand-logo {
+      width: 45px;
+      height: 45px;
+      background: var(--rainbow-gradient);
+      color: white;
+      border-radius: 15px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-weight: 900;
+      font-size: 18px;
+      transition: all 0.3s ease;
+      box-shadow: var(--shadow-glow);
+    }
+
+    .header-brand:hover .brand-logo {
+      transform: rotate(5deg) scale(1.1);
+      box-shadow: 0 15px 40px rgba(102, 126, 234, 0.4);
+    }
+
+    .header-brand span {
+      background: var(--rainbow-gradient);
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+      background-clip: text;
+    }
+    
+    .header-menu {
+      display: flex;
+      gap: 1.5rem;
+      align-items: center;
+    }
+    
+    .header-menu a {
+      color: var(--text-secondary);
+      text-decoration: none;
+      font-weight: 600;
+      transition: all 0.3s ease;
+      padding: 0.75rem 1.25rem;
+      border-radius: 12px;
+      display: flex;
+      align-items: center;
+      gap: 0.5rem;
+      background: var(--glass-bg);
+      border: 1px solid var(--glass-border);
+      backdrop-filter: blur(10px);
+    }
+    
+    .header-menu a:hover, .header-menu a.active {
+      color: var(--text-primary);
+      background: rgba(255, 255, 255, 0.15);
+      transform: translateY(-2px);
+      box-shadow: var(--shadow-glow);
+    }
+
+    /* Premium Profile Container */
+    .profile-container {
+      max-width: 1400px;
+      margin: 3rem auto;
+      padding: 0 2rem;
+    }
+
+    /* Premium Profile Header */
+    .profile-header {
+      background: var(--card-bg);
+      backdrop-filter: blur(25px);
+      border: 1px solid var(--glass-border);
+      border-radius: var(--border-radius);
+      padding: 3rem;
+      box-shadow: var(--shadow-intense);
+      margin-bottom: 2.5rem;
+      position: relative;
+      overflow: hidden;
+      transition: all 0.4s ease;
+    }
+
+    .profile-header:hover {
+      transform: translateY(-5px);
+      box-shadow: var(--shadow-ultimate);
+    }
+
+    .profile-main {
+      display: flex;
+      align-items: flex-start;
+      gap: 3rem;
+    }
+
+    .profile-avatar {
+      position: relative;
+      flex-shrink: 0;
+    }
+
+    .profile-picture {
+      width: 200px;
+      height: 200px;
+      border-radius: 50%;
+      object-fit: cover;
+      border: 5px solid var(--glass-border);
+      box-shadow: var(--shadow-intense);
+      transition: all 0.4s ease;
+    }
+
+    .profile-default {
+      width: 200px;
+      height: 200px;
+      border-radius: 50%;
+      background: var(--rainbow-gradient);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      color: white;
+      font-size: 5rem;
+      font-weight: 900;
+      border: 5px solid var(--glass-border);
+      box-shadow: var(--shadow-intense);
+      transition: all 0.4s ease;
+    }
+
+    .profile-avatar:hover .profile-picture,
+    .profile-avatar:hover .profile-default {
+      transform: scale(1.05);
+      border-color: rgba(102, 126, 234, 0.5);
+      box-shadow: var(--shadow-ultimate);
+    }
+
+    .profile-info {
+      flex: 1;
+    }
+
+    .profile-name {
+      font-size: 3rem;
+      font-weight: 900;
+      background: var(--rainbow-gradient);
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+      background-clip: text;
+      margin: 0 0 0.75rem 0;
+    }
+
+    .profile-title {
+      font-size: 1.6rem;
+      color: var(--text-secondary);
+      font-weight: 600;
+      margin: 0 0 1.5rem 0;
+    }
+
+    .profile-bio {
+      color: var(--text-secondary);
+      font-size: 1.2rem;
+      line-height: 1.7;
+      margin-bottom: 2rem;
+    }
+
+    .profile-stats {
+      display: flex;
+      gap: 2rem;
+      margin-top: 2rem;
+    }
+
+    .stat-item {
+      text-align: center;
+      padding: 1.5rem;
+      background: var(--glass-bg);
+      border-radius: 15px;
+      border: 1px solid var(--glass-border);
+      transition: all 0.3s ease;
+      min-width: 120px;
+      backdrop-filter: blur(15px);
+    }
+
+    .stat-item:hover {
+      background: rgba(255, 255, 255, 0.12);
+      transform: translateY(-5px) scale(1.02);
+      box-shadow: var(--shadow-glow);
+    }
+
+    .stat-value {
+      font-size: 2rem;
+      font-weight: 900;
+      background: var(--rainbow-gradient);
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+      background-clip: text;
+      margin-bottom: 0.5rem;
+    }
+
+    .stat-label {
+      font-size: 0.9rem;
+      color: var(--text-secondary);
+      font-weight: 600;
+      text-transform: uppercase;
+      letter-spacing: 1px;
+    }
+
+    /* Premium Badge Container - UPDATED to match freelancer dashboard */
+    .badge-container {
+      background: var(--card-bg);
+      backdrop-filter: blur(25px);
+      border: 1px solid var(--glass-border);
+      border-radius: var(--border-radius);
+      padding: 3rem;
+      box-shadow: var(--shadow-intense);
+      margin-bottom: 2.5rem;
+      position: relative;
+      overflow: hidden;
+      transition: all 0.4s ease;
+    }
+
+    .badge-container::before {
+      content: '';
+      position: absolute;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      background: conic-gradient(from 0deg, transparent, rgba(102, 126, 234, 0.1), transparent);
+      animation: rotate-gradient 15s linear infinite;
+    }
+
+    .badge-container:hover {
+      transform: translateY(-5px);
+      box-shadow: var(--shadow-ultimate);
+    }
+
+    .badge-header {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      margin-bottom: 3rem;
+      padding-bottom: 2rem;
+      border-bottom: 2px solid var(--glass-border);
+      position: relative;
+      z-index: 2;
+    }
+
+    .badge-title {
+      font-size: 2.2rem;
+      font-weight: 900;
+      background: var(--rainbow-gradient);
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+      background-clip: text;
+      margin: 0;
+      display: flex;
+      align-items: center;
+      gap: 1rem;
+    }
+
+    .badge-count {
+      background: var(--glass-bg);
+      color: var(--text-primary);
+      padding: 1rem 2rem;
+      border-radius: 20px;
+      font-weight: 700;
+      border: 1px solid var(--glass-border);
+      backdrop-filter: blur(15px);
+      transition: all 0.3s ease;
+      position: relative;
+      z-index: 2;
+    }
+
+    .badge-count:hover {
+      background: rgba(255, 255, 255, 0.15);
+      transform: translateY(-2px);
+    }
+
+    .badge-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
+      gap: 2rem;
+      position: relative;
+      z-index: 2;
+    }
+
+    .badge-card {
+      background: var(--card-bg);
+      backdrop-filter: blur(25px);
+      border: 1px solid var(--glass-border);
+      border-radius: var(--border-radius);
+      padding: 2rem;
+      position: relative;
+      overflow: hidden;
+      transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+      animation: fade-in-up 0.8s ease-out;
+      box-shadow: var(--shadow-glow);
+      height: 100%;
+      display: flex;
+      flex-direction: column;
+      justify-content: space-between;
+    }
+
+    .badge-card::before {
+      content: '';
+      position: absolute;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      background: conic-gradient(from 0deg, transparent, rgba(102, 126, 234, 0.1), transparent);
+      animation: rotate-gradient 15s linear infinite;
+    }
+
+    .badge-card:hover {
+      transform: translateY(-8px);
+      box-shadow: var(--shadow-ultimate);
+      border-color: rgba(102, 126, 234, 0.3);
+    }
+
+    .badge-header-inner {
+      display: flex;
+      align-items: center;
+      margin-bottom: 1rem;
+      position: relative;
+      z-index: 2;
+    }
+
+    .badge-icon {
+      width: 50px;
+      height: 50px;
+      border-radius: 50%;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 1.5rem;
+      margin-right: 1rem;
+      color: white;
+      box-shadow: var(--shadow-glow);
+    }
+
+    .badge-card.completed .badge-icon {
+      background: #51cf66 !important; /* Green for completed */
+    }
+
+    .badge-card.in-progress .badge-icon {
+      background: #feca57 !important; /* Yellow for in-progress */
+    }
+
+    .badge-card.locked .badge-icon {
+      background: #868e96 !important; /* Gray for locked */
+    }
+
+    .badge-name {
+      color: var(--text-primary);
+      font-weight: 600;
+      font-size: 1.1rem;
+      margin-bottom: 0.25rem;
+    }
+
+    .badge-status {
+      font-size: 0.85rem;
+      font-weight: 500;
+    }
+
+    .badge-status.completed {
+      color: #4ecdc4;
+    }
+
+    .badge-status.in-progress {
+      color: #feca57;
+    }
+
+    .badge-progress {
+      position: relative;
+      z-index: 2;
+      margin-top: 1rem;
+    }
+
+    .badge-progress-bar {
+      height: 6px;
+      background: rgba(255, 255, 255, 0.1);
+      border-radius: 3px;
+      overflow: hidden;
+      margin-bottom: 0.5rem;
+    }
+
+    .badge-progress-fill {
+      height: 100%;
+      background: #4ecdc4 !important; /* Solid color instead of gradient */
+      border-radius: 3px;
+      transition: width 0.8s ease;
+    }
+
+    .badge-stats {
+      display: flex;
+      justify-content: space-between;
+      font-size: 0.8rem;
+      color: var(--text-muted);
+      position: relative;
+      z-index: 2;
+    }
+
+    .badge-streak {
+      display: flex;
+      align-items: center;
+      gap: 0.25rem;
+      color: #ff6b6b;
+      font-weight: 600;
+      position: relative;
+      z-index: 2;
+      margin-top: 0.5rem;
+    }
+
+    @keyframes rotate-gradient {
+      from {
+        transform: rotate(0deg);
+      }
+      to {
+        transform: rotate(360deg);
+      }
+    }
+
+    @keyframes fade-in-up {
+      from {
+        opacity: 0;
+        transform: translateY(30px);
+      }
+      to {
+        opacity: 1;
+        transform: translateY(0);
+      }
+    }
+
+    /* Premium Profile Details */
+    .profile-details {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 2rem;
+      margin-bottom: 2.5rem;
+    }
+
+    .detail-card {
+      background: var(--card-bg);
+      backdrop-filter: blur(25px);
+      border: 1px solid var(--glass-border);
+      border-radius: var(--border-radius);
+      padding: 2.5rem;
+      box-shadow: var(--shadow-glow);
+      transition: all 0.4s ease;
+    }
+
+    .detail-card:hover {
+      transform: translateY(-8px) scale(1.02);
+      box-shadow: var(--shadow-ultimate);
+      border-color: rgba(102, 126, 234, 0.3);
+    }
+
+    .detail-card h3 {
+      font-size: 1.8rem;
+      font-weight: 800;
+      color: var(--text-primary);
+      margin: 0 0 2rem 0;
+      display: flex;
+      align-items: center;
+      gap: 1rem;
+      padding-bottom: 1.5rem;
+      border-bottom: 2px solid var(--glass-border);
+      position: relative;
+    }
+
+    .detail-card h3::after {
+      content: '';
+      position: absolute;
+      bottom: -2px;
+      left: 0;
+      width: 60px;
+      height: 4px;
+      background: var(--rainbow-gradient);
+      border-radius: 4px;
+    }
+
+    .detail-card h3 i {
+      background: var(--rainbow-gradient);
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+      background-clip: text;
+      font-size: 1.5rem;
+    }
+
+    .skills-container {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 1rem;
+      margin-bottom: 2rem;
+    }
+
+    .skill-tag {
+      background: var(--glass-bg);
+      color: var(--text-primary);
+      padding: 0.8rem 1.5rem;
+      border-radius: 20px;
+      font-size: 1rem;
+      font-weight: 600;
+      border: 1px solid var(--glass-border);
+      transition: all 0.3s ease;
+      display: flex;
+      align-items: center;
+      gap: 0.5rem;
+      backdrop-filter: blur(10px);
+    }
+
+    .skill-tag:hover {
+      transform: translateY(-3px) scale(1.05);
+      box-shadow: var(--shadow-glow);
+      border-color: rgba(102, 126, 234, 0.5);
+    }
+
+    .skill-tag i {
+      font-size: 0.9rem;
+      background: var(--rainbow-gradient);
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+      background-clip: text;
+    }
+
+    .info-item {
+      display: flex;
+      align-items: center;
+      gap: 1.5rem;
+      margin-bottom: 1.5rem;
+      padding: 1.5rem;
+      border-radius: 15px;
+      transition: all 0.3s ease;
+      border: 1px solid transparent;
+      background: var(--glass-bg);
+      backdrop-filter: blur(10px);
+    }
+
+    .info-item:hover {
+      background: rgba(255, 255, 255, 0.12);
+      border-color: var(--glass-border);
+      transform: translateX(8px);
+      box-shadow: var(--shadow-glow);
+    }
+
+    .info-item i {
+      width: 28px;
+      font-size: 1.3rem;
+      color: var(--text-primary);
+      background: var(--rainbow-gradient);
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+      background-clip: text;
+      text-align: center;
+    }
+
+    .info-item a {
+      color: var(--text-primary);
+      text-decoration: none;
+      font-weight: 600;
+      transition: all 0.3s ease;
+      display: flex;
+      align-items: center;
+      gap: 0.5rem;
+    }
+
+    .info-item a:hover {
+      color: #60a5fa;
+      transform: translateX(5px);
+    }
+
+    /* Premium Certificates Section */
+    .certificates-section {
+      background: var(--card-bg);
+      backdrop-filter: blur(25px);
+      border: 1px solid var(--glass-border);
+      border-radius: var(--border-radius);
+      padding: 3rem;
+      box-shadow: var(--shadow-intense);
+      margin-bottom: 2.5rem;
+      transition: all 0.4s ease;
+    }
+
+    .certificates-section:hover {
+      transform: translateY(-8px);
+      box-shadow: var(--shadow-ultimate);
+    }
+
+    .section-header {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      margin-bottom: 3rem;
+      padding-bottom: 2rem;
+      border-bottom: 2px solid var(--glass-border);
+      position: relative;
+    }
+
+    .section-title {
+      font-size: 2.2rem;
+      font-weight: 900;
+      background: var(--rainbow-gradient);
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+      background-clip: text;
+      margin: 0;
+      display: flex;
+      align-items: center;
+      gap: 1rem;
+    }
+
+    .certificate-count {
+      background: var(--glass-bg);
+      color: var(--text-primary);
+      padding: 1rem 2rem;
+      border-radius: 20px;
+      font-weight: 700;
+      border: 1px solid var(--glass-border);
+      backdrop-filter: blur(15px);
+      transition: all 0.3s ease;
+    }
+
+    .certificate-count:hover {
+      background: rgba(255, 255, 255, 0.15);
+      transform: translateY(-2px);
+    }
+
+    .certificates-container {
+      display: grid;
+      grid-template-columns: repeat(auto-fill, minmax(350px, 1fr));
+      gap: 2.5rem;
+    }
+
+    .certificate-card {
+      background: var(--card-bg);
+      border-radius: var(--border-radius);
+      overflow: hidden;
+      box-shadow: var(--shadow-glow);
+      border: 1px solid var(--glass-border);
+      transition: all 0.5s ease;
+      backdrop-filter: blur(15px);
+    }
+
+    .certificate-card:hover {
+      transform: translateY(-10px) scale(1.02);
+      box-shadow: var(--shadow-ultimate);
+      border-color: rgba(102, 126, 234, 0.4);
+    }
+
+    .certificate-image {
+      width: 100%;
+      height: 250px;
+      object-fit: cover;
+      border-bottom: 1px solid var(--glass-border);
+      transition: all 0.4s ease;
+    }
+
+    .certificate-default {
+      width: 100%;
+      height: 250px;
+      background: var(--glass-bg);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      color: var(--text-muted);
+      border-bottom: 1px solid var(--glass-border);
+      transition: all 0.4s ease;
+    }
+
+    .certificate-default i {
+      font-size: 5rem;
+      background: var(--rainbow-gradient);
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+      background-clip: text;
+    }
+
+    .certificate-card:hover .certificate-image,
+    .certificate-card:hover .certificate-default {
+      transform: scale(1.05);
+    }
+
+    .certificate-content {
+      padding: 2rem;
+    }
+
+    .certificate-caption {
+      font-weight: 800;
+      color: var(--text-primary);
+      font-size: 1.3rem;
+      margin: 0 0 1rem 0;
+      line-height: 1.3;
+    }
+
+    .certificate-date {
+      font-size: 1rem;
+      color: var(--text-secondary);
+      display: flex;
+      align-items: center;
+      gap: 0.5rem;
+      font-weight: 600;
+    }
+
+    .certificate-actions {
+      display: flex;
+      gap: 1rem;
+      margin-top: 2rem;
+    }
+
+    .btn-icon {
+      background: var(--glass-bg);
+      color: var(--text-secondary);
+      border: 1px solid var(--glass-border);
+      border-radius: 12px;
+      padding: 1rem;
+      cursor: pointer;
+      transition: all 0.3s ease;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      text-decoration: none;
+      backdrop-filter: blur(10px);
+      font-size: 1.1rem;
+    }
+
+    .btn-icon:hover {
+      background: var(--rainbow-gradient);
+      color: white;
+      transform: translateY(-3px) scale(1.1);
+      border-color: transparent;
+      box-shadow: var(--shadow-glow);
+    }
+
+    /* Premium Empty State */
+    .empty-state {
+      text-align: center;
+      padding: 5rem 2rem;
+      color: var(--text-muted);
+      grid-column: 1 / -1;
+    }
+
+    .empty-state i {
+      font-size: 5rem;
+      margin-bottom: 2rem;
+      background: var(--rainbow-gradient);
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+      background-clip: text;
+    }
+
+    .empty-state h3 {
+      color: var(--text-primary);
+      margin-bottom: 1.5rem;
+      font-weight: 800;
+      font-size: 2rem;
+    }
+
+    .empty-state p {
+      color: var(--text-secondary);
+      margin-bottom: 2rem;
+      font-size: 1.2rem;
+    }
+
+    /* Enhanced Scrollbar */
+    ::-webkit-scrollbar {
+      width: 12px;
+    }
+
+    ::-webkit-scrollbar-track {
+      background: rgba(255, 255, 255, 0.05);
+      border-radius: 10px;
+    }
+
+    ::-webkit-scrollbar-thumb {
+      background: var(--rainbow-gradient);
+      border-radius: 10px;
+      transition: all 0.3s ease;
+    }
+
+    ::-webkit-scrollbar-thumb:hover {
+      background: var(--secondary-gradient);
+      transform: scale(1.1);
+    }
+
+    /* Responsive Design */
+    @media (max-width: 968px) {
+      .profile-details {
+        grid-template-columns: 1fr;
+      }
+      
+      .certificates-container {
+        grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
+      }
+      
+      .badge-grid {
+        grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
+      }
+    }
+    
+    @media (max-width: 768px) {
+      .header-nav {
+        padding: 1rem;
+        flex-direction: column;
+        gap: 1rem;
+      }
+      
+      .header-menu {
+        gap: 1rem;
+        flex-wrap: wrap;
+        justify-content: center;
+      }
+      
+      .profile-container {
+        padding: 0 1rem;
+        margin: 2rem auto;
+      }
+      
+      .profile-main {
+        flex-direction: column;
+        text-align: center;
+        gap: 2rem;
+      }
+
+      .profile-picture,
+      .profile-default {
+        width: 160px;
+        height: 160px;
+      }
+
+      .profile-name {
+        font-size: 2.2rem;
+      }
+      
+      .profile-stats {
+        justify-content: center;
+        flex-wrap: wrap;
+        gap: 1rem;
+      }
+      
+      .profile-header, .certificates-section, .badge-container {
+        padding: 2rem;
+      }
+      
+      .detail-card {
+        padding: 2rem;
+      }
+
+      .section-title, .badge-title {
+        font-size: 1.8rem;
+      }
+      
+      .badge-header {
+        flex-direction: column;
+        gap: 1rem;
+        text-align: center;
+      }
+    }
+
+    /* Scroll to top button */
+    .scroll-to-top {
+      position: fixed;
+      bottom: 30px;
+      right: 30px;
+      width: 60px;
+      height: 60px;
+      background: var(--rainbow-gradient);
+      border: none;
+      border-radius: 50%;
+      color: white;
+      font-size: 1.4rem;
+      cursor: pointer;
+      box-shadow: var(--shadow-intense);
+      transition: all 0.3s ease;
+      z-index: 1000;
+      display: none;
+      backdrop-filter: blur(10px);
+      align-items: center;
+      justify-content: center;
+    }
+
+    .scroll-to-top:hover {
+      transform: translateY(-5px) scale(1.1);
+      box-shadow: var(--shadow-ultimate);
+    }
+
+    /* Modal styles */
+    .certificate-modal {
+      position: fixed;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      background: rgba(0,0,0,0.95);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      z-index: 2000;
+      cursor: zoom-out;
+      backdrop-filter: blur(20px);
+    }
+
+    .certificate-modal img {
+      max-width: 90%;
+      max-height: 90%;
+      object-fit: contain;
+      border-radius: 20px;
+      box-shadow: var(--shadow-ultimate);
+    }
+
+    .modal-close {
+      position: absolute;
+      top: 30px;
+      right: 30px;
+      background: var(--glass-bg);
+      border: 1px solid var(--glass-border);
+      border-radius: 50%;
+      width: 50px;
+      height: 50px;
+      color: white;
+      font-size: 1.2rem;
+      cursor: pointer;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      transition: all 0.3s ease;
+      backdrop-filter: blur(15px);
+    }
+
+    .modal-close:hover {
+      background: var(--rainbow-gradient);
+      transform: scale(1.1);
+    }
+  </style>
+</head>
+<body>
+    <!-- Simplified Background Animation -->
+    <div class="bg-animation">
+        <div class="floating-orb orb-1"></div>
+        <div class="floating-orb orb-2"></div>
+        <div class="floating-orb orb-3"></div>
+    </div>
+
+    <!-- Premium Header Navigation -->
+    <nav class="header-nav" id="headerNav">
+        <a href="{% url 'admin_dashboard' %}" class="header-brand">
+            <div class="brand-logo">SJ</div>
+            <span>SkillJourney</span>
+        </a>
+        
+        <div class="header-menu">
+            <a href="{% url 'my_jobs' %}">
+                <i class="bi bi-briefcase"></i> Back to Jobs
+            </a>
+            <a href="{% url 'admin_dashboard' %}">
+                <i class="bi bi-speedometer2"></i> Dashboard
+            </a>
+        </div>
+    </nav>
+    
+    <!-- Premium Profile Content -->
+    <div class="profile-container">
+        <!-- Premium Profile Header -->
+        <div class="profile-header">
+            <div class="profile-main">
+                <div class="profile-avatar">
+                    {% if freelancer.profile_picture %}
+                        <img src="{{ freelancer.profile_picture.url }}" alt="Profile Picture" class="profile-picture">
+                    {% else %}
+                        <div class="profile-default">
+                            {{ freelancer.full_name|slice:":1"|upper }}
+                        </div>
+                    {% endif %}
+                </div>
+                                        
+                <div class="profile-info">
+                    <h1 class="profile-name">{{ freelancer.full_name }}</h1>
+                    
+                    {% if freelancer.professional_title %}
+                        <p class="profile-title">{{ freelancer.professional_title }}</p>
+                    {% endif %}
+                    
+                    {% if freelancer.bio %}
+                        <p class="profile-bio">{{ freelancer.bio }}</p>
+                    {% endif %}
+                    
+                    <div class="profile-stats">
+                        <div class="stat-item">
+                            <div class="stat-value">{{ freelancer.certificate_posts.count }}</div>
+                            <div class="stat-label">Certificates</div>
+                        </div>
+                        <div class="stat-item">
+                            <div class="stat-value">{{ freelancer.skills|wordcount }}</div>
+                            <div class="stat-label">Skills</div>
+                        </div>
+                        <div class="stat-item">
+                            <div class="stat-value">
+                                {% if freelancer.experience_level %}
+                                    {{ freelancer.get_experience_level_display }}
+                                {% else %}
+                                    -
+                                {% endif %}
+                            </div>
+                            <div class="stat-label">Experience</div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Premium Badge Container - UPDATED to match freelancer dashboard -->
+        <div class="badge-container">
+            <div class="badge-header">
+                <h2 class="badge-title">
+                    <i class="bi bi-award"></i> Achievement Badges
+                </h2>
+                <div class="badge-count">{{ badges|length }} badges</div>
+            </div>
+            
+            <div class="badge-grid">
+                {% for key, badge in badges.items %}
+                    {% if key != 'profile' %}
+                    <div class="badge-card {% if badge.has_badge %}completed{% else %}in-progress{% endif %}">
+                        <div class="badge-header-inner">
+                            <div class="badge-icon">
+                                <i class="bi bi-{% if badge.has_badge %}award{% else %}hourglass-split{% endif %}"></i>
+                            </div>
+                            <div>
+                                <h4 class="badge-name">{{ key|title }} Badge</h4>
+                                <div class="badge-status {% if badge.has_badge %}completed{% else %}in-progress{% endif %}">
+                                    {% if badge.has_badge %}
+                                        Level {{ badge.level }}
+                                    {% else %}
+                                        In Progress
+                                    {% endif %}
+                                </div>
+                            </div>
+                        </div>
+                        
+                        <div class="badge-progress">
+                            <div class="badge-progress-bar">
+                                <div class="badge-progress-fill" style="width: {% if badge.has_badge %}100{% else %}{{ badge.completed }}{% endif %}%"></div>
+                            </div>
+                            <div class="badge-stats">
+                                <span>Progress</span>
+                                <span>
+                                    {% if badge.completed %}
+                                        {{ badge.completed }}{% if badge.next_target %}/{{ badge.next_target }}{% endif %}
+                                    {% else %}
+                                        0/{{ badge.next_target }}
+                                    {% endif %}
+                                </span>
+                            </div>
+                        </div>
+                        
+                        {% if badge.streak %}
+                        <div class="badge-streak">
+                            <i class="bi bi-fire"></i>
+                            <span>Streak: {{ badge.streak }} days</span>
+                        </div>
+                        {% endif %}
+                    </div>
+                    {% endif %}
+                {% endfor %}
+                
+                <!-- Profile Badge separately -->
+                <div class="badge-card {% if badges.profile.has_badge %}completed{% else %}in-progress{% endif %}">
+                    <div class="badge-header-inner">
+                        <div class="badge-icon">
+                            <i class="bi bi-person-{% if badges.profile.has_badge %}check{% else %}gear{% endif %}"></i>
+                        </div>
+                        <div>
+                            <h4 class="badge-name">Profile Badge</h4>
+                            <div class="badge-status {% if badges.profile.has_badge %}completed{% else %}in-progress{% endif %}">
+                                {% if badges.profile.has_badge %}
+                                    Completed
+                                {% else %}
+                                    In Progress
+                                {% endif %}
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <div class="badge-progress">
+                        <div class="badge-progress-bar">
+                            <div class="badge-progress-fill" style="width: {{ badges.profile.completed }}%"></div>
+                        </div>
+                        <div class="badge-stats">
+                            <span>Progress</span>
+                            <span>{{ badges.profile.completed }}%</span>
+                        </div>
+                    </div>
+                    
+                    {% if not badges.profile.has_badge %}
+                    <div class="badge-streak">
+                        <i class="bi bi-info-circle"></i>
+                        <span>Next target: 100%</span>
+                    </div>
+                    {% endif %}
+                </div>
+            </div>
+        </div>
+        
+        <!-- Premium Profile Details -->
+        <div class="profile-details">
+            <!-- Skills & Experience -->
+            <div class="detail-card">
+                <h3><i class="bi bi-stars"></i> Skills & Experience</h3>
+                
+                {% if freelancer.skills %}
+                    <div class="skills-container">
+                        {% for skill in freelancer.skills.split %}
+                            <span class="skill-tag">
+                                <i class="bi bi-tools"></i> {{ skill }}
+                            </span>
+                        {% endfor %}
+                    </div>
+                {% endif %}
+                
+                {% if freelancer.experience_level %}
+                    <div class="info-item">
+                        <i class="bi bi-briefcase"></i>
+                        <div>
+                            <strong>Experience Level:</strong> {{ freelancer.get_experience_level_display }}
+                        </div>
+                    </div>
+                {% endif %}
+                
+                {% if freelancer.location %}
+                    <div class="info-item">
+                        <i class="bi bi-geo-alt"></i>
+                        <div>
+                            <strong>Location:</strong> {{ freelancer.location }}
+                        </div>
+                    </div>
+                {% endif %}
+            </div>
+            
+            <!-- Contact & Links -->
+            <div class="detail-card">
+                <h3><i class="bi bi-link-45deg"></i> Contact & Links</h3>
+                
+                {% if freelancer.linkedin %}
+                    <div class="info-item">
+                        <i class="bi bi-linkedin"></i>
+                        <div>
+                            <strong>LinkedIn:</strong> 
+                            <a href="{{ freelancer.linkedin }}" target="_blank">
+                                View Profile <i class="bi bi-box-arrow-up-right"></i>
+                            </a>
+                        </div>
+                    </div>
+                {% endif %}
+                
+                {% if freelancer.github %}
+                    <div class="info-item">
+                        <i class="bi bi-github"></i>
+                        <div>
+                            <strong>GitHub:</strong> 
+                            <a href="{{ freelancer.github }}" target="_blank">
+                                View Profile <i class="bi bi-box-arrow-up-right"></i>
+                            </a>
+                        </div>
+                    </div>
+                {% endif %}
+                
+                {% if freelancer.resume %}
+                    <div class="info-item">
+                        <i class="bi bi-file-earmark-pdf"></i>
+                        <div>
+                            <strong>Resume:</strong> 
+                            <a href="{{ freelancer.resume.url }}" target="_blank">
+                                Download <i class="bi bi-download"></i>
+                            </a>
+                        </div>
+                    </div>
+                {% endif %}
+            </div>
+        </div>
+        
+        <!-- Premium Certificates Section -->
+        {% if freelancer.certificate_posts.exists %}
+            <div class="certificates-section">
+                <div class="section-header">
+                    <h2 class="section-title">
+                        <i class="bi bi-award"></i> Certificates & Achievements
+                    </h2>
+                    <div class="certificate-count">{{ freelancer.certificate_posts.count }} certificates</div>
+                </div>
+                
+                <div class="certificates-container">
+                    {% for cert in freelancer.certificate_posts.all %}
+                        <div class="certificate-card">
+                            {% if cert.certificate %}
+                                <img src="{{ cert.certificate.url }}" alt="Certificate" class="certificate-image">
+                            {% else %}
+                                <div class="certificate-default">
+                                    <i class="bi bi-award"></i>
+                                </div>
+                            {% endif %}
+                            
+                            <div class="certificate-content">
+                                <h4 class="certificate-caption">
+                                    {% if cert.caption %}
+                                        {{ cert.caption }}
+                                    {% else %}
+                                        Certificate
+                                    {% endif %}
+                                </h4>
+                                
+                                {% if cert.issue_date %}
+                                    <div class="certificate-date">
+                                        <i class="bi bi-calendar"></i> 
+                                        Issued: {{ cert.issue_date|date:"M Y" }}
+                                    </div>
+                                {% endif %}
+                                
+                                <div class="certificate-actions">
+                                    {% if cert.certificate %}
+                                        <button class="btn-icon view-certificate" data-certificate-url="{{ cert.certificate.url }}" title="View Certificate">
+                                            <i class="bi bi-eye"></i>
+                                        </button>
+                                        <a href="{{ cert.certificate.url }}" target="_blank" class="btn-icon" title="Download">
+                                            <i class="bi bi-download"></i>
+                                        </a>
+                                    {% endif %}
+                                </div>
+                            </div>
+                        </div>
+                    {% endfor %}
+                </div>
+            </div>
+        {% else %}
+            <div class="certificates-section">
+                <div class="section-header">
+                    <h2 class="section-title">
+                        <i class="bi bi-award"></i> Certificates & Achievements
+                    </h2>
+                </div>
+                <div class="empty-state">
+                    <i class="bi bi-award"></i>
+                    <h3>No certificates yet</h3>
+                    <p>This freelancer hasn't added any certificates yet.</p>
+                </div>
+            </div>
+        {% endif %}
+    </div>
+
+    <!-- Scroll to top button -->
+    <button class="scroll-to-top" id="scrollToTop">
+        <i class="bi bi-chevron-up"></i>
+    </button>
+
+    <!-- Bootstrap JS -->
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+
+    <script>
+        document.addEventListener('DOMContentLoaded', function() {
+            // Header scroll effect
+            const headerNav = document.getElementById('headerNav');
+            
+            window.addEventListener('scroll', function() {
+                if (window.scrollY > 50) {
+                    headerNav.classList.add('scrolled');
+                } else {
+                    headerNav.classList.remove('scrolled');
+                }
+            });
+
+            // Scroll to top functionality
+            const scrollToTop = document.getElementById('scrollToTop');
+            
+            window.addEventListener('scroll', function() {
+                if (window.scrollY > 300) {
+                    scrollToTop.style.display = 'flex';
+                } else {
+                    scrollToTop.style.display = 'none';
+                }
+            });
+
+            scrollToTop.addEventListener('click', function() {
+                window.scrollTo({
+                    top: 0,
+                    behavior: 'smooth'
+                });
+            });
+
+            // Certificate image viewer
+            const viewButtons = document.querySelectorAll('.view-certificate');
+            
+            viewButtons.forEach(button => {
+                button.addEventListener('click', function() {
+                    const certificateUrl = this.getAttribute('data-certificate-url');
+                    
+                    // Create modal for image viewing
+                    const modal = document.createElement('div');
+                    modal.className = 'certificate-modal';
+                    
+                    const modalImg = document.createElement('img');
+                    modalImg.src = certificateUrl;
+                    
+                    const closeBtn = document.createElement('button');
+                    closeBtn.className = 'modal-close';
+                    closeBtn.innerHTML = '<i class="bi bi-x-lg"></i>';
+                    
+                    modal.appendChild(modalImg);
+                    modal.appendChild(closeBtn);
+                    document.body.appendChild(modal);
+                    
+                    // Close modal functionality
+                    const closeModal = function() {
+                        document.body.removeChild(modal);
+                    };
+                    
+                    modal.addEventListener('click', function(e) {
+                        if (e.target === modal) closeModal();
+                    });
+                    
+                    closeBtn.addEventListener('click', closeModal);
+                    
+                    // ESC key to close
+                    document.addEventListener('keydown', function(e) {
+                        if (e.key === 'Escape') closeModal();
+                    });
+                });
+            });
+
+            // Skill tags hover effect
+            const skillTags = document.querySelectorAll('.skill-tag');
+            skillTags.forEach(tag => {
+                tag.addEventListener('mouseenter', function() {
+                    this.style.transform = 'translateY(-3px) scale(1.05)';
+                });
+                
+                tag.addEventListener('mouseleave', function() {
+                    this.style.transform = 'translateY(0) scale(1)';
+                });
+            });
+
+            // Badge cards hover effect
+            const badgeCards = document.querySelectorAll('.badge-card');
+            badgeCards.forEach(card => {
+                card.addEventListener('mouseenter', function() {
+                    this.style.transform = 'translateY(-8px) scale(1.02)';
+                });
+                
+                card.addEventListener('mouseleave', function() {
+                    this.style.transform = 'translateY(0) scale(1)';
+                });
+            });
+
+            // Badge cards animation
+            const badgeCardsAnimate = document.querySelectorAll('.badge-card');
+            badgeCardsAnimate.forEach((card, index) => {
+                card.style.opacity = '0';
+                card.style.transform = 'translateY(20px)';
+                
+                setTimeout(() => {
+                    card.style.transition = 'all 0.5s ease-out';
+                    card.style.opacity = '1';
+                    card.style.transform = 'translateY(0)';
+                }, 600 + (index * 100));
+            });
+        });
+    </script>
+</body>
+</html>

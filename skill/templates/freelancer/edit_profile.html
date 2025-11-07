@@ -1,0 +1,667 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Edit Profile - SkillJourney</title>
+    
+    <!-- Bootstrap CSS -->
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" rel="stylesheet">
+    <!-- Bootstrap Icons -->
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.0/font/bootstrap-icons.css">
+    <!-- Font Awesome -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <!-- Google Fonts -->
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800;900&display=swap" rel="stylesheet">
+    
+    <style>
+        /* Premium Color Palette - Matching Landing Page */
+        :root {
+            --primary-gradient: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            --secondary-gradient: linear-gradient(135deg, #4ecdc4 0%, #44a08d 100%);
+            --accent-gradient: linear-gradient(135deg, #ff6b6b 0%, #feca57 100%);
+            --success-gradient: linear-gradient(135deg, #51cf66 0%, #40c057 100%);
+            --purple-gradient: linear-gradient(135deg, #a855f7 0%, #3b82f6 100%);
+            --rainbow-gradient: linear-gradient(135deg, #ff6b6b, #4ecdc4, #45b7d1, #a855f7, #feca57, #667eea);
+            --glass-bg: rgba(255, 255, 255, 0.08);
+            --glass-border: rgba(255, 255, 255, 0.12);
+            --dark-bg: #0f0f23;
+            --darker-bg: #0a0a1a;
+            --card-bg: rgba(30, 30, 60, 0.6);
+            --text-primary: #ffffff;
+            --text-secondary: #e2e8f0;
+            --text-muted: #94a3b8;
+            --shadow-glow: 0 10px 40px rgba(102, 126, 234, 0.15);
+            --shadow-intense: 0 20px 50px rgba(0, 0, 0, 0.3);
+            --border-radius: 20px;
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Inter', -apple-system, BlinkMacSystemFont, sans-serif;
+            background: linear-gradient(135deg, var(--dark-bg) 0%, var(--darker-bg) 100%);
+            color: var(--text-primary);
+            overflow-x: hidden;
+            line-height: 1.6;
+            min-height: 100vh;
+        }
+
+        /* Subtle Background Animation */
+        .bg-animation {
+            position: fixed;
+            inset: 0;
+            z-index: -1;
+            overflow: hidden;
+        }
+
+        .floating-orb {
+            position: absolute;
+            border-radius: 50%;
+            filter: blur(100px);
+            opacity: 0.15;
+            animation: float-orbs 40s ease-in-out infinite;
+        }
+
+        .orb-1 {
+            width: 400px;
+            height: 400px;
+            background: var(--primary-gradient);
+            top: 10%;
+            left: 5%;
+            animation-delay: 0s;
+        }
+
+        .orb-2 {
+            width: 300px;
+            height: 300px;
+            background: var(--secondary-gradient);
+            bottom: 15%;
+            right: 10%;
+            animation-delay: 20s;
+        }
+
+        .orb-3 {
+            width: 350px;
+            height: 350px;
+            background: var(--accent-gradient);
+            top: 60%;
+            left: 70%;
+            animation-delay: 30s;
+        }
+
+        /* Premium Navigation Bar */
+        .custom-navbar {
+            background: var(--card-bg);
+            backdrop-filter: blur(30px);
+            border: 1px solid var(--glass-border);
+            border-radius: var(--border-radius);
+            box-shadow: var(--shadow-intense);
+            padding: 1.5rem 2rem;
+            margin-bottom: 2rem;
+            animation: slide-down 0.6s ease-out;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .custom-navbar::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: -100%;
+            width: 100%;
+            height: 100%;
+            background: linear-gradient(90deg, transparent, rgba(255,255,255,0.03), transparent);
+            animation: nav-shimmer 6s ease-in-out infinite;
+        }
+
+        .nav-brand-container {
+            display: flex;
+            align-items: center;
+            gap: 1.5rem;
+            position: relative;
+            z-index: 2;
+        }
+
+        .animated-logo {
+            width: 55px;
+            height: 55px;
+            background: var(--rainbow-gradient);
+            border-radius: 15px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 1.5rem;
+            color: white;
+            box-shadow: var(--shadow-glow);
+            transition: all 0.3s ease;
+        }
+
+        .animated-logo:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 15px 40px rgba(102, 126, 234, 0.3);
+        }
+
+        .nav-text-content h3 {
+            color: var(--text-primary);
+            margin-bottom: 0.25rem;
+            font-size: 1.8rem;
+            font-weight: 800;
+            background: var(--rainbow-gradient);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+        }
+
+        .welcome-text {
+            color: var(--text-secondary);
+            font-size: 1rem;
+        }
+
+        .username-highlight {
+            background: var(--primary-gradient);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+            font-weight: 700;
+        }
+
+        /* Premium Cards */
+        .card {
+            background: var(--card-bg);
+            backdrop-filter: blur(25px);
+            border: 1px solid var(--glass-border);
+            border-radius: var(--border-radius);
+            box-shadow: var(--shadow-glow);
+            transition: all 0.3s ease;
+            color: var(--text-primary);
+            position: relative;
+            overflow: hidden;
+        }
+
+        .card:hover {
+            transform: translateY(-3px);
+            box-shadow: var(--shadow-intense);
+            border-color: rgba(102, 126, 234, 0.3);
+        }
+
+        .card-title {
+            color: var(--text-primary);
+            font-weight: 700;
+            font-size: 1.3rem;
+        }
+
+        .card-text {
+            color: var(--text-secondary);
+            line-height: 1.7;
+        }
+
+        /* Section Headers */
+        .section-header {
+            margin-bottom: 1.5rem;
+            padding-bottom: 0.75rem;
+            border-bottom: 2px solid var(--glass-border);
+            position: relative;
+        }
+
+        .section-header::after {
+            content: '';
+            position: absolute;
+            bottom: -2px;
+            left: 0;
+            width: 60px;
+            height: 3px;
+            background: var(--rainbow-gradient);
+            border-radius: 3px;
+        }
+
+        .section-title {
+            color: var(--text-primary);
+            font-weight: 700;
+            margin-bottom: 0.5rem;
+            font-size: 1.5rem;
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+        }
+
+        .section-subtitle {
+            color: var(--text-secondary);
+            font-size: 1rem;
+            font-weight: 500;
+        }
+
+        /* Form Styles */
+        .form-label {
+            font-weight: 600;
+            color: var(--text-primary);
+            margin-bottom: 0.5rem;
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+        }
+
+        .form-control, .form-select, .form-file {
+            background: var(--glass-bg);
+            border: 1px solid var(--glass-border);
+            border-radius: 12px;
+            color: var(--text-primary);
+            padding: 12px 16px;
+            transition: all 0.3s ease;
+        }
+
+        .form-control:focus, .form-select:focus {
+            background: rgba(255, 255, 255, 0.12);
+            border-color: rgba(102, 126, 234, 0.5);
+            box-shadow: 0 0 0 3px rgba(102, 126, 234, 0.1);
+            color: var(--text-primary);
+        }
+
+        .form-control::placeholder {
+            color: var(--text-muted);
+        }
+
+        textarea.form-control {
+            min-height: 120px;
+            resize: vertical;
+        }
+
+        /* Buttons */
+        .btn-primary {
+            background: var(--rainbow-gradient);
+            border: none;
+            border-radius: 12px;
+            padding: 12px 24px;
+            font-weight: 600;
+            transition: all 0.3s ease;
+            color: white;
+            box-shadow: var(--shadow-glow);
+        }
+
+        .btn-primary:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 10px 25px rgba(102, 126, 234, 0.4);
+        }
+
+        .btn-sm {
+            border-radius: 8px;
+            padding: 6px 12px;
+            font-weight: 500;
+        }
+
+        .btn-danger {
+            background: linear-gradient(135deg, #ff6b6b 0%, #ee5a52 100%);
+            border: none;
+            border-radius: 8px;
+            padding: 6px 12px;
+            font-weight: 500;
+            transition: all 0.3s ease;
+        }
+
+        .btn-danger:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 4px 8px rgba(255, 107, 107, 0.3);
+        }
+
+        /* Certificate Cards */
+        .certificate-card {
+            margin-bottom: 1.5rem;
+            overflow: hidden;
+            border-radius: 15px;
+            background: var(--glass-bg);
+            border: 1px solid var(--glass-border);
+            padding: 1rem;
+            transition: all 0.3s ease;
+        }
+
+        .certificate-card:hover {
+            transform: translateY(-3px);
+            box-shadow: var(--shadow-glow);
+        }
+
+        .certificate-img {
+            width: 100%;
+            height: 180px;
+            object-fit: contain;
+            border-radius: 10px;
+            transition: all 0.3s ease;
+            background: rgba(0, 0, 0, 0.2);
+        }
+
+        .certificate-card:hover .certificate-img {
+            transform: scale(1.02);
+        }
+
+        .certificate-date {
+            color: var(--text-muted);
+            font-size: 0.85rem;
+            font-weight: 500;
+        }
+
+        /* Responsive Design */
+        @media (max-width: 768px) {
+            .custom-navbar {
+                padding: 1rem;
+            }
+            
+            .nav-text-content h3 {
+                font-size: 1.4rem;
+            }
+        }
+
+        /* Subtle Animations */
+        @keyframes float-orbs {
+            0%, 100% {
+                transform: translateY(0) rotate(0deg);
+            }
+            50% {
+                transform: translateY(-20px) rotate(180deg);
+            }
+        }
+
+        @keyframes slide-down {
+            from {
+                opacity: 0;
+                transform: translateY(-20px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        @keyframes nav-shimmer {
+            0% {
+                left: -100%;
+            }
+            50% {
+                left: 100%;
+            }
+            100% {
+                left: 100%;
+            }
+        }
+
+        /* Custom Scrollbar */
+        ::-webkit-scrollbar {
+            width: 8px;
+        }
+
+        ::-webkit-scrollbar-track {
+            background: rgba(255, 255, 255, 0.05);
+            border-radius: 10px;
+        }
+
+        ::-webkit-scrollbar-thumb {
+            background: var(--rainbow-gradient);
+            border-radius: 10px;
+        }
+
+        ::-webkit-scrollbar-thumb:hover {
+            background: var(--secondary-gradient);
+        }
+    </style>
+</head>
+<body>
+    <!-- Subtle Background Animation -->
+    <div class="bg-animation">
+        <div class="floating-orb orb-1"></div>
+        <div class="floating-orb orb-2"></div>
+        <div class="floating-orb orb-3"></div>
+    </div>
+
+    <!-- Main Content -->
+    <div class="container py-4">
+        <!-- Premium Navigation -->
+        <nav class="navbar navbar-light bg-white sticky-top mb-4 custom-navbar">
+            <div class="container-fluid">
+                <div class="d-flex align-items-center">
+                    <div class="nav-brand-container">
+                        <div class="animated-logo">
+                            <i class="bi bi-pencil-square"></i>
+                        </div>
+                        <div class="nav-text-content">
+                            <h3 class="fw-bold mb-0">Edit Profile</h3>
+                            <p class="text-muted mb-0 small welcome-text">Update your professional identity on <span class="username-highlight">SkillJourney</span></p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </nav>
+
+        <!-- Edit Profile Form -->
+        <div class="card p-4 mb-4">
+            <div class="section-header">
+                <h3 class="section-title">
+                    <i class="bi bi-person-gear"></i>
+                    Personal Information
+                </h3>
+                <p class="section-subtitle">Update your professional details</p>
+            </div>
+            
+            <form method="POST" enctype="multipart/form-data">
+                {% csrf_token %}
+                
+                <div class="row">
+                    <!-- Left Column -->
+                    <div class="col-md-6">
+                        <!-- Full Name -->
+                        <div class="mb-3">
+                            <label class="form-label">
+                                <i class="bi bi-person-fill"></i>
+                                Full Name
+                            </label>
+                            <input type="text" name="full_name" class="form-control" value="{{ profile.full_name }}" required>
+                        </div>
+
+                        <!-- Professional Title -->
+                        <div class="mb-3">
+                            <label class="form-label">
+                                <i class="bi bi-briefcase-fill"></i>
+                                Professional Title
+                            </label>
+                            <input type="text" name="professional_title" class="form-control" value="{{ profile.professional_title }}">
+                        </div>
+
+                        <!-- Location -->
+                        <div class="mb-3">
+                            <label class="form-label">
+                                <i class="bi bi-geo-alt-fill"></i>
+                                Location
+                            </label>
+                            <input type="text" name="location" class="form-control" value="{{ profile.location }}">
+                        </div>
+
+                        <!-- LinkedIn -->
+                        <div class="mb-3">
+                            <label class="form-label">
+                                <i class="bi bi-linkedin"></i>
+                                LinkedIn Profile
+                            </label>
+                            <input type="url" name="linkedin" class="form-control" value="{{ profile.linkedin }}">
+                        </div>
+
+                        <!-- GitHub -->
+                        <div class="mb-3">
+                            <label class="form-label">
+                                <i class="bi bi-github"></i>
+                                GitHub Profile
+                            </label>
+                            <input type="url" name="github" class="form-control" value="{{ profile.github }}">
+                        </div>
+                    </div>
+                    
+                    <!-- Right Column -->
+                    <div class="col-md-6">
+                        <!-- Bio -->
+                        <div class="mb-3">
+                            <label class="form-label">
+                                <i class="bi bi-info-circle-fill"></i>
+                                Bio
+                            </label>
+                            <textarea name="bio" class="form-control" rows="4">{{ profile.bio }}</textarea>
+                        </div>
+
+                        <!-- Skills -->
+                        <div class="mb-3">
+                            <label class="form-label">
+                                <i class="bi bi-tools"></i>
+                                Skills (comma separated)
+                            </label>
+                            <input type="text" name="skills" class="form-control" value="{{ profile.skills }}">
+                        </div>
+
+                        <!-- Experience Level -->
+                        <div class="mb-3">
+                            <label class="form-label">
+                                <i class="bi bi-graph-up"></i>
+                                Experience Level
+                            </label>
+                            <select name="experience_level" class="form-select">
+                                <option value="">Select experience level</option>
+                                <option value="entry" {% if profile.experience_level == "entry" %}selected{% endif %}>Entry Level (0-2 years)</option>
+                                <option value="intermediate" {% if profile.experience_level == "intermediate" %}selected{% endif %}>Intermediate (2-5 years)</option>
+                                <option value="expert" {% if profile.experience_level == "expert" %}selected{% endif %}>Expert (5+ years)</option>
+                            </select>
+                        </div>
+                    </div>
+                </div>
+                
+                <!-- File Uploads -->
+                <div class="row mt-3">
+                    <div class="col-md-6">
+                        <!-- Profile Picture -->
+                        <div class="mb-3">
+                            <label class="form-label">
+                                <i class="bi bi-camera-fill"></i>
+                                Profile Picture
+                            </label>
+                            <input type="file" name="profile_picture" class="form-control form-file">
+                        </div>
+                    </div>
+                    <div class="col-md-6">
+                        <!-- Resume -->
+                        <div class="mb-3">
+                            <label class="form-label">
+                                <i class="bi bi-file-earmark-pdf-fill"></i>
+                                Resume
+                            </label>
+                            <input type="file" name="resume" class="form-control form-file">
+                        </div>
+                    </div>
+                </div>
+                
+                <!-- Submit Button -->
+                <div class="d-flex justify-content-end mt-4">
+                    <button type="submit" class="btn btn-primary">
+                        <i class="bi bi-check-lg me-2"></i> Save Changes
+                    </button>
+                </div>
+            </form>
+        </div>
+
+        <!-- Certificates Section -->
+        <div class="card p-4">
+            <div class="section-header">
+                <h3 class="section-title">
+                    <i class="bi bi-award-fill"></i>
+                    Your Certificates
+                </h3>
+                <p class="section-subtitle">Manage your professional certificates</p>
+            </div>
+            
+            {% if certificates %}
+                <div class="row">
+                    {% for cert in certificates %}
+                        <div class="col-md-6 col-lg-4 mb-3">
+                            <div class="certificate-card">
+                                {% if cert.certificate %}
+                                    <img src="{{ cert.certificate.url }}" class="certificate-img mb-2" alt="Certificate">
+                                {% else %}
+                                    <div class="certificate-img mb-2 d-flex align-items-center justify-content-center">
+                                        <i class="bi bi-file-earmark-text" style="font-size: 3rem; color: var(--text-muted);"></i>
+                                    </div>
+                                {% endif %}
+                                <p class="card-text mb-1 fw-bold">{{ cert.caption|default:"Certificate" }}</p>
+                                <small class="certificate-date">{{ cert.created_at|date:"M d, Y" }}</small>
+                                <div class="mt-3 d-flex gap-2">
+                                    <a href="{% url 'edit_post' cert.id %}" class="btn btn-primary btn-sm flex-fill">
+                                        <i class="bi bi-pencil me-1"></i> Edit
+                                    </a>
+                                    <form action="{% url 'delete_post' cert.id %}" method="POST" class="flex-fill">
+                                        {% csrf_token %}
+                                        <button type="submit" class="btn btn-danger btn-sm w-100">
+                                            <i class="bi bi-trash me-1"></i> Delete
+                                        </button>
+                                    </form>
+                                </div>
+                            </div>
+                        </div>
+                    {% endfor %}
+                </div>
+            {% else %}
+                <div class="text-center py-4">
+                    <i class="bi bi-award" style="font-size: 3rem; color: var(--text-muted);"></i>
+                    <p class="text-muted mt-2">No certificates uploaded yet.</p>
+                </div>
+            {% endif %}
+        </div>
+    </div>
+
+    <!-- Bootstrap JS -->
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.bundle.min.js"></script>
+    
+    <script>
+        // Initialize animations
+        document.addEventListener('DOMContentLoaded', function() {
+            // Simple fade-in animation for cards
+            const cards = document.querySelectorAll('.card');
+            cards.forEach((card, index) => {
+                card.style.opacity = '0';
+                card.style.transform = 'translateY(20px)';
+                
+                setTimeout(() => {
+                    card.style.transition = 'all 0.6s ease-out';
+                    card.style.opacity = '1';
+                    card.style.transform = 'translateY(0)';
+                }, index * 100);
+            });
+
+            // Form validation enhancement
+            const form = document.querySelector('form');
+            if (form) {
+                form.addEventListener('submit', function(e) {
+                    const requiredFields = form.querySelectorAll('[required]');
+                    let isValid = true;
+                    
+                    requiredFields.forEach(field => {
+                        if (!field.value.trim()) {
+                            isValid = false;
+                            field.style.borderColor = '#ff6b6b';
+                        } else {
+                            field.style.borderColor = '';
+                        }
+                    });
+                    
+                    if (!isValid) {
+                        e.preventDefault();
+                        // Add a subtle shake animation to invalid fields
+                        requiredFields.forEach(field => {
+                            if (!field.value.trim()) {
+                                field.classList.add('animate__animated', 'animate__shakeX');
+                                setTimeout(() => {
+                                    field.classList.remove('animate__animated', 'animate__shakeX');
+                                }, 1000);
+                            }
+                        });
+                    }
+                });
+            }
+        });
+    </script>
+</body>
+</html>

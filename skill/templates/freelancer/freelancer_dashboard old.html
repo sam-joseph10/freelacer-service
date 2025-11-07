@@ -1,0 +1,543 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Job Notifications</title>
+    
+    <!-- Bootstrap CSS -->
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" rel="stylesheet">
+    <!-- Bootstrap Icons -->
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.0/font/bootstrap-icons.css">
+    <!-- Google Fonts -->
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    
+    <style>
+    /* Custom Variables */
+    :root {
+      --primary-color: #4a3cff;
+      --primary-dark: #3525d1;
+      --primary-light: #f0eeff;
+      --secondary-color: #ff6b4a;
+      --text-dark: #1a1a2e;
+      --text-muted: #6c757d;
+      --light-bg: #f8f9fa;
+      --border-color: rgba(0, 0, 0, 0.1);
+      --shadow-sm: 0 0.125rem 0.25rem rgba(0, 0, 0, 0.075);
+      --shadow-md: 0 0.5rem 1rem rgba(0, 0, 0, 0.1);
+      --shadow-lg: 0 1rem 3rem rgba(0, 0, 0, 0.175);
+      --border-radius: 0.625rem;
+    }
+
+    /* Typography */
+    body {
+      font-family: 'Inter', -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+      line-height: 1.6;
+      color: var(--text-dark);
+      background-color: #f8f9fa;
+    }
+
+    .display-4, .display-5, .display-6 {
+      font-weight: 700;
+      line-height: 1.2;
+    }
+
+    h1, h2, h3, h4, h5, h6 {
+      font-weight: 600;
+    }
+
+    /* Navigation */
+    .navbar {
+      backdrop-filter: blur(10px);
+      background-color: rgba(255, 255, 255, 0.98) !important;
+      box-shadow: 0 2px 15px rgba(0, 0, 0, 0.05);
+    }
+
+    .nav-link {
+      color: var(--text-dark) !important;
+      font-weight: 500;
+      transition: color 0.3s ease;
+      position: relative;
+      padding: 0.5rem 1rem !important;
+    }
+
+    .nav-link:hover, .nav-link.active {
+      color: var(--primary-color) !important;
+    }
+
+    /* Profile in top right */
+    .profile-top-right {
+      position: absolute;
+      top: 1rem;
+      right: 1rem;
+      z-index: 1000;
+    }
+
+    .profile-dropdown {
+      background: white;
+      border-radius: 12px;
+      padding: 0.5rem;
+      box-shadow: var(--shadow-md);
+      display: flex;
+      align-items: center;
+      cursor: pointer;
+      transition: all 0.3s ease;
+    }
+
+    .profile-dropdown:hover {
+      box-shadow: var(--shadow-lg);
+    }
+
+    .profile-img {
+      width: 40px;
+      height: 40px;
+      border-radius: 50%;
+      object-fit: cover;
+    }
+
+    /* Buttons */
+    .btn-primary {
+      background-color: var(--primary-color);
+      border-color: var(--primary-color);
+      font-weight: 500;
+      padding: 8px 16px;
+      border-radius: 10px;
+      transition: all 0.3s ease;
+    }
+
+    .btn-primary:hover {
+      background-color: var(--primary-dark);
+      border-color: var(--primary-dark);
+      transform: translateY(-2px);
+      box-shadow: 0 4px 12px rgba(74, 60, 255, 0.25);
+    }
+
+    .btn-outline-primary {
+      color: var(--primary-color);
+      border-color: var(--primary-color);
+      font-weight: 500;
+      padding: 8px 16px;
+      border-radius: 10px;
+      transition: all 0.3s ease;
+    }
+
+    .btn-outline-primary:hover {
+      background-color: var(--primary-color);
+      border-color: var(--primary-color);
+      transform: translateY(-2px);
+    }
+
+    /* Cards */
+    .card {
+      border: none;
+      border-radius: var(--border-radius);
+      box-shadow: var(--shadow-sm);
+      transition: all 0.3s ease;
+    }
+
+    .card:hover {
+      box-shadow: var(--shadow-md);
+      transform: translateY(-2px);
+    }
+
+    .card-title {
+      color: var(--text-dark);
+      font-weight: 600;
+    }
+
+    /* Main content */
+    .main-content {
+      margin-top: 2rem;
+      padding: 2rem;
+    }
+
+    /* AI Chatbox Styles */
+    .chat-container {
+      height: 500px;
+      display: flex;
+      flex-direction: column;
+      background: white;
+      border-radius: var(--border-radius);
+      box-shadow: var(--shadow-sm);
+      overflow: hidden;
+    }
+
+    .chat-header {
+      background: linear-gradient(135deg, var(--primary-color) 0%, var(--secondary-color) 100%);
+      color: white;
+      padding: 1rem;
+      text-align: center;
+      font-weight: 600;
+    }
+
+    .chat-messages {
+      flex: 1;
+      overflow-y: auto;
+      padding: 1rem;
+      background-color: var(--light-bg);
+    }
+
+    .message {
+      margin-bottom: 1rem;
+      display: flex;
+      flex-direction: column;
+    }
+
+    .message-bubble {
+      padding: 0.75rem 1rem;
+      border-radius: 18px;
+      max-width: 80%;
+      word-wrap: break-word;
+    }
+
+    .ai-message .message-bubble {
+      background-color: white;
+      border: 1px solid var(--border-color);
+      border-bottom-left-radius: 4px;
+      align-self: flex-start;
+    }
+
+    .user-message {
+      align-items: flex-end;
+    }
+
+    .user-message .message-bubble {
+      background: linear-gradient(135deg, var(--primary-color) 0%, var(--primary-dark) 100%);
+      color: white;
+      border-bottom-right-radius: 4px;
+    }
+
+    .message-time {
+      font-size: 0.7rem;
+      color: var(--text-muted);
+      margin-top: 0.25rem;
+    }
+
+    .chat-input-container {
+      padding: 1rem;
+      border-top: 1px solid var(--border-color);
+      background: white;
+    }
+
+    .chat-input {
+      border-radius: 20px;
+      border: 1px solid var(--border-color);
+      padding: 0.75rem 1rem;
+      resize: none;
+    }
+
+    .chat-input:focus {
+      outline: none;
+      border-color: var(--primary-color);
+      box-shadow: 0 0 0 3px rgba(74, 60, 255, 0.1);
+    }
+
+    .send-button {
+      background: linear-gradient(135deg, var(--primary-color) 0%, var(--secondary-color) 100%);
+      border: none;
+      color: white;
+      border-radius: 50%;
+      width: 40px;
+      height: 40px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      transition: all 0.3s ease;
+    }
+
+    .send-button:hover {
+      transform: scale(1.05);
+      box-shadow: 0 4px 8px rgba(74, 60, 255, 0.3);
+    }
+
+    .suggestion-chips {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 0.5rem;
+      margin-top: 1rem;
+    }
+
+    .suggestion-chip {
+      background-color: var(--primary-light);
+      color: var(--primary-color);
+      border: none;
+      border-radius: 16px;
+      padding: 0.5rem 1rem;
+      font-size: 0.8rem;
+      cursor: pointer;
+      transition: all 0.3s ease;
+    }
+
+    .suggestion-chip:hover {
+      background-color: var(--primary-color);
+      color: white;
+    }
+
+    /* Responsive adjustments */
+    @media (max-width: 768px) {
+      .profile-top-right {
+        position: relative;
+        top: 0;
+        right: 0;
+        margin-bottom: 1rem;
+      }
+      
+      .main-content {
+        padding: 1rem;
+      }
+      
+      .chat-container {
+        height: 400px;
+      }
+    }
+    </style>
+</head>
+<body>
+    <!-- Navigation Bar -->
+    <nav class="navbar navbar-expand-lg navbar-light bg-white sticky-top">
+        <div class="container">
+            <a class="navbar-brand d-flex align-items-center" href="#">
+                <div class="brand-logo me-2" style="width: 36px; height: 36px; background: linear-gradient(135deg, var(--primary-color) 0%, var(--secondary-color) 100%); color: white; border-radius: 8px; display: flex; align-items: center; justify-content: center; font-weight: 700; font-size: 16px;">SJ</div>
+                <span class="fw-bold">SkillJourney</span>
+            </a>
+            
+        </div>
+        
+        <!-- Profile in top right corner -->
+        <div class="profile-top-right">
+            <div class="dropdown">
+                <div class="profile-dropdown" id="dropdownMenuButton" data-bs-toggle="dropdown" aria-expanded="false">
+                    {% if profile.profile_picture %}
+                        <img src="{{ profile.profile_picture.url }}" class="profile-img me-2">
+                    {% else %}
+                        <img src="https://via.placeholder.com/100" class="profile-img me-2">
+                    {% endif %}
+                </div>
+                <ul class="dropdown-menu dropdown-menu-end" aria-labelledby="dropdownMenuButton">
+                    <li><a class="dropdown-item" href="{% url 'view_profile' %}">View Profile</a></li>
+                    <li><a class="dropdown-item" href="{% url 'edit_profile' %}">Edit Profile</a></li>
+                    <li><hr class="dropdown-divider"></li>
+                    <li><a class="dropdown-item" href="{% url 'logout' %}">Logout</a></li>
+                </ul>
+            </div>
+        </div>
+    </nav>
+
+    <!-- Main Content -->
+    <div class="container-fluid main-content">
+        <div class="row">
+            <!-- Left Side: Job Notifications -->
+            <div class="col-lg-9 col-md-8 p-4">
+                <h3 class="fw-bold mb-4">Job Applications & Notifications</h3>
+                
+                {% for job in job_notifications %}
+                    <div class="card mb-3">
+                        <div class="card-body">
+                            <h5 class="card-title">{{ job.title }}</h5>
+                            <p class="card-text text-muted">{{ job.company }}</p>
+                            <p class="card-text">{{ job.description|truncatewords:30 }}</p>
+                            <div class="d-flex justify-content-between align-items-center">
+                                <span class="badge bg-primary">{{ job.type }}</span>
+                                <a href="#" class="btn btn-primary btn-sm">View Details</a>
+                            </div>
+                        </div>
+                    </div>
+                {% empty %}
+                    <div class="text-center py-5">
+                        <i class="bi bi-bell display-1 text-muted"></i>
+                        <h4 class="mt-3">No job notifications yet</h4>
+                        <p class="text-muted">When you apply to jobs, you'll see notifications here</p>
+                    </div>
+                {% endfor %}
+            </div>
+
+            <!-- Right Side: AI Chatbox -->
+            <div class="col-lg-3 col-md-4 p-4">
+                <div class="chat-container">
+                    <div class="chat-header">
+                        <i class="bi bi-robot me-2"></i> AI Career Assistant
+                    </div>
+                    
+                    <div class="chat-messages" id="chat-messages">
+                        <div class="message ai-message">
+                            <div class="message-bubble">
+                                Hi there! I'm your AI career assistant. How can I help you with your job search today?
+                            </div>
+                            <div class="message-time">Just now</div>
+                        </div>
+                        
+                        <div class="message ai-message">
+                            <div class="message-bubble">
+                                You can ask me things like:
+                                <ul class="mt-2 mb-0">
+                                    <li>How to improve your resume</li>
+                                    <li>Interview preparation tips</li>
+                                    <li>Job search strategies</li>
+                                    <li>Career advice</li>
+                                </ul>
+                            </div>
+                            <div class="message-time">Just now</div>
+                        </div>
+                    </div>
+                    
+                    <div class="chat-input-container">
+                        <div class="input-group">
+                            <textarea class="chat-input form-control" id="message-input" rows="1" placeholder="Type your message..." onkeypress="handleKeyPress(event)"></textarea>
+                            <button class="send-button ms-2" onclick="sendMessage()">
+                                <i class="bi bi-send"></i>
+                            </button>
+                        </div>
+                        
+                        <div class="suggestion-chips">
+                            <button class="suggestion-chip" onclick="suggestionClick('Resume tips')">Resume tips</button>
+                            <button class="suggestion-chip" onclick="suggestionClick('Interview prep')">Interview prep</button>
+                            <button class="suggestion-chip" onclick="suggestionClick('Job search advice')">Job search advice</button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Bootstrap JS -->
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.bundle.min.js"></script>
+    
+    <script>
+       
+    // Enhanced AI responses database
+    const aiResponses = {
+        "hello": "Hello! Welcome to SkillJourney! I'm your AI career assistant. How can I help you with your freelancing journey today?",
+        "hi": "Hi there! Ready to find your next freelancing opportunity? What can I help you with?",
+        "resume": "Here are resume tips for freelancers:\n\n1) Tailor your resume to each job by highlighting relevant skills\n2) Use action verbs like 'developed', 'managed', 'created'\n3) Quantify achievements (e.g., 'Increased client revenue by 30%')\n4) Include a skills section with your technical proficiencies\n5) Add a portfolio link or examples of your work\n6) Keep it concise (1-2 pages maximum)\n7) Proofread carefully for errors\n\nWould you like more specific resume advice?",
+        "interview": "Freelancer interview preparation:\n\n1) Research the client/company thoroughly\n2) Prepare examples of your best work (portfolio)\n3) Practice explaining your process and approach\n4) Be ready to discuss rates and timelines\n5) Prepare questions about the project scope\n6) Have your availability ready to discuss\n7) Dress professionally (even for video calls)\n\nNeed more specific interview tips?",
+        "job search": "Job search strategies for freelancers:\n\n1) Complete your SkillJourney profile with all skills and experience\n2) Regularly check the job notifications feed\n3) Apply to relevant jobs quickly\n4) Customize each application to the specific job\n5) Follow up if you don't hear back within a week\n6) Build your portfolio with diverse projects\n7) Network with other freelancers on the platform\n\nWhat type of work are you looking for?",
+        "website": "SkillJourney helps freelancers find and apply for jobs! Here's how it works:\n\n1) Register and create an account\n2) Build your complete profile with skills, experience, and portfolio\n3) Go to your dashboard to see job notifications\n4) Apply to jobs that match your skills\n5) Wait for recruiter approval/rejection notifications\n6) Communicate with clients through the platform\n7) Build your reputation with completed projects\n\nWhat would you like to know more about?",
+        "profile": "For the best results on SkillJourney:\n\n1) Complete your profile 100% - this increases visibility\n2) Add all relevant skills you possess\n3) Upload your professional resume\n4) Include a clear profile picture\n5) Add portfolio examples or certificates\n6) Write a compelling bio that highlights your expertise\n7) Keep your availability status updated\n\nNeed help with any specific part of your profile?",
+        "skills": "Skills improvement strategies:\n\n1) Identify in-demand skills in your field\n2) Take online courses or certifications\n3) Practice with personal projects\n4) Follow industry blogs and tutorials\n5) Join professional communities\n6) Ask for feedback from clients\n7) Gradually expand your service offerings\n\nWhat skills are you looking to develop?",
+        "thanks": "You're welcome! I'm happy to help with your freelancing journey. Is there anything else you'd like to know about finding work on SkillJourney?",
+        "love": "I love you too, Let me know how I can help you succeed on SkillJourney.",
+        "badwords": "I'm here to provide helpful career advice. Let's keep our conversation professional and focused on your freelancing success. How can I assist you today?",
+        "inappropriate": "I'm designed to provide professional career guidance only. Let's focus on how I can help you with your freelancing career, job search, or skill development.",
+        "default": "I'm here to help with your freelancing career on SkillJourney! You can ask me about:\n- Resume and profile tips\n- Interview preparation\n- Job search strategies\n- Skill development\n- How SkillJourney works\n- Applying for jobs\n\nWhat would you like to know?"
+    };
+    
+    // Inappropriate words detection
+    const inappropriateWords = [
+        
+    ];
+    
+    // Get a response from AI
+    function getAIResponse(message) {
+        const lowerMessage = message.toLowerCase();
+        
+        // Check for inappropriate content first
+        const hasInappropriate = inappropriateWords.some(word => lowerMessage.includes(word));
+        if (hasInappropriate) {
+            return aiResponses["inappropriate"];
+        }
+        
+        // Check for thank you messages
+        if (lowerMessage.includes('thank') || lowerMessage.includes('thanks')) {
+            return aiResponses["thanks"];
+        }
+        
+        // Check for love/affection messages
+        if (lowerMessage.includes('love') || lowerMessage.includes('like you') || lowerMessage.includes('loving')) {
+            return aiResponses["love"];
+        }
+        
+        // Check for bad words
+        const badWords = ['stupid', 'idiot', 'hate', 'suck', 'bad', 'worst', 'sucks'];
+        const hasBadWords = badWords.some(word => lowerMessage.includes(word));
+        if (hasBadWords) {
+            return aiResponses["badwords"];
+        }
+        
+        // Response mapping
+        if (lowerMessage.includes('resume') || lowerMessage.includes('cv')) {
+            return aiResponses["resume"];
+        } else if (lowerMessage.includes('interview')) {
+            return aiResponses["interview"];
+        } else if (lowerMessage.includes('job') && lowerMessage.includes('search')) {
+            return aiResponses["job search"];
+        } else if (lowerMessage.includes('website') || lowerMessage.includes('skilljourney') || lowerMessage.includes('how it works')) {
+            return aiResponses["website"];
+        } else if (lowerMessage.includes('profile') || lowerMessage.includes('complete profile')) {
+            return aiResponses["profile"];
+        } else if (lowerMessage.includes('skill') || lowerMessage.includes('improve') || lowerMessage.includes('learn')) {
+            return aiResponses["skills"];
+        } else if (lowerMessage.includes('hello') || lowerMessage.includes('hi') || lowerMessage.includes('hey')) {
+            return aiResponses["hello"];
+        } else {
+            return aiResponses["default"];
+        }
+    }
+    
+    // Send a message
+    function sendMessage() {
+        const input = document.getElementById('message-input');
+        const message = input.value.trim();
+        
+        if (message) {
+            // Add user message
+            addMessage(message, 'user');
+            input.value = '';
+            
+            // Simulate AI thinking
+            setTimeout(() => {
+                const response = getAIResponse(message);
+                addMessage(response, 'ai');
+            }, 1000);
+        }
+    }
+    
+    // Add a message to the chat
+    function addMessage(text, sender) {
+        const messagesContainer = document.getElementById('chat-messages');
+        const messageDiv = document.createElement('div');
+        messageDiv.className = `message ${sender}-message`;
+        
+        const bubbleDiv = document.createElement('div');
+        bubbleDiv.className = 'message-bubble';
+        
+        // Preserve line breaks in the response
+        bubbleDiv.innerHTML = text.replace(/\n/g, '<br>');
+        
+        const timeDiv = document.createElement('div');
+        timeDiv.className = 'message-time';
+        timeDiv.textContent = 'Just now';
+        
+        messageDiv.appendChild(bubbleDiv);
+        messageDiv.appendChild(timeDiv);
+        messagesContainer.appendChild(messageDiv);
+        
+        // Scroll to bottom
+        messagesContainer.scrollTop = messagesContainer.scrollHeight;
+    }
+    
+    // Handle enter key press
+    function handleKeyPress(event) {
+        if (event.key === 'Enter' && !event.shiftKey) {
+            event.preventDefault();
+            sendMessage();
+        }
+    }
+    
+    // Handle suggestion chip clicks
+    function suggestionClick(text) {
+        document.getElementById('message-input').value = text;
+        sendMessage();
+    }
+    
+    // Update suggestion chips to include website questions
+    document.addEventListener('DOMContentLoaded', function() {
+        // You can update the suggestion chips here if needed
+        const suggestionChips = document.querySelector('.suggestion-chips');
+        if (suggestionChips) {
+            // Add a website info chip if you want
+            suggestionChips.innerHTML += '<button class="suggestion-chip" onclick="suggestionClick(\'How does SkillJourney work?\')">Website Info</button>';
+        }
+    });
+</script>
+</body>
+</html>

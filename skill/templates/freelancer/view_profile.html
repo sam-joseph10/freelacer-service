@@ -1,0 +1,1399 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Professional Profile - SkillJourney</title>
+    
+    <!-- Bootstrap CSS -->
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" rel="stylesheet">
+    <!-- Bootstrap Icons -->
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.0/font/bootstrap-icons.css">
+    <!-- Font Awesome -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <!-- Google Fonts -->
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800;900&display=swap" rel="stylesheet">
+    
+    <style>
+        /* Light Color Palette */
+        :root {
+            --primary-color: #667eea;
+            --secondary-color: #4ecdc4;
+            --accent-color: #ff6b6b;
+            --success-color: #51cf66;
+            --warning-color: #feca57;
+            --info-color: #45b7d1;
+            --purple-color: #a855f7;
+            
+            --primary-light: rgba(102, 126, 234, 0.1);
+            --secondary-light: rgba(78, 205, 196, 0.1);
+            --accent-light: rgba(255, 107, 107, 0.1);
+            
+            --glass-bg: rgba(255, 255, 255, 0.08);
+            --glass-border: rgba(255, 255, 255, 0.12);
+            --dark-bg: #0f0f23;
+            --darker-bg: #0a0a1a;
+            --card-bg: rgba(30, 30, 60, 0.6);
+            --text-primary: #ffffff;
+            --text-secondary: #e2e8f0;
+            --text-muted: #94a3b8;
+            --shadow-glow: 0 8px 25px rgba(0, 0, 0, 0.15);
+            --shadow-intense: 0 15px 35px rgba(0, 0, 0, 0.25);
+            --border-radius: 16px;
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Inter', -apple-system, BlinkMacSystemFont, sans-serif;
+            background: linear-gradient(135deg, var(--dark-bg) 0%, var(--darker-bg) 100%);
+            color: var(--text-primary);
+            overflow-x: hidden;
+            line-height: 1.6;
+            min-height: 100vh;
+        }
+
+        /* Subtle Background Animation */
+        .bg-animation {
+            position: fixed;
+            inset: 0;
+            z-index: -1;
+            overflow: hidden;
+        }
+
+        .floating-orb {
+            position: absolute;
+            border-radius: 50%;
+            filter: blur(80px);
+            opacity: 0.1;
+            animation: float-orbs 40s ease-in-out infinite;
+        }
+
+        .orb-1 {
+            width: 300px;
+            height: 300px;
+            background: var(--primary-color);
+            top: 10%;
+            left: 5%;
+            animation-delay: 0s;
+        }
+
+        .orb-2 {
+            width: 250px;
+            height: 250px;
+            background: var(--secondary-color);
+            bottom: 15%;
+            right: 10%;
+            animation-delay: 20s;
+        }
+
+        .orb-3 {
+            width: 280px;
+            height: 280px;
+            background: var(--accent-color);
+            top: 60%;
+            left: 70%;
+            animation-delay: 30s;
+        }
+
+        /* Premium Navigation Bar */
+        .custom-navbar {
+            background: var(--card-bg);
+            backdrop-filter: blur(25px);
+            border: 1px solid var(--glass-border);
+            border-radius: var(--border-radius);
+            box-shadow: var(--shadow-intense);
+            padding: 1.5rem 2rem;
+            margin-bottom: 2rem;
+            animation: slide-down 0.6s ease-out;
+        }
+
+        .nav-brand-container {
+            display: flex;
+            align-items: center;
+            gap: 1.5rem;
+        }
+
+        /* ENHANCED: Rocket Logo with Gradient */
+        .animated-logo {
+            width: 55px;
+            height: 55px;
+            background: linear-gradient(135deg, var(--primary-color), var(--secondary-color));
+            border-radius: 15px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 1.5rem;
+            color: white;
+            box-shadow: var(--shadow-glow);
+            transition: all 0.3s ease;
+        }
+
+        .animated-logo:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 12px 25px rgba(102, 126, 234, 0.3);
+        }
+
+        /* ENHANCED: Profile Heading with Gradient */
+        .nav-text-content h3 {
+            color: var(--text-primary);
+            margin-bottom: 0.25rem;
+            font-size: 1.8rem;
+            font-weight: 800;
+            background: linear-gradient(135deg, var(--primary-color), var(--secondary-color));
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+        }
+
+        .welcome-text {
+            color: var(--text-secondary);
+            font-size: 1rem;
+        }
+
+        .username-highlight {
+            color: var(--secondary-color);
+            font-weight: 700;
+        }
+
+        .profile-top-right {
+            display: flex;
+            align-items: center;
+            gap: 15px;
+        }
+
+        /* ENHANCED: Premium Back to Dashboard Button */
+        .dashboard-btn {
+            background: var(--secondary-color);
+            color: white;
+            border: none;
+            border-radius: 12px;
+            padding: 0.8rem 1.5rem;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+            box-shadow: var(--shadow-glow);
+            text-decoration: none;
+        }
+
+        .dashboard-btn:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 10px 20px rgba(78, 205, 196, 0.3);
+            color: white;
+            text-decoration: none;
+            background: #44b8af;
+        }
+
+        .profile-dropdown {
+            background: var(--glass-bg);
+            border: 1px solid var(--glass-border);
+            border-radius: 12px;
+            padding: 0.5rem;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            display: flex;
+            align-items: center;
+            backdrop-filter: blur(10px);
+        }
+
+        .profile-dropdown:hover {
+            background: rgba(255, 255, 255, 0.12);
+            transform: translateY(-2px);
+        }
+
+        .profile-img {
+            width: 45px;
+            height: 45px;
+            border-radius: 50%;
+            object-fit: cover;
+            border: 2px solid var(--glass-border);
+            transition: all 0.3s ease;
+        }
+
+        /* Premium Cards */
+        .card {
+            background: var(--card-bg);
+            backdrop-filter: blur(20px);
+            border: 1px solid var(--glass-border);
+            border-radius: var(--border-radius);
+            box-shadow: var(--shadow-glow);
+            transition: all 0.3s ease;
+            color: var(--text-primary);
+        }
+
+        .card:hover {
+            transform: translateY(-3px);
+            box-shadow: var(--shadow-intense);
+            border-color: rgba(102, 126, 234, 0.2);
+        }
+
+        .card-title {
+            color: var(--text-primary);
+            font-weight: 700;
+            font-size: 1.3rem;
+        }
+
+        .card-text {
+            color: var(--text-secondary);
+            line-height: 1.7;
+        }
+
+        /* Profile Header Layout */
+        .profile-header {
+            background: var(--card-bg);
+            backdrop-filter: blur(20px);
+            border: 1px solid var(--glass-border);
+            border-radius: var(--border-radius);
+            box-shadow: var(--shadow-intense);
+            margin-bottom: 2rem;
+            overflow: hidden;
+            position: relative;
+        }
+
+        .profile-header::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            height: 100px;
+            background: linear-gradient(135deg, var(--primary-color), var(--secondary-color));
+            opacity: 0.3;
+        }
+
+        .profile-content {
+            position: relative;
+            z-index: 2;
+            padding: 2rem;
+            padding-top: 1rem;
+        }
+
+        .profile-main {
+            display: flex;
+            gap: 2rem;
+            align-items: flex-start;
+            margin-top: 1rem;
+        }
+
+        /* Profile Picture Section - LEFT */
+        .profile-picture-section {
+            flex-shrink: 0;
+            text-align: center;
+        }
+
+        .profile-avatar-main {
+            width: 180px;
+            height: 180px;
+            border-radius: 50%;
+            border: 5px solid rgba(255, 255, 255, 0.9);
+            overflow: hidden;
+            box-shadow: var(--shadow-intense);
+            transition: all 0.3s ease;
+            margin: 0 auto 1.5rem;
+            background: var(--card-bg);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .profile-avatar-main:hover {
+            transform: scale(1.02);
+            box-shadow: 0 20px 40px rgba(102, 126, 234, 0.25);
+        }
+
+        .profile-avatar-main img {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+        }
+
+        .profile-stats {
+            display: flex;
+            gap: 1rem;
+            justify-content: center;
+            margin-top: 1rem;
+        }
+
+        .stat-item {
+            text-align: center;
+            background: var(--glass-bg);
+            padding: 1rem;
+            border-radius: 12px;
+            border: 1px solid var(--glass-border);
+            min-width: 80px;
+            transition: all 0.3s ease;
+        }
+
+        .stat-item:hover {
+            background: rgba(255, 255, 255, 0.12);
+            transform: translateY(-2px);
+        }
+
+        .stat-value {
+            font-size: 1.5rem;
+            font-weight: 800;
+            color: var(--secondary-color);
+            display: block;
+        }
+
+        .stat-label {
+            color: var(--text-muted);
+            font-size: 0.8rem;
+            font-weight: 600;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+            margin-top: 0.25rem;
+        }
+
+        /* Profile Info Section - RIGHT */
+        .profile-info-section {
+            flex: 1;
+            min-width: 0;
+        }
+
+        .profile-name {
+            font-size: 2.3rem;
+            font-weight: 800;
+            margin-bottom: 0.5rem;
+            color: var(--text-primary);
+            line-height: 1.2;
+        }
+
+        .profile-title {
+            color: var(--text-secondary);
+            font-size: 1.2rem;
+            margin-bottom: 1.5rem;
+            font-weight: 500;
+        }
+
+        .profile-bio {
+            color: var(--text-secondary);
+            line-height: 1.7;
+            margin-bottom: 2rem;
+            font-size: 1rem;
+        }
+
+        .action-buttons {
+            display: flex;
+            gap: 1rem;
+            flex-wrap: wrap;
+            margin-bottom: 1.5rem;
+        }
+
+        .action-btn {
+            background: var(--primary-color);
+            color: white;
+            border: none;
+            border-radius: 10px;
+            padding: 0.8rem 1.5rem;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            display: inline-flex;
+            align-items: center;
+            gap: 0.5rem;
+            box-shadow: var(--shadow-glow);
+            text-decoration: none;
+        }
+
+        .action-btn:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 10px 20px rgba(102, 126, 234, 0.3);
+            color: white;
+            background: #5a6fd8;
+        }
+
+        .secondary-btn {
+            background: var(--glass-bg);
+            color: var(--text-primary);
+            border: 1px solid var(--glass-border);
+        }
+
+        .secondary-btn:hover {
+            background: rgba(255, 255, 255, 0.15);
+            color: var(--text-primary);
+        }
+
+        /* ENHANCED: Rank Button with Icon */
+        .rank-btn {
+            background: linear-gradient(135deg, var(--purple-color), var(--primary-color));
+            color: white;
+            border: none;
+            border-radius: 10px;
+            padding: 0.8rem 1.5rem;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            display: inline-flex;
+            align-items: center;
+            gap: 0.5rem;
+            box-shadow: var(--shadow-glow);
+            text-decoration: none;
+        }
+
+        .rank-btn:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 10px 20px rgba(168, 85, 247, 0.3);
+            color: white;
+            background: linear-gradient(135deg, #9333ea, #5a6fd8);
+        }
+
+        /* Progress Bar */
+        .profile-progress {
+            margin-top: 1rem;
+        }
+
+        .progress {
+            height: 8px;
+            background-color: rgba(255, 255, 255, 0.1);
+            border-radius: 10px;
+            overflow: hidden;
+        }
+
+        .progress-bar {
+            background: linear-gradient(90deg, var(--primary-color), var(--secondary-color));
+            border-radius: 10px;
+            transition: width 1.5s ease-in-out;
+        }
+
+        /* Section Headers */
+        .section-header {
+            margin-bottom: 1.5rem;
+            padding-bottom: 0.75rem;
+            border-bottom: 1px solid var(--glass-border);
+            position: relative;
+        }
+
+        .section-header::after {
+            content: '';
+            position: absolute;
+            bottom: -1px;
+            left: 0;
+            width: 50px;
+            height: 2px;
+            background: var(--secondary-color);
+            border-radius: 2px;
+        }
+
+        .section-title {
+            color: var(--text-primary);
+            font-weight: 700;
+            margin-bottom: 0.5rem;
+            font-size: 1.4rem;
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+        }
+
+        .section-subtitle {
+            color: var(--text-secondary);
+            font-size: 0.95rem;
+            font-weight: 500;
+        }
+
+        /* Skills */
+        .skill-badge {
+            background: var(--glass-bg);
+            border: 1px solid var(--glass-border);
+            color: var(--text-primary);
+            padding: 0.5rem 1rem;
+            border-radius: 20px;
+            font-size: 0.9rem;
+            display: inline-block;
+            margin: 0.25rem;
+            transition: all 0.3s ease;
+            font-weight: 500;
+        }
+
+        .skill-badge:hover {
+            background: rgba(102, 126, 234, 0.2);
+            transform: translateY(-2px);
+            border-color: rgba(102, 126, 234, 0.4);
+        }
+
+        /* Enhanced Badge Container - UPDATED to match freelancer dashboard */
+        .badge-container {
+            margin-top: 2rem;
+            padding: 1.5rem;
+            background: var(--card-bg);
+            backdrop-filter: blur(20px);
+            border: 1px solid var(--glass-border);
+            border-radius: var(--border-radius);
+            box-shadow: var(--shadow-glow);
+            position: relative;
+            overflow: hidden;
+        }
+
+        .badge-container::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: conic-gradient(from 0deg, transparent, rgba(102, 126, 234, 0.1), transparent);
+            animation: rotate-gradient 15s linear infinite;
+        }
+
+        .badge-header {
+            margin-bottom: 1.5rem;
+            padding-bottom: 0.75rem;
+            border-bottom: 1px solid var(--glass-border);
+            position: relative;
+            z-index: 2;
+        }
+
+        .badge-header::after {
+            content: '';
+            position: absolute;
+            bottom: -1px;
+            left: 0;
+            width: 50px;
+            height: 2px;
+            background: var(--secondary-color);
+            border-radius: 2px;
+        }
+
+        .badge-title {
+            color: var(--text-primary);
+            font-weight: 700;
+            margin-bottom: 0.5rem;
+            font-size: 1.4rem;
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+        }
+
+        .badge-subtitle {
+            color: var(--text-secondary);
+            font-size: 0.95rem;
+            font-weight: 500;
+        }
+
+        .badge-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
+            gap: 1.5rem;
+            position: relative;
+            z-index: 2;
+        }
+
+        .badge-card {
+            background: var(--card-bg);
+            backdrop-filter: blur(25px);
+            border: 1px solid var(--glass-border);
+            border-radius: var(--border-radius);
+            padding: 1.5rem;
+            position: relative;
+            overflow: hidden;
+            transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+            animation: fade-in-up 0.8s ease-out;
+            box-shadow: var(--shadow-glow);
+            height: 100%;
+            display: flex;
+            flex-direction: column;
+            justify-content: space-between;
+        }
+
+        .badge-card::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: conic-gradient(from 0deg, transparent, rgba(102, 126, 234, 0.1), transparent);
+            animation: rotate-gradient 15s linear infinite;
+        }
+
+        .badge-card:hover {
+            transform: translateY(-5px);
+            box-shadow: var(--shadow-intense);
+            border-color: rgba(102, 126, 234, 0.3);
+        }
+
+        .badge-header-inner {
+            display: flex;
+            align-items: center;
+            margin-bottom: 1rem;
+            position: relative;
+            z-index: 2;
+        }
+
+        .badge-icon {
+            width: 50px;
+            height: 50px;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 1.5rem;
+            margin-right: 1rem;
+            color: white;
+            box-shadow: var(--shadow-glow);
+        }
+
+        .badge-card.completed .badge-icon {
+            background: #51cf66 !important; /* Green for completed */
+        }
+
+        .badge-card.in-progress .badge-icon {
+            background: #feca57 !important; /* Yellow for in-progress */
+        }
+
+        .badge-card.locked .badge-icon {
+            background: #868e96 !important; /* Gray for locked */
+        }
+
+        .badge-name {
+            color: var(--text-primary);
+            font-weight: 600;
+            font-size: 1.1rem;
+            margin-bottom: 0.25rem;
+        }
+
+        .badge-status {
+            font-size: 0.85rem;
+            font-weight: 500;
+        }
+
+        .badge-status.completed {
+            color: #4ecdc4;
+        }
+
+        .badge-status.in-progress {
+            color: #feca57;
+        }
+
+        .badge-progress {
+            position: relative;
+            z-index: 2;
+            margin-top: 1rem;
+        }
+
+        .badge-progress-bar {
+            height: 6px;
+            background: rgba(255, 255, 255, 0.1);
+            border-radius: 3px;
+            overflow: hidden;
+            margin-bottom: 0.5rem;
+        }
+
+        .badge-progress-fill {
+            height: 100%;
+            background: #4ecdc4 !important; /* Solid color instead of gradient */
+            border-radius: 3px;
+            transition: width 0.8s ease;
+        }
+
+        .badge-stats {
+            display: flex;
+            justify-content: space-between;
+            font-size: 0.8rem;
+            color: var(--text-muted);
+            position: relative;
+            z-index: 2;
+        }
+
+        .badge-streak {
+            display: flex;
+            align-items: center;
+            gap: 0.25rem;
+            color: #ff6b6b;
+            font-weight: 600;
+            position: relative;
+            z-index: 2;
+            margin-top: 0.5rem;
+        }
+
+        /* Contact Info */
+        .contact-item {
+            display: flex;
+            align-items: center;
+            margin-bottom: 1rem;
+            padding: 0.75rem;
+            background: var(--glass-bg);
+            border-radius: 10px;
+            border: 1px solid var(--glass-border);
+            transition: all 0.3s ease;
+        }
+
+        .contact-item:hover {
+            background: rgba(255, 255, 255, 0.12);
+        }
+
+        .contact-item i {
+            font-size: 1.1rem;
+            margin-right: 0.75rem;
+            color: var(--secondary-color);
+            width: 20px;
+            text-align: center;
+        }
+
+        /* Social Links */
+        .social-links {
+            display: flex;
+            gap: 1rem;
+            margin-top: 1rem;
+        }
+
+        .social-link {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            width: 40px;
+            height: 40px;
+            border-radius: 50%;
+            background: var(--glass-bg);
+            color: var(--text-primary);
+            text-decoration: none;
+            transition: all 0.3s ease;
+            border: 1px solid var(--glass-border);
+            font-size: 1rem;
+        }
+
+        .social-link:hover {
+            background: var(--primary-color);
+            color: white;
+            transform: translateY(-2px);
+        }
+
+        .social-link.disabled {
+            opacity: 0.4;
+            cursor: not-allowed;
+        }
+
+        .social-link.disabled:hover {
+            background: var(--glass-bg);
+            color: var(--text-primary);
+            transform: none;
+        }
+
+        /* Certificates */
+        .certificate-card {
+            margin-bottom: 1.5rem;
+            overflow: hidden;
+            border-radius: 12px;
+            background: var(--glass-bg);
+            border: 1px solid var(--glass-border);
+            padding: 1rem;
+            transition: all 0.3s ease;
+        }
+
+        .certificate-card:hover {
+            transform: translateY(-3px);
+            box-shadow: var(--shadow-glow);
+        }
+
+        .certificate-img {
+            width: 100%;
+            height: 160px;
+            object-fit: cover;
+            border-radius: 8px;
+            transition: all 0.3s ease;
+        }
+
+        .certificate-card:hover .certificate-img {
+            transform: scale(1.02);
+        }
+
+        .certificate-date {
+            color: var(--text-muted);
+            font-size: 0.85rem;
+            font-weight: 500;
+        }
+
+        .show-more-btn {
+            background: var(--glass-bg);
+            border: 1px solid var(--glass-border);
+            color: var(--text-primary);
+            border-radius: 10px;
+            padding: 0.75rem 1.5rem;
+            width: 100%;
+            text-align: center;
+            transition: all 0.3s ease;
+            margin-top: 1rem;
+            font-weight: 500;
+            cursor: pointer;
+        }
+
+        .show-more-btn:hover {
+            background: rgba(255, 255, 255, 0.1);
+            transform: translateY(-2px);
+        }
+
+        .hidden-certificate {
+            display: none;
+        }
+
+        /* Animations */
+        @keyframes rotate-gradient {
+            from {
+                transform: rotate(0deg);
+            }
+            to {
+                transform: rotate(360deg);
+            }
+        }
+
+        @keyframes fade-in-up {
+            from {
+                opacity: 0;
+                transform: translateY(30px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        /* Responsive Design */
+        @media (max-width: 768px) {
+            .profile-main {
+                flex-direction: column;
+                text-align: center;
+            }
+            
+            .profile-picture-section {
+                margin-bottom: 1rem;
+            }
+
+            .profile-avatar-main {
+                width: 150px;
+                height: 150px;
+            }
+            
+            .profile-stats {
+                gap: 0.5rem;
+            }
+            
+            .stat-item {
+                min-width: 70px;
+                padding: 0.75rem 0.5rem;
+            }
+            
+            .action-buttons {
+                justify-content: center;
+            }
+
+            .profile-name {
+                font-size: 2rem;
+            }
+
+            .nav-text-content h3 {
+                font-size: 1.4rem;
+            }
+
+            .profile-top-right {
+                flex-direction: column;
+                gap: 0.5rem;
+            }
+
+            .badge-grid {
+                grid-template-columns: 1fr;
+            }
+        }
+
+        /* Subtle Animations */
+        @keyframes float-orbs {
+            0%, 100% {
+                transform: translateY(0) rotate(0deg);
+            }
+            50% {
+                transform: translateY(-15px) rotate(180deg);
+            }
+        }
+
+        @keyframes slide-down {
+            from {
+                opacity: 0;
+                transform: translateY(-15px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        /* Custom Scrollbar */
+        ::-webkit-scrollbar {
+            width: 6px;
+        }
+
+        ::-webkit-scrollbar-track {
+            background: rgba(255, 255, 255, 0.05);
+            border-radius: 10px;
+        }
+
+        ::-webkit-scrollbar-thumb {
+            background: var(--primary-color);
+            border-radius: 10px;
+        }
+
+        ::-webkit-scrollbar-thumb:hover {
+            background: var(--secondary-color);
+        }
+    </style>
+</head>
+<body>
+    <!-- Subtle Background Animation -->
+    <div class="bg-animation">
+        <div class="floating-orb orb-1"></div>
+        <div class="floating-orb orb-2"></div>
+        <div class="floating-orb orb-3"></div>
+    </div>
+
+    <!-- Main Content -->
+    <div class="container py-4">
+        <!-- Premium Navigation -->
+        <nav class="navbar navbar-light bg-white sticky-top mb-4 custom-navbar">
+            <div class="container-fluid">
+                <div class="d-flex align-items-center">
+                    <div class="nav-brand-container">
+                        <div class="animated-logo">
+                            <i class="bi bi-rocket-takeoff"></i>
+                        </div>
+                        <div class="nav-text-content">
+                            <h3 class="fw-bold mb-0">Profile</h3>
+                            <p class="text-muted mb-0 small welcome-text">Your professional identity on <span class="username-highlight">SkillJourney</span></p>
+                        </div>
+                    </div>
+                </div>
+                        
+                <!-- Profile in top right corner with Back to Dashboard button -->
+                <div class="profile-top-right">
+                    <!-- ENHANCED: Premium Back to Dashboard Button -->
+                    <a href="{% url 'freelancer_dashboard' %}" class="dashboard-btn">
+                        <i class="bi bi-arrow-left"></i> Back to Dashboard
+                    </a>
+                    
+                    <div class="profile-dropdown">
+                        {% if profile.profile_picture %}
+                            <img src="{{ profile.profile_picture.url }}" class="profile-img me-2">
+                        {% else %}
+                            <img src="https://via.placeholder.com/100" class="profile-img me-2">
+                        {% endif %}
+                    </div>
+                </div>
+            </div>
+        </nav>
+
+        <!-- Profile Header Structure -->
+        <div class="profile-header">
+            <div class="profile-content">
+                <div class="profile-main">
+                    <!-- LEFT: Profile Picture Section -->
+                    <div class="profile-picture-section">
+                        <div class="profile-avatar-main">
+                            {% if profile.profile_picture %}
+                                <img src="{{ profile.profile_picture.url }}" alt="Profile Picture">
+                            {% else %}
+                                <div style="width: 100%; height: 100%; background: var(--primary-color); display: flex; align-items: center; justify-content: center; border-radius: 50%;">
+                                    <i class="bi bi-person-fill" style="font-size: 3.5rem; color: white;"></i>
+                                </div>
+                            {% endif %}
+                        </div>
+                        
+                        <div class="profile-stats">
+                            <div class="stat-item">
+                                <div class="stat-value">{{ applications_sent_count|default:"0" }}</div>
+                                <div class="stat-label">Apps</div>
+                            </div>
+                            <div class="stat-item">
+                                <div class="stat-value">{{ applications_accepted_count }}</div>
+                                <div class="stat-label">Approved</div>
+                            </div>
+                            <div class="stat-item">
+                                <div class="stat-value">{{ saved_jobs_count|default:"0" }}</div>
+                                <div class="stat-label">Saved</div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- RIGHT: Profile Info Section -->
+                     
+                    <div class="profile-info-section">
+                        <h1 class="profile-name">{{ profile.full_name|default:"Your Name" }}</h1>
+                        <p class="profile-title">{{ profile.professional_title|default:"Professional Title" }}</p>
+                        
+                        <div class="profile-bio">
+                            {{ profile.bio|default:"No bio added yet. Share your professional story and aspirations to attract potential employers. Your bio is your opportunity to showcase your personality, experience, and what makes you unique in your field." }}
+                        </div>
+                        
+                        <div class="action-buttons">
+                            <a href="{% url 'edit_profile' %}" class="action-btn">
+                                <i class="bi bi-pencil-square"></i> Edit Profile
+                            </a>
+                            {% if profile.resume %}
+                                <a href="{{ profile.resume.url }}" class="action-btn secondary-btn" download>
+                                    <i class="bi bi-download"></i> Download Resume
+                                </a>
+                            {% else %}
+                                <button class="action-btn secondary-btn" disabled>
+                                    <i class="bi bi-download"></i> No Resume
+                                </button>
+                            {% endif %}
+                        </div>
+                        
+                        <div class="profile-progress">
+                            <div class="d-flex justify-content-between mb-2">
+                                <span class="text-muted fw-bold">Profile Completion</span>
+                                <span class="text-primary fw-bold">{{ completion_percentage|default:"0" }}%</span>
+                            </div>
+                            <div class="progress">
+                                <div class="progress-bar" role="progressbar" style="width: {{ completion_percentage|default:'0' }}%"></div>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <!-- ENHANCED: Rank Button with Icon -->
+                    <a href="{% url 'freelancer_view_rank' %}" class="rank-btn">
+                        <i class="bi bi-trophy-fill"></i> 
+                    </a>
+                </div>
+            </div>
+        </div>
+
+        <!-- Enhanced Badge Container - UPDATED to match freelancer dashboard -->
+        <div class="badge-container">
+            <div class="badge-header">
+                <h3 class="badge-title">
+                    <i class="bi bi-award-fill"></i>
+                    Achievement Badges
+                </h3>
+                <p class="badge-subtitle">Your progress and accomplishments</p>
+            </div>
+            
+            <div class="badge-grid">
+                {% for key, badge in badges.items %}
+                    {% if key != 'profile' %}
+                    <div class="badge-card {% if badge.has_badge %}completed{% else %}in-progress{% endif %}">
+                        <div class="badge-header-inner">
+                            <div class="badge-icon">
+                                <i class="bi bi-{% if badge.has_badge %}award{% else %}hourglass-split{% endif %}"></i>
+                            </div>
+                            <div>
+                                <h4 class="badge-name">{{ key|title }} Badge</h4>
+                                <div class="badge-status {% if badge.has_badge %}completed{% else %}in-progress{% endif %}">
+                                    {% if badge.has_badge %}
+                                        Level {{ badge.level }}
+                                    {% else %}
+                                        In Progress
+                                    {% endif %}
+                                </div>
+                            </div>
+                        </div>
+                        
+                        <div class="badge-progress">
+                            <div class="badge-progress-bar">
+                                <div class="badge-progress-fill" style="width: {% if badge.has_badge %}100{% else %}{{ badge.completed }}{% endif %}%"></div>
+                            </div>
+                            <div class="badge-stats">
+                                <span>Progress</span>
+                                <span>
+                                    {% if badge.completed %}
+                                        {{ badge.completed }}{% if badge.next_target %}/{{ badge.next_target }}{% endif %}
+                                    {% else %}
+                                        0/{{ badge.next_target }}
+                                    {% endif %}
+                                </span>
+                            </div>
+                        </div>
+                        
+                        {% if badge.streak %}
+                        <div class="badge-streak">
+                            <i class="bi bi-fire"></i>
+                            <span>Streak: {{ badge.streak }} days</span>
+                        </div>
+                        {% endif %}
+                    </div>
+                    {% endif %}
+                {% endfor %}
+                
+                <!-- Profile Badge separately -->
+                <div class="badge-card {% if badges.profile.has_badge %}completed{% else %}in-progress{% endif %}">
+                    <div class="badge-header-inner">
+                        <div class="badge-icon">
+                            <i class="bi bi-person-{% if badges.profile.has_badge %}check{% else %}gear{% endif %}"></i>
+                        </div>
+                        <div>
+                            <h4 class="badge-name">Profile Badge</h4>
+                            <div class="badge-status {% if badges.profile.has_badge %}completed{% else %}in-progress{% endif %}">
+                                {% if badges.profile.has_badge %}
+                                    Completed
+                                {% else %}
+                                    In Progress
+                                {% endif %}
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <div class="badge-progress">
+                        <div class="badge-progress-bar">
+                            <div class="badge-progress-fill" style="width: {{ badges.profile.completed }}%"></div>
+                        </div>
+                        <div class="badge-stats">
+                            <span>Progress</span>
+                            <span>{{ badges.profile.completed }}%</span>
+                        </div>
+                    </div>
+                    
+                    {% if not badges.profile.has_badge %}
+                    <div class="badge-streak">
+                        <i class="bi bi-info-circle"></i>
+                        <span>Next target: 100%</span>
+                    </div>
+                    {% endif %}
+                </div>
+            </div>
+        </div>
+
+        <div class="row">
+            <!-- Left Column -->
+            <div class="col-lg-8">
+                <!-- Skills Section -->
+                <div class="card mb-4">
+                    <div class="card-body">
+                        <div class="section-header">
+                            <h3 class="section-title">
+                                <i class="bi bi-lightning-charge-fill"></i>
+                                Skills & Expertise
+                            </h3>
+                            <p class="section-subtitle">Your professional capabilities</p>
+                        </div>
+                        {% if skills_list %}
+                            <div>
+                                {% for skill in skills_list %}
+                                    <span class="skill-badge">{{ skill }}</span>
+                                {% endfor %}
+                            </div>
+                        {% else %}
+                            <p class="text-muted">No skills added yet. Add your skills to showcase your expertise to employers.</p>
+                        {% endif %}
+                    </div>
+                </div>
+
+                <!-- Certificates Section -->
+                <div class="card mb-4">
+                    <div class="card-body">
+                        <div class="d-flex justify-content-between align-items-center mb-3">
+                            <div class="section-header mb-0">
+                                <h3 class="section-title">
+                                    <i class="bi bi-award-fill"></i>
+                                    Certificates
+                                </h3>
+                                <p class="section-subtitle">Your achievements</p>
+                            </div>
+                            <a href="{% url 'upload_certificate' %}" class="action-btn" style="padding: 0.6rem 1.2rem; font-size: 0.9rem;">
+                                <i class="bi bi-plus-lg"></i> Add
+                            </a>
+                        </div>
+                        
+                        {% for post in posts %}
+                            <div class="certificate-card {% if forloop.counter > 1 %}hidden-certificate{% endif %}" id="certificate-{{ forloop.counter }}">
+                                {% if post.certificate %}
+                                    <img src="{{ post.certificate.url }}" class="certificate-img mb-2" alt="Certificate">
+                                {% endif %}
+                                <p class="card-text mb-1 fw-bold">{{ post.caption|default:"Certificate" }}</p>
+                                <small class="certificate-date">{{ post.created_at|date:"M d, Y" }}</small>
+                            </div>
+                        {% empty %}
+                            <p class="text-muted">No certificates posted yet. Add your certificates to showcase your achievements.</p>
+                        {% endfor %}
+                        
+                        {% if posts|length > 1 %}
+                            <button class="show-more-btn" id="show-more-btn" onclick="toggleCertificates()">
+                                <i class="bi bi-chevron-down me-1"></i> Show more certificates
+                            </button>
+                        {% endif %}
+                    </div>
+                </div>
+            </div>
+
+            <!-- Right Column -->
+            <div class="col-lg-4">
+                <!-- Contact Information -->
+                <div class="card mb-4">
+                    <div class="card-body">
+                        <div class="section-header">
+                            <h3 class="section-title">
+                                <i class="bi bi-telephone-fill"></i>
+                                Contact Info
+                            </h3>
+                            <p class="section-subtitle">How to reach you</p>
+                        </div>
+                        
+                        <div>
+                            <div class="contact-item">
+                                <i class="bi bi-envelope-fill"></i>
+                                <span>{{ profile.user.email|default:"Not provided" }}</span>
+                            </div>
+                            <div class="contact-item">
+                                <i class="bi bi-geo-alt-fill"></i>
+                                <span>City: {{ profile.city|default:"Not specified" }}</span>
+                            </div>
+                            <div class="contact-item">
+                                <i class="bi bi-geo-alt-fill"></i>
+                                <span>Country: {{ profile.location|default:"Not specified" }}</span>
+                            </div>
+                        </div>
+                        
+                        <div class="social-links">
+                            {% if profile.linkedin %}
+                                <a href="{{ profile.linkedin }}" target="_blank" class="social-link">
+                                    <i class="bi bi-linkedin"></i>
+                                </a>
+                            {% else %}
+                                <span class="social-link disabled">
+                                    <i class="bi bi-linkedin"></i>
+                                </span>
+                            {% endif %}
+                            
+                            {% if profile.github %}
+                                <a href="{{ profile.github }}" target="_blank" class="social-link">
+                                    <i class="bi bi-github"></i>
+                                </a>
+                            {% else %}
+                                <span class="social-link disabled">
+                                    <i class="bi bi-github"></i>
+                                </span>
+                            {% endif %}
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Resume Section -->
+                <div class="card mb-4">
+                    <div class="card-body">
+                        <div class="section-header">
+                            <h3 class="section-title">
+                                <i class="bi bi-mortarboard-fill"></i>
+                                Resume
+                            </h3>
+                        </div>
+                        
+                        {% if profile.resume %}
+                                <a href="{{ profile.resume.url }}" class="action-btn secondary-btn" download>
+                                    <i class="bi bi-download"></i> Download Resume
+                                </a>
+                            {% else %}
+                                <button class="action-btn secondary-btn" disabled>
+                                    <i class="bi bi-download"></i> No Resume
+                                </button>
+                            {% endif %}
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Bootstrap JS -->
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.bundle.min.js"></script>
+    
+    <script>
+        // Toggle certificates function
+        function toggleCertificates() {
+            const allCertificates = document.querySelectorAll('.certificate-card');
+            const showMoreBtn = document.getElementById('show-more-btn');
+            
+            const isShowingOnlyFirst = allCertificates[1]?.classList.contains('hidden-certificate');
+            
+            if (isShowingOnlyFirst) {
+                for (let i = 1; i < allCertificates.length; i++) {
+                    allCertificates[i].style.display = 'block';
+                    allCertificates[i].classList.remove('hidden-certificate');
+                }
+                showMoreBtn.innerHTML = '<i class="bi bi-chevron-up me-1"></i> Show less certificates';
+            } else {
+                for (let i = 1; i < allCertificates.length; i++) {
+                    allCertificates[i].classList.add('hidden-certificate');
+                }
+                showMoreBtn.innerHTML = '<i class="bi bi-chevron-down me-1"></i> Show more certificates';
+            }
+        }
+        
+        // Initialize progress bar animation
+        document.addEventListener('DOMContentLoaded', function() {
+            const progressBar = document.querySelector('.progress-bar');
+            if (progressBar) {
+                setTimeout(() => {
+                    progressBar.style.transition = 'width 1.5s ease-in-out';
+                }, 500);
+            }
+
+            // Simple fade-in animation for cards
+            const cards = document.querySelectorAll('.card');
+            cards.forEach((card, index) => {
+                card.style.opacity = '0';
+                card.style.transform = 'translateY(15px)';
+                
+                setTimeout(() => {
+                    card.style.transition = 'all 0.5s ease-out';
+                    card.style.opacity = '1';
+                    card.style.transform = 'translateY(0)';
+                }, index * 100);
+            });
+
+            // Profile header animation
+            const profileHeader = document.querySelector('.profile-header');
+            if (profileHeader) {
+                profileHeader.style.opacity = '0';
+                profileHeader.style.transform = 'translateY(15px)';
+                
+                setTimeout(() => {
+                    profileHeader.style.transition = 'all 0.6s ease-out';
+                    profileHeader.style.opacity = '1';
+                    profileHeader.style.transform = 'translateY(0)';
+                }, 200);
+            }
+
+            // Badge container animation
+            const badgeContainer = document.querySelector('.badge-container');
+            if (badgeContainer) {
+                badgeContainer.style.opacity = '0';
+                badgeContainer.style.transform = 'translateY(15px)';
+                
+                setTimeout(() => {
+                    badgeContainer.style.transition = 'all 0.6s ease-out';
+                    badgeContainer.style.opacity = '1';
+                    badgeContainer.style.transform = 'translateY(0)';
+                }, 400);
+            }
+
+            // Badge cards animation
+            const badgeCards = document.querySelectorAll('.badge-card');
+            badgeCards.forEach((card, index) => {
+                card.style.opacity = '0';
+                card.style.transform = 'translateY(20px)';
+                
+                setTimeout(() => {
+                    card.style.transition = 'all 0.5s ease-out';
+                    card.style.opacity = '1';
+                    card.style.transform = 'translateY(0)';
+                }, 600 + (index * 100));
+            });
+        });
+
+        // Smooth scroll for any anchor links
+        document.querySelectorAll('a[href^="#"]').forEach(anchor => {
+            anchor.addEventListener('click', function (e) {
+                e.preventDefault();
+                const target = document.querySelector(this.getAttribute('href'));
+                if (target) {
+                    target.scrollIntoView({
+                        behavior: 'smooth',
+                        block: 'start'
+                    });
+                }
+            });
+        });
+    </script>
+</body>
+</html>
